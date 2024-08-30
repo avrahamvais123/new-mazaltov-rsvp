@@ -41,10 +41,6 @@ export default function Progression() {
   const [count, setCount] = React.useState(0);
   const [steps, setSteps] = React.useState(stepsData);
 
-  console.log("carouselApi: ", carouselApi);
-  console.log("current: ", current);
-  console.log("count: ", count);
-
   useEffect(() => {
     if (!carouselApi) {
       return;

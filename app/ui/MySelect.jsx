@@ -10,20 +10,26 @@ import {
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 
-const MySelect = ({ input, value, errors, setValue = () => {} }) => {
-  console.log('errors: ', errors);
+const MySelect = ({
+  field,
+  value,
+  errors,
+  setValue = () => {},
+  defaultValue,
+}) => {
   return (
     <>
       <Select
         dir="rtl"
-        required={input?.required ? true : false}
-        onValueChange={(val) => setValue(input?.name, val)}
+        defaultValue={defaultValue}
+        required={field?.required ? true : false}
+        onValueChange={(val) => setValue(field?.name, val)}
       >
         <SelectTrigger className="w-full border px-4 py-5 rounded-none text-md shadow-none">
           <SelectValue placeholder=" " />
         </SelectTrigger>
         <SelectContent className="rounded-sm">
-          {input?.options.map((option, index) => (
+          {field?.options.map((option, index) => (
             <SelectItem key={index} value={option.value} className="rounded-sm">
               {option.label}
             </SelectItem>
@@ -31,7 +37,7 @@ const MySelect = ({ input, value, errors, setValue = () => {} }) => {
         </SelectContent>
       </Select>
       <label
-        htmlFor={input?.name}
+        htmlFor={field?.name}
         className={cn(
           "absolute right-0 top-2 mx-4 text-gray-400 transition-all transform",
           value
@@ -39,11 +45,11 @@ const MySelect = ({ input, value, errors, setValue = () => {} }) => {
             : "bg-white peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100"
         )}
       >
-        {input?.label}
+        {field?.label}
       </label>
-      {errors[input?.name] && (
+      {errors[field?.name] && (
         <span className="text-red-500 text-sm">
-          {errors[input?.name]?.message}
+          {errors[field?.name]?.message}
         </span>
       )}
     </>

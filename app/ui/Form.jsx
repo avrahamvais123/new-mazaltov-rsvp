@@ -5,7 +5,7 @@ import Input from "./Input";
 import MySelect from "./MySelect";
 
 const MyForm = forwardRef(
-  ({ children, formClassName, inputs, onSubmit, submitName }, ref) => {
+  ({ children, formClassName, fields, onSubmit, submitName }, ref) => {
     const {
       register,
       handleSubmit,
@@ -23,22 +23,29 @@ const MyForm = forwardRef(
           formClassName
         )}
       >
-        <div className="h-72 md:h-auto grid grid-cols-12 gap-4 overflow-y-auto">
-          {/* הוספתי md:h-auto */}
-          {inputs.map((input, i) => {
-            const value = watch(input?.name);
+        <div className="h-72 md:h-auto grid grid-cols-12 gap-4 overflow-y-auto pt-2">
+          {fields.map((fieldData, i) => {
+            const field =
+              typeof fieldData === "function"
+                ? fieldData({ watch, fields })
+                : fieldData;
+
+            if (!field) return;
+
+            const value = watch(field?.name);
 
             return (
               <div
                 key={i}
                 className={cn(
-                  `col-span-${input?.span || 12}`,
+                  `col-span-${field?.span || 12}`,
                   `relative max-md:col-span-12`
                 )}
               >
-                {input?.type === "select" ? (
+                {field?.type === "select" ? (
                   <MySelect
-                    input={input}
+                    defaultValue={field?.defaultValue}
+                    field={field}
                     value={value}
                     errors={errors}
                     setValue={setValue}
@@ -46,7 +53,7 @@ const MyForm = forwardRef(
                 ) : (
                   <Input
                     value={value}
-                    input={input}
+                    field={field}
                     register={register}
                     errors={errors}
                   />

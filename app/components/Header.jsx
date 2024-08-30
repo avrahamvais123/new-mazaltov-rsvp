@@ -18,7 +18,6 @@ import { useAtom } from "jotai";
 
 const Header = () => {
   const [user, setUser] = useAtom(userAtom);
-  console.log("user: ", user);
   const [isOpen, setOpen] = useState(false);
   const { data: session } = useSession();
 
@@ -53,7 +52,6 @@ const Header = () => {
         </div>
 
         {/* avatar */}
-
         <DropdownMenu dir="rtl">
           <DropdownMenuTrigger>
             {user?.image ? (

@@ -4,9 +4,9 @@ import Form from "@/app/ui/Form";
 import React from "react";
 
 const StepOne = ({ carouselApi }) => {
-  const inputs = [
+  const fields = [
     {
-      name: "type",
+      name: "eventType",
       label: "סוג אירוע",
       type: "select",
       placeholder: "סוג אירוע",
@@ -28,54 +28,68 @@ const StepOne = ({ carouselApi }) => {
       span: 6,
       required: true,
     },
-    {
-      name: "groom_name",
-      label: "שם החתן",
-      type: "text",
-      placeholder: "שם החתן",
-      span: 6,
-      required: true,
-    },
-    {
-      name: "bride_name",
-      label: "שם הכלה",
-      type: "text",
-      placeholder: "שם הכלה",
-      span: 6,
-      required: true,
-    },
-    {
-      name: "groom_parents",
-      label: "הורי החתן",
-      type: "text",
-      placeholder: "הורי החתן",
-      span: 6,
-      required: true,
-    },
-    {
-      name: "bride_parents",
-      label: "הורי הכלה",
-      type: "text",
-      placeholder: "הורי הכלה",
-      span: 6,
-      required: true,
-    },
-    {
+    ({ watch }) =>
+      (watch("eventType") === "חתונה" || watch("eventType") === "בר מצווה") && {
+        name: "groom_name",
+        label: "שם החתן",
+        type: "text",
+        placeholder: "שם החתן",
+        span: 6,
+        required: true,
+      },
+    ({ watch }) =>
+      (watch("eventType") === "חתונה" || watch("eventType") === "בת מצווה") && {
+        name: "bride_name",
+        label: "שם הכלה",
+        type: "text",
+        placeholder: "שם הכלה",
+        span: 6,
+        required: true,
+      },
+    ({ watch }) =>
+      watch("eventType") === "חתונה" && {
+        name: "groom_parents",
+        label: "הורי החתן",
+        type: "text",
+        placeholder: "הורי החתן",
+        span: 6,
+        required: true,
+      },
+    ({ watch }) =>
+      watch("eventType") === "חתונה" && {
+        name: "bride_parents",
+        label: "הורי הכלה",
+        type: "text",
+        placeholder: "הורי הכלה",
+        span: 6,
+        required: true,
+      },
+    ({ watch }) =>
+      watch("eventType") !== "חתונה" && {
+        name: "bride_parents",
+        label: "שמות ההורים",
+        type: "text",
+        placeholder: "שמות ההורים",
+        span: 6,
+        required: true,
+      },
+    ({ watch }) => ({
       name: "reception_time",
       label: "שעת קבלת פנים",
       type: "time",
       placeholder: "שעת קבלת פנים",
       span: 6,
       required: true,
-    },
-    {
-      name: "hupa_time",
-      label: "שעת החופה",
-      type: "time",
-      placeholder: "שעת החופה",
-      span: 6,
-      required: true,
-    },
+    }),
+    ({ watch }) =>
+      watch("eventType") === "חתונה" && {
+        name: "hupa_time",
+        label: "שעת החופה",
+        type: "time",
+        placeholder: "שעת החופה",
+        span: 6,
+        required: true,
+      },
     {
       name: "place",
       label: "מיקום האירוע",
@@ -92,12 +106,6 @@ const StepOne = ({ carouselApi }) => {
       span: 6,
       required: true,
     },
-    {
-      name: "extra",
-      label: "תוספות",
-      type: "textarea",
-      placeholder: "משהו שהייתם רוצים להוסיף",
-    },
   ];
 
   const onSubmit = (data) => {
@@ -108,7 +116,7 @@ const StepOne = ({ carouselApi }) => {
   return (
     <Form
       formClassName="size-full justify-start"
-      inputs={inputs}
+      fields={fields}
       onSubmit={onSubmit}
       submitName="עבור"
     />
