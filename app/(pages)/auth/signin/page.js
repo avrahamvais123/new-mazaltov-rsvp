@@ -31,10 +31,10 @@ export default function SignIn() {
       required: true,
     }, */
 
-  const inputs = [
+  const fields = [
     {
       name: "email",
-      label: "תאריך האירוע",
+      label: "אימייל",
       type: "email",
       placeholder: "אימייל",
       required: true,
@@ -54,7 +54,7 @@ export default function SignIn() {
 
       <Form
         title="כניסה"
-        inputs={inputs}
+        fields={fields}
         onSubmit={onSubmit}
         submitName="כניסה"
         formClassName=""
