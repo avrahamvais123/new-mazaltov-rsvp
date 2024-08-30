@@ -6,7 +6,7 @@ import {
   CarouselContent,
   CarouselItem,
 } from "@/components/ui/carousel";
-import SlideOne from "./SlideOne";
+import SlideDetails from "./SlideDetails";
 import StepsBar from "@/app/ui/StepsBar";
 import SlideTwo from "./SlideTwo";
 import SlideThree from "./SlideThree";
@@ -16,7 +16,7 @@ const stepsData = [
     id: 1,
     name: "פרטי האירוע",
     description: "פרטי האירוע",
-    Component: SlideOne,
+    Component: SlideDetails,
     status: "current",
   },
   {
@@ -58,7 +58,7 @@ export default function Progression() {
     <div className="size-full p-4 overflow-hidden flex flex-col justify-start items-center">
       {/* title and StepsBar */}
       <div className="flex flex-col items-center justify-center gap-5 my-2 md:my-6 mb-10">
-        <h1 className="text-2xl font-medium text-slate-400">יצירת הזמנה</h1>
+        {/* <h1 className="text-2xl font-medium text-slate-400">יצירת הזמנה</h1> */}
         <StepsBar steps={steps} setSteps={setSteps} current={current} />
       </div>
 
@@ -66,9 +66,9 @@ export default function Progression() {
       <Carousel
         options={{ direction: "rtl", watchDrag: false }}
         setApi={(api) => setCarouselApi(api)}
-        className="size-full max-w-sm"
+        className="size-full"
       >
-        <CarouselContent>
+        <CarouselContent className="size-full" WrapperClassName="size-full">
           {steps.map(({ Component }, index) => (
             <CarouselItem key={index}>
               <Component setSteps={setSteps} carouselApi={carouselApi} />

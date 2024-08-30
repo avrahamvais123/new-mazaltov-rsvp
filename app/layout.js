@@ -17,7 +17,7 @@ export default function RootLayout({ children }) {
       <body
         className={cn(
           noto_Sans_Hebrew.className,
-          "size-full flex flex-col items-center"
+          "overflow-hidden size-full flex flex-col items-center"
         )}
       >
         <Main>{children}</Main>

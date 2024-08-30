@@ -1,9 +1,19 @@
 "use client";
 
 import Form from "@/app/ui/Form";
+import { invitation_details_Atom } from "@/lib/jotai";
+import { useAtom } from "jotai";
 import React from "react";
+import { takeScreenshot } from "@/lib/takeScreenshot";
+import DraggableTextBox from "./DraggableTextBox";
+import { take_screenshot } from "@/lib/take_screenshot";
 
 const StepOne = ({ carouselApi }) => {
+  const [invitation_details, setInvitation_details] = useAtom(
+    invitation_details_Atom
+  );
+  console.log("invitation_details: ", invitation_details);
+
   const fields = [
     {
       name: "eventType",
@@ -29,7 +39,7 @@ const StepOne = ({ carouselApi }) => {
       required: true,
     },
     ({ watch }) =>
-      (watch("eventType") === "חתונה" || watch("eventType") === "בר מצווה") && {
+      ["חתונה", "בר מצווה"].includes(watch("eventType")) && {
         name: "groom_name",
         label: "שם החתן",
         type: "text",
@@ -38,7 +48,7 @@ const StepOne = ({ carouselApi }) => {
         required: true,
       },
     ({ watch }) =>
-      (watch("eventType") === "חתונה" || watch("eventType") === "בת מצווה") && {
+      ["חתונה", "בת מצווה"].includes(watch("eventType")) && {
         name: "bride_name",
         label: "שם הכלה",
         type: "text",
@@ -114,12 +124,19 @@ const StepOne = ({ carouselApi }) => {
   };
 
   return (
-    <Form
-      formClassName="size-full justify-start"
-      fields={fields}
-      onSubmit={onSubmit}
-      submitName="עבור"
-    />
+    <div className="size-full flex max-md:flex-col items-center justify-center">
+      <Form
+        formClassName="size-full justify-start"
+        fields={fields}
+        onSubmit={onSubmit}
+        submitName="עבור"
+      />
+      <button onClick={() => take_screenshot("screenshot")}>click</button>
+      <div id="screenshot" className="relative size-96">
+        <DraggableTextBox className="" text={invitation_details.text_1} />
+        <img src="/images/הזמנה לבר מצווה 2 ב.jpg" className="cover" />
+      </div>
+    </div>
   );
 };
 

@@ -1,6 +1,5 @@
 "use client";
 
-import { cn } from "@/lib/utils";
 import React from "react";
 import Header from "./Header";
 import { SessionProvider } from "next-auth/react";

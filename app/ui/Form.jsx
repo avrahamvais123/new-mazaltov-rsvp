@@ -19,11 +19,17 @@ const MyForm = forwardRef(
         ref={ref}
         onSubmit={handleSubmit(onSubmit)}
         className={cn(
-          "w-full h-fit max-w-96 p-4 rounded flex flex-col gap-4 relative",
+          "w-full flex-grow max-w-96 p-4 rounded flex flex-col gap-4 relative",
           formClassName
         )}
       >
-        <div className="h-72 md:h-auto grid grid-cols-12 gap-4 overflow-y-auto pt-2">
+        <div
+          className={cn(
+            "overflow-y-auto",
+            "h-72 md:h-auto pt-2",
+            "grid grid-cols-12 gap-4"
+          )}
+        >
           {fields.map((fieldData, i) => {
             const field =
               typeof fieldData === "function"
