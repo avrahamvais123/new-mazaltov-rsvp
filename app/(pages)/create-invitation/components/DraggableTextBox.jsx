@@ -1,91 +1,64 @@
-"use client";
-
-import { cn } from "@/lib/utils";
-import React, { useState, useEffect, useRef } from "react";
-import Draggable from "react-draggable";
-import { ResizableBox } from "react-resizable";
+import React, { useState, useRef } from "react";
+import { Rnd } from "react-rnd";
 import "react-resizable/css/styles.css";
 
 const DraggableResizableTextBox = (props) => {
-  const [isShiftPressed, setIsShiftPressed] = useState(false);
-  const [isHovered, setIsHovered] = useState(false); // שמירה על מצב ההובר
-  const [fontSize, setFontSize] = useState(16); // גודל פונט התחלתי
-  const sizeRef = useRef({ width: 200, height: 100 }); // שמירה על הגודל הקודם של התיבה
+  const [fontSize, setFontSize] = useState(16);
+  const [size, setSize] = useState({ width: 200, height: 100 });
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+  const textAreaRef = useRef(null);
 
-  useEffect(() => {
-    const handleKeyDown = (event) => {
-      if (event.key === "Shift") {
-        setIsShiftPressed(true);
-      }
-    };
+  const handleResize = (e, direction, ref, delta, position) => {
+    const newWidth = parseFloat(ref.style.width);
+    const newHeight = parseFloat(ref.style.height);
 
-    const handleKeyUp = (event) => {
-      if (event.key === "Shift") {
-        setIsShiftPressed(false);
-      }
-    };
-
-    window.addEventListener("keydown", handleKeyDown);
-    window.addEventListener("keyup", handleKeyUp);
-
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown);
-      window.removeEventListener("keyup", handleKeyUp);
-    };
-  }, []);
-
-  const handleResize = (event, { size }) => {
-    if (isShiftPressed) {
-      // שינוי הפונט רק אם גודל התיבה השתנה
-      const widthRatio = size.width / sizeRef.current.width;
+    if (direction === "left" || direction === "right") {
+      // התאמה אוטומטית לגובה השורות רק בעת גרירת הידיות הצדדיות
+      textAreaRef.current.style.width = `${newWidth}px`;
+      textAreaRef.current.style.height = "auto";
+      textAreaRef.current.style.height = `${textAreaRef.current.scrollHeight}px`;
+      setSize({ width: newWidth, height: textAreaRef.current.scrollHeight });
+    } else {
+      // שמירה על הפרופורציה של הטקסט בעת גרירת הפינות
+      const widthRatio = newWidth / size.width;
       const newFontSize = fontSize * widthRatio;
       setFontSize(newFontSize);
+
+      // שמירה על הפרופורציה באמצעות חישוב הגובה החדש בהתאם לרוחב החדש
+      const newHeightBasedOnWidth = newWidth * (size.height / size.width);
+      setSize({ width: newWidth, height: newHeightBasedOnWidth });
     }
-    sizeRef.current = size; // שמירה על הגודל הנוכחי בתור גודל קודם
+    setPosition({ x: position.x, y: position.y });
   };
 
   return (
-    <div className="absolute inset-0 z-10">
-      <Draggable handle=".handle">
-        <div
-          className="relative"
-          onMouseEnter={() => setIsHovered(true)}
-          onMouseLeave={() => setIsHovered(false)}
-        >
-          <ResizableBox
-            width={200}
-            height={100}
-            minConstraints={[100, 50]}
-            maxConstraints={[500, 300]}
-            resizeHandles={["sw"]}
-            className={cn(
-              "relative",
-              isHovered ? "border border-dashed" : "border-none",
-              props?.className
-            )}
-            onResize={handleResize}
-            handle={
-              isHovered && (
-                <span className="absolute -bottom-2 -left-2 size-5 bg-white cursor-nwse-resize" />
-              )
-            }
-          >
-            {/* ידית לגרירה */}
-            {isHovered && (
-              <div className="handle absolute -top-2 -right-2 size-5 bg-white p-1 cursor-move" />
-            )}
-
-            {/* תיבת הטקסט */}
-            <textarea
-              rows="4"
-              className="size-full text-white text-center resize-none bg-transparent"
-              style={{ fontSize: `${fontSize}px` }}
-              placeholder="גרור אותי"
-            />
-          </ResizableBox>
-        </div>
-      </Draggable>
-    </div>
+    <Rnd
+      size={{ width: size.width, height: size.height }}
+      position={{ x: position.x, y: position.y }}
+      onDragStop={(e, d) => {
+        setPosition({ x: d.x, y: d.y });
+      }}
+      onResize={handleResize}
+      minWidth={100}
+      minHeight={50}
+      bounds="parent"
+      className={`absolute z-10 border border-transparent border-dashed hover:border-white ${props?.className}`}
+      resizeHandleStyles={{
+        bottomRight: { cursor: "nwse-resize" },
+        bottomLeft: { cursor: "nesw-resize" },
+        topRight: { cursor: "nesw-resize" },
+        topLeft: { cursor: "nwse-resize" },
+        left: { cursor: "ew-resize" },
+        right: { cursor: "ew-resize" },
+      }}
+    >
+      <textarea
+        ref={textAreaRef}
+        className="w-full text-white text-center resize-none bg-transparent overflow-hidden"
+        style={{ fontSize: `${fontSize}px` }}
+        placeholder="גרור אותי"
+      />
+    </Rnd>
   );
 };
 

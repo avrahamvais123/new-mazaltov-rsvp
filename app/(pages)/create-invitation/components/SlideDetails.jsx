@@ -6,7 +6,6 @@ import { useAtom } from "jotai";
 import React from "react";
 import { takeScreenshot } from "@/lib/takeScreenshot";
 import DraggableTextBox from "./DraggableTextBox";
-import { take_screenshot } from "@/lib/take_screenshot";
 
 const StepOne = ({ carouselApi }) => {
   const [invitation_details, setInvitation_details] = useAtom(
@@ -131,7 +130,7 @@ const StepOne = ({ carouselApi }) => {
         onSubmit={onSubmit}
         submitName="עבור"
       />
-      <button onClick={() => take_screenshot("screenshot")}>click</button>
+      <button onClick={() => takeScreenshot("screenshot")}>click</button>
       <div id="screenshot" className="relative size-96">
         <DraggableTextBox className="" text={invitation_details.text_1} />
         <img src="/images/הזמנה לבר מצווה 2 ב.jpg" className="cover" />

@@ -58,7 +58,6 @@ export default function Progression() {
     <div className="size-full p-4 overflow-hidden flex flex-col justify-start items-center">
       {/* title and StepsBar */}
       <div className="flex flex-col items-center justify-center gap-5 my-2 md:my-6 mb-10">
-        {/* <h1 className="text-2xl font-medium text-slate-400">יצירת הזמנה</h1> */}
         <StepsBar steps={steps} setSteps={setSteps} current={current} />
       </div>
 

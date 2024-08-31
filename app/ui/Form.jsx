@@ -39,13 +39,17 @@ const MyForm = forwardRef(
             if (!field) return;
 
             const value = watch(field?.name);
+            //console.log('field: ', field);
+            console.log('field: ', field?.span);
+            const color = "red";
 
             return (
               <div
                 key={i}
                 className={cn(
+                  `relative max-md:col-span-12`,
                   `col-span-${field?.span || 12}`,
-                  `relative max-md:col-span-12`
+                  `bg-${color}-100`,
                 )}
               >
                 {field?.type === "select" ? (
