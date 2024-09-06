@@ -112,7 +112,7 @@ const StepOne = ({ carouselApi }) => {
       label: "כתובת האולם",
       type: "text",
       placeholder: "כתובת האולם",
-      span: 6,
+      span: "col-span-6",
       required: true,
     },
   ];

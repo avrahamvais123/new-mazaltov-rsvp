@@ -88,4 +88,13 @@
   .test {
     @apply border-4 border-red-600;
   }
+  .flex-center {
+    @apply flex items-center justify-center;
+  }
+  .flex-col-center {
+    @apply flex flex-col items-center justify-center;
+  }
+  .center {
+    @apply items-center justify-center;
+  }
 }
