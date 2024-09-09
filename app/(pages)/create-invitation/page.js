@@ -1,8 +1,7 @@
 import React from "react";
-import Progression from "./components/Progression";
 
 const Page = () => {
-  return <Progression />;
+  return <>Progression</>;
 };
 
 export default Page;
