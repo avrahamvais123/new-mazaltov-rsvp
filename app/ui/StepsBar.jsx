@@ -1,8 +1,8 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { CheckIcon } from "@heroicons/react/20/solid";
 import { useEffect } from "react";
+import { Tick02Icon } from "@/icons/icons";
 
 const Text = ({ step }) => {
   return (
@@ -51,7 +51,7 @@ export default function NewSteps({ steps, setSteps, current }) {
                   </div>
 
                   <div className="relative flex h-8 w-8 items-center justify-center rounded-full bg-indigo-600 hover:bg-indigo-900">
-                    <CheckIcon className="h-5 w-5 text-white" />
+                    <Tick02Icon className="h-5 w-5 text-white" />
                     <Text step={step} />
                   </div>
                 </>
