@@ -13,10 +13,12 @@ export default function MyUploader() {
     return { url: "https://httpbin.org/post" };
   };
 
+  const a = "";
+  
   const Preview = ({ meta }) => {
     const { name, percent, status, previewUrl } = meta;
-    console.log('percent: ', percent);
-    
+    console.log("percent: ", percent);
+
     return (
       <div className="w-full bg-slate-100 p-2 rounded-sm flex-center justify-start gap-4">
         <img src={previewUrl} alt={name} className="size-10 object-cover" />
