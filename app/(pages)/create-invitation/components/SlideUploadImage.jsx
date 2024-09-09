@@ -1,10 +1,11 @@
 "use client";
 
 import DropZoneUploader from "@/app/ui/DropZoneUploader";
+import MyUploader from "@/app/ui/MyUploader";
 import React from "react";
 
 const SlideUploadImage = () => {
-  return <DropZoneUploader />;
+  return <MyUploader />;
 };
 
 export default SlideUploadImage;

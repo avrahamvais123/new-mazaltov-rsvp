@@ -11,16 +11,27 @@ export default function DropZoneUploader() {
   console.log("filePreviews: ", filePreviews);
   console.log("filePreviews?.length: ", filePreviews?.length > 0);
 
-  const onDrop = useCallback((acceptedFiles) => {
-    const previews = acceptedFiles.map((file) => {
-      return {
-        preview: URL.createObjectURL(file),
-        name: file.name,
-        size: (file.size / 1048576).toFixed(2), // המרת Bytes ל-MB ועיגול לשתי ספרות
-      };
-    });
-    setFilePreviews((prevPreviews) => [...prevPreviews, ...previews]);
-  }, []);
+  const onDrop = useCallback(
+    (acceptedFiles) => {
+      if (filePreviews.length >= 2) {
+        alert("ניתן להעלות עד שני קבצים בלבד.");
+        return;
+      }
+
+      const previews = acceptedFiles
+        .slice(0, 2 - filePreviews.length)
+        .map((file) => {
+          return {
+            preview: URL.createObjectURL(file),
+            name: file.name,
+            size: (file.size / 1048576).toFixed(2), // המרת Bytes ל-MB ועיגול לשתי ספרות
+          };
+        });
+
+      setFilePreviews((prevPreviews) => [...prevPreviews, ...previews]);
+    },
+    [filePreviews]
+  );
 
   const removeFile = (index) => {
     setFilePreviews((prevPreviews) =>
@@ -30,20 +41,18 @@ export default function DropZoneUploader() {
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
+    maxFiles: 2, // הגבלת מספר הקבצים לשני קבצים
   });
 
   return (
     <div
       className={cn(
-        "size-full md:w-[30rem] py-6 overflow-hidden",
-        "flex-col-center gap-6"
+        "size-full py-6 overflow-hidden",
+        "flex-col-center justify-start gap-6"
       )}
     >
-      {/* title */}
-      <h1 className="text-2xl text-indigo-600">העלה הזמנה</h1>
-
       {/* DropZone */}
-      {filePreviews?.length == 0 ? (
+      {filePreviews?.length === 0 ? (
         <div
           {...getRootProps()}
           className={cn(
@@ -68,24 +77,37 @@ export default function DropZoneUploader() {
           )}
         </div>
       ) : (
-        <div className="size-full overflow-hidden flex-col-center gap-2 test">
+        <div className="size-full overflow-hidden flex-col-center gap-2">
           {/* preview files */}
           <div
             className={cn(
-              "size-full", 
-              "grid grid-rows-1 items-center gap-2",
-              filePreviews?.length == 1 ? "grid-cols-1" : "grid-cols-2"
+              "size-full",
+              "grid grid-rows-1 items-center justify-items-center	 gap-2",
+              filePreviews?.length === 1 ? "grid-cols-1" : "grid-cols-2"
             )}
           >
             {filePreviews?.map((file, index) => {
               return (
-                <img key={index} src={file?.preview} className="size-full" />
+                <div className="relative">
+                  <button
+                    onClick={() => removeFile(index)}
+                    className="absolute -top-2 -right-2"
+                  >
+                    <CancelCircleIcon className="size-5 text-red-600 hover:text-red-800" />
+                  </button>
+
+                  <img
+                    key={index}
+                    src={file?.preview}
+                    className="max-w-full max-h-[300px] h-auto object-contain"
+                  />
+                </div>
               );
             })}
           </div>
 
           {/* button submit */}
-          <button className="size-full px-4 py-2 rounded-sm bg-indigo-800 text-indigo-50">
+          <button className="px-6 py-1.5 rounded-sm bg-indigo-800 text-indigo-50">
             המשך
           </button>
         </div>
