@@ -88,7 +88,7 @@ export default function DropZoneUploader() {
           >
             {filePreviews?.map((file, index) => {
               return (
-                <div className="relative">
+                <div key={index} className="relative">
                   <button
                     onClick={() => removeFile(index)}
                     className="absolute -top-2 -right-2"
