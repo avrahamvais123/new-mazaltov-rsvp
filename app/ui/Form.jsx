@@ -87,5 +87,6 @@ const MyForm = forwardRef(
     );
   }
 );
+MyForm.displayName = "MyForm";
 
 export default MyForm;
