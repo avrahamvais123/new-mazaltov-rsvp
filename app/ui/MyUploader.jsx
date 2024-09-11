@@ -21,7 +21,7 @@ export default function MyUploader() {
     console.log("percent: ", percent);
 
     return (
-      <div className="w-full md:w-96 bg-slate-100 p-2 rounded-sm flex-center justify-start gap-4">
+      <div className="w-full md:w-96 bg-slate-50 p-2 rounded-sm flex-center justify-start gap-4">
         <img src={previewUrl} alt={name} className="size-10 object-cover" />
         <div className="flex flex-col overflow-hidden">
           <span className=" text-slate-600 truncate whitespace-nowrap text-ellipsis">
