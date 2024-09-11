@@ -6,6 +6,7 @@ import Dropzone from "react-dropzone-uploader";
 import { FileUploadIcon } from "../icons/icons";
 import { cn } from "@/lib/utils";
 import { getDroppedOrSelectedFiles } from "html5-file-selector";
+import { CheckmarkCircle01Icon as CheckIcon } from "@/app/icons/icons";
 
 export default function MyUploader() {
   const [uploadedFiles, setUploadedFiles] = useState([]);
@@ -16,23 +17,46 @@ export default function MyUploader() {
   };
 
   const Preview = ({ meta }) => {
+    console.log("meta: ", meta);
     const { name, percent, status, previewUrl } = meta;
-    console.log("previewUrl: ", previewUrl);
-    console.log("percent: ", percent);
 
     return (
-      <div className="w-full md:w-96 bg-slate-50 p-2 rounded-sm flex-center justify-start gap-4">
-        <img src={previewUrl} alt={name} className="size-10 object-cover" />
+      <div
+        className={cn(
+          "w-full md:w-96 p-2",
+          "bg-slate-50 border border-slate-200 rounded-sm",
+          "flex-center justify-start gap-4",
+          status === "done" && "bg-lime-50 border-lime-200"
+        )}
+      >
+        <img
+          src={previewUrl}
+          alt={name}
+          className="size-10 object-cover rounded-sm"
+        />
+        {/* text */}
         <div className="flex flex-col overflow-hidden">
-          <span className=" text-slate-600 truncate whitespace-nowrap text-ellipsis">
+          {/* שם הקובץ */}
+          <span
+            className={cn(
+              status === "done" ? "text-lime-600" : "text-slate-400",
+              "truncate whitespace-nowrap text-ellipsis"
+            )}
+          >
             {name}
           </span>
+
           {/* הצגת אחוזים רק בזמן העלאה */}
-          {status === "uploading" && <span>{Math.round(percent)}% עלה</span>}
-          {status === "done" && (
-            <span className="text-lime-600">העלאה הושלמה</span>
-          )}
+          {status === "uploading" ? (
+            <span className="text-sm">{Math.round(percent)}% עלה</span>
+          ) : status === "done" ? (
+            <span className="text-lime-600 rounded-sm text-xs font-bold">
+              העלאה הושלמה
+            </span>
+          ) : null}
         </div>
+
+        <CheckIcon className="size-6 text-lime-600" />
       </div>
     );
   };

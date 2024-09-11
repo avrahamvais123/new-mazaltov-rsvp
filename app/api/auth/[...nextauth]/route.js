@@ -2,7 +2,10 @@ import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
 
+console.log("NEXTAUTH_SECRET:", process.env.NEXTAUTH_SECRET);
+
 const handler = NextAuth({
+  secret: process.env.NEXTAUTH_SECRET, // הוסף את זה ישירות כאן
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID,
