@@ -38,7 +38,7 @@ export default function SignIn() {
       type: "email",
       placeholder: "אימייל",
       required: true,
-      span: 6,
+      span: 12,
     },
     {
       name: "password",
@@ -46,7 +46,7 @@ export default function SignIn() {
       type: "password",
       placeholder: "סיסמה",
       required: true,
-      span: 6,
+      span: 12,
     },
   ];
 
@@ -60,9 +60,11 @@ export default function SignIn() {
           fields={fields}
           onSubmit={onSubmit}
           submitName="כניסה"
-          formClassName=""
+          formClassName="md:min-w-96 max-h-80"
+          fieldsClassName="rounded-sm"
+          submitClassName="rounded-sm"
         >
-          <div className="relative w-full h-[1px] my-4 bg-slate-200">
+          <div className="relative h- w-full h-[1px] my-4 bg-slate-200">
             <span className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white px-2 text-sm text-gray-500">
               או
             </span>
@@ -71,7 +73,7 @@ export default function SignIn() {
           {/* google button */}
           <button
             type="button"
-            className="w-full px-4 py-2 border flex justify-center items-center gap-2"
+            className="w-full rounded-sm px-4 py-2 border text-slate-400 flex justify-center items-center gap-2"
             onClick={() =>
               signIn("google", {
                 callbackUrl: "/",

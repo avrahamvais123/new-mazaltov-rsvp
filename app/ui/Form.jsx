@@ -5,7 +5,18 @@ import Input from "./Input";
 import MySelect from "./MySelect";
 
 const MyForm = forwardRef(
-  ({ children, formClassName, fields, onSubmit, submitName }, ref) => {
+  (
+    {
+      children,
+      formClassName,
+      submitClassName,
+      fieldsClassName,
+      fields,
+      onSubmit,
+      submitName,
+    },
+    ref
+  ) => {
     const {
       register,
       handleSubmit,
@@ -35,22 +46,17 @@ const MyForm = forwardRef(
               typeof fieldData === "function"
                 ? fieldData({ watch, fields })
                 : fieldData;
-
             if (!field) return;
 
             const value = watch(field?.name);
-            //console.log('field: ', field);
-            console.log('field: ', field?.span);
-            const color = "red";
 
             return (
               <div
                 key={i}
-                className={cn(
-                  `relative max-md:col-span-12`,
-                  `col-span-${field?.span || 12}`,
-                  `bg-${color}-100`,
-                )}
+                style={{
+                  gridColumn: `span ${field?.span || 12} / span 12`,
+                }}
+                className="relative max-md:col-span-12"
               >
                 {field?.type === "select" ? (
                   <MySelect
@@ -59,6 +65,8 @@ const MyForm = forwardRef(
                     value={value}
                     errors={errors}
                     setValue={setValue}
+                    fieldsClassName={fieldsClassName}
+                    className={fieldData?.className}
                   />
                 ) : (
                   <Input
@@ -66,6 +74,8 @@ const MyForm = forwardRef(
                     field={field}
                     register={register}
                     errors={errors}
+                    fieldsClassName={fieldsClassName}
+                    className={fieldData?.className}
                   />
                 )}
               </div>
@@ -78,7 +88,11 @@ const MyForm = forwardRef(
         <div className="w-full sticky bottom-0 bg-white py-2">
           <button
             type="submit"
-            className="w-full bg-indigo-800 text-indigo-50 px-4 py-2"
+            className={cn(
+              "w-full px-4 py-2",
+              "bg-indigo-800 text-indigo-50",
+              submitClassName
+            )}
           >
             {submitName}
           </button>

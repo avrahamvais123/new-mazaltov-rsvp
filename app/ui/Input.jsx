@@ -3,7 +3,14 @@
 import { cn } from "@/lib/utils";
 import React from "react";
 
-const Input = ({ value, field, errors, register = () => {} }) => {
+const Input = ({
+  value,
+  field,
+  className,
+  fieldsClassName,
+  errors,
+  register = () => {},
+}) => {
   const required =
     typeof field?.required === "string"
       ? field.required
@@ -27,7 +34,9 @@ const Input = ({ value, field, errors, register = () => {} }) => {
         className={cn(
           "w-full border px-4 py-2 peer",
           "focus:outline-indigo-800",
-          errors[field?.name] && "border-red-500"
+          errors[field?.name] && "border-red-500",
+          fieldsClassName,
+          className
         )}
       />
       <label
