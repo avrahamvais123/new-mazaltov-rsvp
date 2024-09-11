@@ -38,6 +38,7 @@ export default function SignIn() {
       type: "email",
       placeholder: "אימייל",
       required: true,
+      span: 6,
     },
     {
       name: "password",
@@ -45,45 +46,48 @@ export default function SignIn() {
       type: "password",
       placeholder: "סיסמה",
       required: true,
+      span: 6,
     },
   ];
 
   return (
-    <div className="size-full flex flex-col items-center justify-center">
-      <h2 className="text-2xl text-center text-slate-400">כניסה</h2>
+    <div className="size-full flex-col-center bg-slate-50">
+      <div className="bg-white rounded-sm p-4">
+        <h2 className="text-2xl text-center text-slate-400 font-bold">כניסה</h2>
 
-      <Form
-        title="כניסה"
-        fields={fields}
-        onSubmit={onSubmit}
-        submitName="כניסה"
-        formClassName=""
-      >
-        <div className="relative w-full h-[1px] my-4 bg-slate-200">
-          <span className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white px-2 text-sm text-gray-500">
-            או
-          </span>
-        </div>
-
-        {/* google button */}
-        <button
-          type="button"
-          className="w-full px-4 py-2 border flex justify-center items-center gap-2"
-          onClick={() =>
-            signIn("google", {
-              callbackUrl: "/",
-            })
-          }
+        <Form
+          title="כניסה"
+          fields={fields}
+          onSubmit={onSubmit}
+          submitName="כניסה"
+          formClassName=""
         >
-          <img
-            src="/icons/google-icon.png"
-            alt="Google Icon"
-            width={20}
-            height={20}
-          />
-          כניסה עם גוגל
-        </button>
-      </Form>
+          <div className="relative w-full h-[1px] my-4 bg-slate-200">
+            <span className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white px-2 text-sm text-gray-500">
+              או
+            </span>
+          </div>
+
+          {/* google button */}
+          <button
+            type="button"
+            className="w-full px-4 py-2 border flex justify-center items-center gap-2"
+            onClick={() =>
+              signIn("google", {
+                callbackUrl: "/",
+              })
+            }
+          >
+            <img
+              src="/icons/google-icon.png"
+              alt="Google Icon"
+              width={20}
+              height={20}
+            />
+            כניסה עם גוגל
+          </button>
+        </Form>
+      </div>
     </div>
   );
 }

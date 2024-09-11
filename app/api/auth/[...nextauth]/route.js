@@ -2,10 +2,8 @@ import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import CredentialsProvider from "next-auth/providers/credentials";
 
-console.log("NEXTAUTH_SECRET:", process.env.NEXTAUTH_SECRET);
-
 const handler = NextAuth({
-  secret: process.env.NEXTAUTH_SECRET, // הוסף את זה ישירות כאן
+  secret: process.env.NEXTAUTH_SECRET,
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID,
@@ -18,6 +16,7 @@ const handler = NextAuth({
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
+        console.log("credentials: ", credentials);
         // כאן תוכל לבדוק את אימות המשתמש
         /* const user = await someLoginFunction(
           credentials.email,
