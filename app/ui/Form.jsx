@@ -14,6 +14,8 @@ const MyForm = forwardRef(
       fields,
       onSubmit,
       submitName,
+      success,
+      error,
     },
     ref
   ) => {
@@ -30,17 +32,29 @@ const MyForm = forwardRef(
         ref={ref}
         onSubmit={handleSubmit(onSubmit)}
         className={cn(
-          "w-full flex-grow max-w-96 p-4 rounded flex flex-col gap-4 relative",
+          "w-full h-fit max-w-96 p-4 rounded flex flex-col gap-4 relative",
           formClassName
         )}
       >
         <div
           className={cn(
             "overflow-y-auto",
-            "h-72 md:h-auto pt-2",
+            "md:h-auto pt-2",
             "grid grid-cols-12 gap-4"
           )}
         >
+          {/* alerts */}
+          {success && (
+            <span className="col-span-12 py-2 text-xs text-center bg-lime-50 text-lime-500">
+              {success}
+            </span>
+          )}
+          {error && (
+            <span className="col-span-12 py-2 text-xs text-center bg-red-50 text-red-500">
+              {error}
+            </span>
+          )}
+
           {fields.map((fieldData, i) => {
             const field =
               typeof fieldData === "function"

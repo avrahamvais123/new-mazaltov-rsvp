@@ -1,44 +1,60 @@
-// app/auth/signin/page.js
 "use client";
 
 import Form from "@/app/ui/Form";
 import { cn } from "@/lib/utils";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { userAtom } from "@/lib/jotai";
+import { userAtom, eventAtom } from "@/lib/jotai";
 import { useAtom } from "jotai";
+import axios from "axios";
 import { useState } from "react";
 
-export default function SignIn() {
+export default function SignUp() {
   const [user, setUser] = useAtom(userAtom);
+  const [event, setEvent] = useAtom(eventAtom);
   const [success, setSuccess] = useState();
   const [error, setError] = useState();
 
   const router = useRouter();
 
   const onSubmit = async (data) => {
-    const result = await signIn("credentials", {
-      redirect: false,
-      email: data?.email,
-      password: data?.password,
-      callbackUrl: "/",
-    });
+    console.log("data: ", data);
+    const { name, email, password } = data;
 
-    console.log("result: ", result);
+    try {
+      const response = await axios.post("/api/auth/signup", {
+        name,
+        email,
+        password,
+      });
 
-    if (result?.error) {
-      // handle error
-      console.error("result?.error: ", result?.error);
-      if (result?.error === "CredentialsSignin") {
-        setError("האימייל או הסיסמה אינם נכונים");
+      console.log("response: ", response);
+      signIn();
+    } catch (error) {
+      if (error?.response) {
+        // הבעיה מהשרת
+        console.error(
+          "error?.response?.data?.message: ",
+          error?.response?.data?.message
+        );
+        setError(error?.response?.data?.message);
+      } else {
+        // בעיה כללית יותר
+        console.error("An error occurred. Please try again.");
+        setError("An error occurred. Please try again.");
       }
-    } else {
-      // redirect to callbackUrl
-      router.push(result?.url);
     }
   };
 
   const fields = [
+    {
+      name: "name",
+      label: "שם",
+      type: "name",
+      placeholder: "שם",
+      required: true,
+      span: 12,
+    },
     {
       name: "email",
       label: "אימייל",
@@ -66,7 +82,7 @@ export default function SignIn() {
           "bg-white rounded-sm p-4"
         )}
       >
-        <h2 className="text-2xl text-center text-slate-400 font-bold">כניסה</h2>
+        <h2 className="text-2xl text-center text-slate-400 font-bold">הרשמה</h2>
         <span className="text-xs text-center text-slate-400">
           משתמש שנרשם דרך גוגל יש להיכנס רק דרך גוגל ומי שנרשם ידנית עם מייל
           וסיסמה צריך להיכנס גם כן רק בדרך זו
@@ -76,12 +92,12 @@ export default function SignIn() {
           title="כניסה"
           fields={fields}
           onSubmit={onSubmit}
-          submitName="כניסה"
+          submitName="הרשמה"
           formClassName="p-0"
           fieldsClassName="rounded-sm"
           submitClassName="rounded-sm"
-          success={success}
           error={error}
+          success={success}
         >
           <div className="relative h- w-full h-[1px] my-4 bg-slate-200">
             <span className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white px-2 text-sm text-gray-500">
@@ -95,7 +111,7 @@ export default function SignIn() {
             className="w-full rounded-sm px-4 py-2 border text-slate-400 flex justify-center items-center gap-2"
             onClick={() =>
               signIn("google", {
-                callbackUrl: "/",
+                callbackUrl: "/auth/signin",
               })
             }
           >
@@ -105,19 +121,17 @@ export default function SignIn() {
               width={20}
               height={20}
             />
-            כניסה עם גוגל
+            הרשמה עם גוגל
           </button>
         </Form>
 
-        {/* להרשמה */}
+        {/* לכניסה */}
         <span className="text-xs text-center text-slate-400">
-          עדיין לא רשומים לחצו
+          כבר רשומים לחצו
           <button
             type="button"
             className="mr-1 text-indigo-600"
-            onClick={() => {
-              router.push("/auth/signup");
-            }}
+            onClick={signIn}
           >
             כאן
           </button>

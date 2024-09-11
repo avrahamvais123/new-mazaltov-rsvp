@@ -24,9 +24,34 @@ const Header = () => {
   useEffect(() => {
     if (session) {
       console.log("session: ", session);
-      setUser({ ...user, ...session.user });
+      const { user } = session;
+      //setUser({ ...user, ...session.user });
+
+      setUser((prev) => ({
+        ...prev,
+        id: user?.id,
+        name: user?.name,
+        email: user?.email,
+        image: user?.image
+      }));
     }
   }, [session]);
+
+  const GenerateImage = () => {
+    if (user?.name !== "אורח") {
+      if (user?.image) {
+        return <img src={user?.image} className="size-10 rounded-full" />;
+      } else {
+        return (
+          <div className="size-10 rounded-full bg-indigo-600 text-indigo-50 text-2xl flex-center">
+            {user?.name[0]}
+          </div>
+        );
+      }
+    } else {
+      return <UserCircleIcon className="text-slate-300" />;
+    }
+  };
 
   return (
     <>
@@ -54,11 +79,7 @@ const Header = () => {
         {/* avatar */}
         <DropdownMenu dir="rtl">
           <DropdownMenuTrigger>
-            {user?.image ? (
-              <img src={user?.image} className="size-10 rounded-full" />
-            ) : (
-              <UserCircleIcon className="text-slate-300" />
-            )}
+            <GenerateImage />
           </DropdownMenuTrigger>
 
           <DropdownMenuContent className="ml-2">
