@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   Sheet,
   SheetContent,
@@ -27,27 +27,32 @@ const Menu = ({ open, setOpen }) => {
   const [user, setUser] = useAtom(userAtom);
   const { data: session } = useSession();
   const pathname = usePathname();
+  const router = useRouter();
 
   const links = [
     {
       href: "/",
       Text: (props) => <span {...props}>בית</span>,
       Icon: (props) => <Home09Icon {...props} />,
+      onClick: () => setOpen(false),
     },
     {
       href: "/create-invitation",
       Text: (props) => <span {...props}>יצירת הזמנה</span>,
       Icon: (props) => <FileAddIcon {...props} />,
+      onClick: () => setOpen(false),
     },
     {
       href: "/rsvp",
       Text: (props) => <span {...props}>אישורי הגעה</span>,
       Icon: (props) => <MailOpenIcon {...props} />,
+      onClick: () => setOpen(false),
     },
     {
       href: "/settings",
       Text: (props) => <span {...props}>הגדרות</span>,
       Icon: (props) => <Settings04Icon {...props} />,
+      onClick: () => setOpen(false),
     },
     {
       href: "/auth/signin",
@@ -83,13 +88,12 @@ const Menu = ({ open, setOpen }) => {
                 typeof checkActive === "function"
                   ? checkActive()
                   : pathname === href;
-
-              const Component = onClick ? "button" : Link;
+              console.log("isActive: ", isActive);
 
               return (
-                <Component
-                  href={onClick ? undefined : href}
+                <Link
                   key={i}
+                  href={href}
                   onClick={onClick}
                   className={cn(
                     "group w-full px-4 py-2 flex gap-4 items-center",
@@ -113,7 +117,7 @@ const Menu = ({ open, setOpen }) => {
                         : "text-indigo-400 group-hover:text-indigo-50"
                     )}
                   />
-                </Component>
+                </Link>
               );
             })}
           </div>
