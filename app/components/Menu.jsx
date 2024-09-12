@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import {
   Sheet,
   SheetContent,
@@ -19,15 +19,14 @@ import {
   Settings04Icon,
   UserCircleIcon,
 } from "../icons/icons";
-import { useAtom } from "jotai";
+import { useAtomValue } from "jotai";
 import { userAtom } from "@/lib/jotai";
 import { cn } from "@/lib/utils";
 
 const Menu = ({ open, setOpen }) => {
-  const [user, setUser] = useAtom(userAtom);
+  const user = useAtomValue(userAtom);
   const { data: session } = useSession();
   const pathname = usePathname();
-  const router = useRouter();
 
   const links = [
     {
@@ -59,7 +58,6 @@ const Menu = ({ open, setOpen }) => {
       Text: (props) => <span {...props}>{session ? "יציאה" : "כניסה"}</span>,
       Icon: (props) => <Login02Icon {...props} />,
       onClick: session ? signOut : () => signIn(),
-      checkActive: () => (session ? false : pathname.includes("/auth/signin")), // Check if the current path matches the signin path
     },
   ];
 
@@ -83,40 +81,40 @@ const Menu = ({ open, setOpen }) => {
           <SheetDescription className="hidden" />
 
           <div className="text-right flex flex-col items-start">
-            {links.map(({ Icon, href, Text, onClick, checkActive }, i) => {
-              const isActive =
-                typeof checkActive === "function"
-                  ? checkActive()
-                  : pathname === href;
-              console.log("isActive: ", isActive);
+            {links.map(({ Icon, href, Text, onClick }) => {
+              const isActive = pathname === href;
 
               return (
                 <Link
-                  key={i}
+                  key={href}
                   href={href}
                   onClick={onClick}
-                  className={cn(
-                    "group w-full px-4 py-2 flex gap-4 items-center",
-                    isActive
-                      ? "bg-indigo-700 text-indigo-50"
-                      : "hover:bg-indigo-700 group-hover:text-indigo-50"
-                  )}
+                  className="w-full group"
                 >
-                  <Icon
+                  <div
                     className={cn(
-                      "size-5",
+                      "w-full px-4 py-2 flex gap-4 items-center",
                       isActive
-                        ? "text-indigo-50"
-                        : "text-indigo-400 group-hover:text-indigo-50"
+                        ? "bg-indigo-700 text-indigo-50"
+                        : "hover:bg-indigo-700/30 group-active:bg-indigo-700"
                     )}
-                  />
-                  <Text
-                    className={cn(
-                      isActive
-                        ? "text-indigo-50"
-                        : "text-indigo-400 group-hover:text-indigo-50"
-                    )}
-                  />
+                  >
+                    <Icon
+                      className={cn(
+                        "size-5",
+                        isActive
+                          ? "text-indigo-50"
+                          : "text-indigo-400 group-active:text-indigo-50"
+                      )}
+                    />
+                    <Text
+                      className={
+                        isActive
+                          ? "text-indigo-50"
+                          : "text-indigo-400 group-active:text-indigo-50"
+                      }
+                    />
+                  </div>
                 </Link>
               );
             })}
