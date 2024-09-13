@@ -28,7 +28,7 @@ export default function MyUploader({ setSteps, carouselApi }) {
   };
 
   const Preview = (props) => {
-    console.log("props: ", props);
+    //console.log("props: ", props);
 
     const { cancel, restart, remove, xhr, file, meta } = props?.fileWithMeta;
     const { name, percent, status, previewUrl } = meta;
@@ -46,7 +46,7 @@ export default function MyUploader({ setSteps, carouselApi }) {
           {status === "uploading" ? (
             <span className="text-sm">{Math.round(percent)}% עלה</span>
           ) : status === "done" ? (
-            <span className="text-lime-600 flex-center justify-start gap-2 rounded-sm text-xs font-bold">
+            <span className="text-lime-600 flex-center justify-start gap-1 rounded-sm text-xs font-bold">
               <CheckIcon className="size-4 text-lime-600" />
               העלאה הושלמה
             </span>
@@ -98,11 +98,18 @@ export default function MyUploader({ setSteps, carouselApi }) {
   };
 
   const Input = (props) => {
-    const { accept, onFiles, files, getFilesFromEvent } = props;
+    //console.log("props from Input: ", props);
+    const { accept, onFiles, files, getFilesFromEvent, extra } = props;
+    const { active } = extra;
 
     return (
       <div className="flex flex-col justify-center items-center gap-2">
-        <FileUploadIcon className="size-14 text-slate-400" />
+        <FileUploadIcon
+          className={cn(
+            "size-14 transition-all",
+            active ? "text-indigo-600" : "text-slate-400"
+          )}
+        />
         <div className="flex-col-center text-sm text-slate-400">
           <span>גרור לכאן קבצים</span>
           <span>
@@ -133,7 +140,17 @@ export default function MyUploader({ setSteps, carouselApi }) {
     );
   };
 
-  const Layout = ({ input, previews, submitButton, dropzoneProps, files }) => {
+  const Layout = (props) => {
+    const {
+      input,
+      previews,
+      submitButton,
+      dropzoneProps,
+      files,
+      extra,
+    } = props;
+    const { active } = extra;
+
     return (
       <div className="size-full flex-col-center justify-start md:py-8 gap-4">
         <h1 className="text-xl font-bold text-slate-400">העלאת קבצים</h1>
@@ -142,8 +159,9 @@ export default function MyUploader({ setSteps, carouselApi }) {
           className={cn(
             "aaa w-full h-32 min-h-32",
             "md:h-40 md:min-h-40 md:w-96",
-            "rounded-lg p-4",
+            "rounded-lg p-4 transition-all",
             "border-2 border-dashed border-slate-200",
+            active && "border-indigo-500 bg-indigo-50/50",
             "flex-col-center gap-4",
             files.length <= 0 && "md:h-60 md:min-h-60"
           )}
