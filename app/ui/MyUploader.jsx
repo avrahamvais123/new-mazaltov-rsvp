@@ -31,7 +31,7 @@ export default function MyUploader({ setSteps, carouselApi }) {
     console.log("props: ", props);
 
     const { cancel, restart, remove, xhr, file, meta } = props?.fileWithMeta;
-    const { name, percent, status, previewUrl } = props?.meta;
+    const { name, percent, status, previewUrl } = meta;
 
     /* text */
     const Text = () => {
