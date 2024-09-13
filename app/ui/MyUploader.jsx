@@ -14,7 +14,6 @@ import {
 } from "@/app/icons/icons";
 import localforage from "localforage";
 import { useUpdate } from "react-use";
-import Link from "next/link";
 
 const greenColor = "#05C851";
 
@@ -203,7 +202,7 @@ export default function MyUploader({ setSteps, carouselApi }) {
     );
   };
 
-  const handleChangeStatus = ({ meta, file }, status) => {
+  const handleChangeStatus = ({ meta }, status) => {
     console.log("status: ", status);
     console.log("meta from handleChangeStatus: ", meta);
 
@@ -223,13 +222,18 @@ export default function MyUploader({ setSteps, carouselApi }) {
   };
 
   const handleSubmit = (files) => {
-    console.log("files: ", files);
     const allFiles = files.map((f) => f.meta);
 
     localforage.setItem("uploadedFiles", allFiles);
 
     setSteps((prev) =>
-      prev.map((step) => (step.id === 2 ? { ...step, status: "done" } : step))
+      prev.map((step) =>
+        step.id === 1
+          ? { ...step, status: "done" }
+          : step.id === 2
+          ? { ...step, status: "current" }
+          : step
+      )
     );
   };
 

@@ -17,14 +17,14 @@ const stepsData = [
     name: "העלאת הזמנה",
     description: "העלאת הזמנה",
     Component: SlideUploadImage,
-    status: "current",
+    status: "done",
   },
   {
     id: 2,
     name: "העלאת תמונות",
     description: "העלאת תמונות",
     Component: SlideTwo,
-    status: "",
+    status: "current",
   },
   {
     id: 3,
@@ -40,6 +40,7 @@ export default function Progression() {
   const [current, setCurrent] = React.useState(0);
   const [count, setCount] = React.useState(0);
   const [steps, setSteps] = React.useState(stepsData);
+  console.log('steps: ', steps);
 
   useEffect(() => {
     if (!carouselApi) {
