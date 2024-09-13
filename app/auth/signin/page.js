@@ -5,12 +5,9 @@ import Form from "@/app/ui/Form";
 import { cn } from "@/lib/utils";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { userAtom } from "@/lib/jotai";
-import { useAtom } from "jotai";
 import { useState } from "react";
 
 export default function SignIn() {
-  const [user, setUser] = useAtom(userAtom);
   const [success, setSuccess] = useState();
   const [error, setError] = useState();
 

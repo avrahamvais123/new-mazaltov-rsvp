@@ -68,33 +68,17 @@
   }
 }
 
-/* btn */
-@layer components {
-  .btn {
-    @apply size-fit bg-p5 text-white font-bold py-2 px-4 rounded;
-  }
-
-  .btn:hover {
-    @apply bg-p6;
-  }
-
-  .btn:active {
-    @apply bg-p7;
-  }
-}
-
-/* test */
 @layer components {
   .test {
     @apply border-4 border-red-600;
   }
+  .center {
+    @apply justify-center items-center;
+  }
   .flex-center {
-    @apply flex items-center justify-center;
+    @apply flex justify-center items-center;
   }
   .flex-col-center {
-    @apply flex flex-col items-center justify-center;
-  }
-  .center {
-    @apply items-center justify-center;
+    @apply flex flex-col justify-center items-center;
   }
 }

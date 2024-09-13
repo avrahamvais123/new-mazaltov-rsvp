@@ -7,9 +7,14 @@ import { FileUploadIcon } from "../icons/icons";
 import { cn } from "@/lib/utils";
 import { getDroppedOrSelectedFiles } from "html5-file-selector";
 import { CheckmarkCircle01Icon as CheckIcon } from "@/app/icons/icons";
+import localforage from "localforage";
+import { useUpdate } from "react-use";
 
-export default function MyUploader() {
+const greenColor = "#05C851";
+
+export default function MyUploader({ setSteps, carouselApi }) {
   const [uploadedFiles, setUploadedFiles] = useState([]);
+  const update = useUpdate();
 
   const getUploadParams = ({ meta }) => {
     console.log("meta from getUploadParams: ", meta);
@@ -25,45 +30,48 @@ export default function MyUploader() {
         className={cn(
           "w-full md:w-96 p-2",
           "bg-slate-50 border border-slate-200 rounded-sm",
-          "flex-center justify-start gap-4",
+          "flex-center justify-between",
           status === "done" && "bg-lime-50 border-lime-200"
         )}
       >
-        <img
-          src={previewUrl}
-          alt={name}
-          className="size-10 object-cover rounded-sm"
-        />
-        {/* text */}
-        <div className="flex flex-col overflow-hidden">
-          {/* שם הקובץ */}
-          <span
-            className={cn(
-              status === "done" ? "text-lime-600" : "text-slate-400",
-              "truncate whitespace-nowrap text-ellipsis"
-            )}
-          >
-            {name}
-          </span>
-
-          {/* הצגת אחוזים רק בזמן העלאה */}
-          {status === "uploading" ? (
-            <span className="text-sm">{Math.round(percent)}% עלה</span>
-          ) : status === "done" ? (
-            <span className="text-lime-600 rounded-sm text-xs font-bold">
-              העלאה הושלמה
+        {/* image & text */}
+        <div className="flex-center gap-2">
+          {/* image */}
+          <img
+            src={previewUrl}
+            alt={name}
+            className="size-10 object-cover rounded-sm"
+          />
+          {/* text */}
+          <div className="flex flex-col overflow-hidden">
+            {/* שם הקובץ */}
+            <span
+              className={cn(
+                status === "done" ? "text-lime-600" : "text-slate-400",
+                "truncate max-w-[90%]"
+              )}
+            >
+              {name}
             </span>
-          ) : null}
+
+            {/* הצגת אחוזים רק בזמן העלאה */}
+            {status === "uploading" ? (
+              <span className="text-sm">{Math.round(percent)}% עלה</span>
+            ) : status === "done" ? (
+              <span className="text-lime-600 rounded-sm text-xs font-bold">
+                העלאה הושלמה
+              </span>
+            ) : null}
+          </div>
         </div>
 
-        <CheckIcon className="size-6 text-lime-600" />
+        {status === "done" && <CheckIcon className="size-5 text-lime-600" />}
       </div>
     );
   };
 
   const Input = (props) => {
     const { accept, onFiles, files, getFilesFromEvent } = props;
-    console.log("props: ", props);
 
     return (
       <div className="flex flex-col justify-center items-center gap-2">
@@ -105,7 +113,7 @@ export default function MyUploader() {
         <div
           {...dropzoneProps}
           className={cn(
-            "w-full h-32 min-h-32",
+            "aaa w-full h-32 min-h-32",
             "md:h-40 md:min-h-40 md:w-96",
             "rounded-lg p-4",
             "border-2 border-dashed border-slate-200",
@@ -155,16 +163,18 @@ export default function MyUploader() {
     console.log("meta from handleChangeStatus: ", meta);
 
     if (status === "uploading") {
-      console.log(`${meta.name} uploading: ${meta.percent}%`);
+      console.log(`${meta?.name} uploading: ${meta?.percent}%`);
     }
 
     const statusArray = ["done", "uploading", "headers_received"];
+    
+    update();
 
-    if (status !== "removed") {
+    /* if (status === "done") {
       setUploadedFiles((prevFiles) => [...prevFiles, file]);
     } else if (status === "removed") {
       setUploadedFiles((prevFiles) => prevFiles.filter((f) => f !== file));
-    }
+    } */
   };
 
   const handleSubmit = (files) => {
@@ -179,8 +189,19 @@ export default function MyUploader() {
     });
   };
 
+  const saveAndNext = () => {
+    //localforage.setItem("uploadedFiles", uploadedFiles);
+    setSteps((prev) =>
+      prev.map((step) => (step.id === 2 ? { ...step, status: "done" } : step))
+    );
+  };
+
   return (
     <>
+      <button className="" onClick={saveAndNext}>
+        click
+      </button>
+
       <Dropzone
         getUploadParams={getUploadParams}
         onChangeStatus={handleChangeStatus}
@@ -196,7 +217,7 @@ export default function MyUploader() {
         submitButtonContent="העלה"
         inputWithFilesContent={(files) => `${files.length} קבצים נבחרו`}
         classNames={{
-          dropzoneActive: "bg-red-600",
+          dropzoneActive: "border-indigo-500",
           inputLabel: "text-blue-500 text-lg font-semibold",
           previewImage: "rounded-lg shadow-lg flex-grow",
         }}
