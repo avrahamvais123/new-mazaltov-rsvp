@@ -6,9 +6,15 @@ import Dropzone from "react-dropzone-uploader";
 import { FileUploadIcon } from "../icons/icons";
 import { cn } from "@/lib/utils";
 import { getDroppedOrSelectedFiles } from "html5-file-selector";
-import { CheckmarkCircle01Icon as CheckIcon } from "@/app/icons/icons";
+import {
+  CheckmarkCircle01Icon as CheckIcon,
+  CancelCircleFillIcon as CancelIcon,
+  Delete02Icon,
+  ReloadIcon,
+} from "@/app/icons/icons";
 import localforage from "localforage";
 import { useUpdate } from "react-use";
+import Link from "next/link";
 
 const greenColor = "#05C851";
 
@@ -21,51 +27,72 @@ export default function MyUploader({ setSteps, carouselApi }) {
     return { url: "https://httpbin.org/post" };
   };
 
-  const Preview = ({ meta }) => {
-    console.log("meta: ", meta);
-    const { name, percent, status, previewUrl } = meta;
+  const Preview = (props) => {
+    console.log("props: ", props);
+
+    const { cancel, restart, remove, xhr, file, meta } = props?.fileWithMeta;
+    const { name, percent, status, previewUrl } = props?.meta;
+
+    /* text */
+    const Text = () => {
+      return (
+        <div className="flex flex-col gap-0.5 overflow-hidden">
+          {/* שם הקובץ */}
+          <span className="text-slate-400 text-sm truncate max-w-[90%]">
+            {name}
+          </span>
+
+          {/* הצגת אחוזים רק בזמן העלאה */}
+          {status === "uploading" ? (
+            <span className="text-sm">{Math.round(percent)}% עלה</span>
+          ) : status === "done" ? (
+            <span className="text-lime-600 flex-center justify-start gap-2 rounded-sm text-xs font-bold">
+              <CheckIcon className="size-4 text-lime-600" />
+              העלאה הושלמה
+            </span>
+          ) : null}
+        </div>
+      );
+    };
 
     return (
       <div
         className={cn(
-          "w-full md:w-96 p-2",
-          "bg-slate-50 border border-slate-200 rounded-sm",
-          "flex-center justify-between",
-          status === "done" && "bg-lime-50 border-lime-200"
+          "w-full md:w-96 p-2 bg-white",
+          "border border-slate-100 rounded-sm",
+          "flex-center justify-between"
         )}
       >
         {/* image & text */}
         <div className="flex-center gap-2">
-          {/* image */}
           <img
             src={previewUrl}
             alt={name}
             className="size-10 object-cover rounded-sm"
           />
-          {/* text */}
-          <div className="flex flex-col overflow-hidden">
-            {/* שם הקובץ */}
-            <span
-              className={cn(
-                status === "done" ? "text-lime-600" : "text-slate-400",
-                "truncate max-w-[90%]"
-              )}
-            >
-              {name}
-            </span>
-
-            {/* הצגת אחוזים רק בזמן העלאה */}
-            {status === "uploading" ? (
-              <span className="text-sm">{Math.round(percent)}% עלה</span>
-            ) : status === "done" ? (
-              <span className="text-lime-600 rounded-sm text-xs font-bold">
-                העלאה הושלמה
-              </span>
-            ) : null}
-          </div>
+          <Text />
         </div>
 
-        {status === "done" && <CheckIcon className="size-5 text-lime-600" />}
+        {/* actions */}
+        <button className="h-[90%] w-5 ml-1">
+          {status !== "done" ? (
+            <CancelIcon
+              onClick={cancel}
+              className="size-full text-slate-300 hover:text-red-600 active:text-red-700"
+            />
+          ) : (
+            <span className="h-full flex-col-center gap-2">
+              <ReloadIcon
+                onClick={restart}
+                className="size-full text-slate-400 hover:text-red-600 active:text-red-700"
+              />
+              <Delete02Icon
+                onClick={remove}
+                className="size-full text-slate-400 hover:text-red-600 active:text-red-700"
+              />
+            </span>
+          )}
+        </button>
       </div>
     );
   };
@@ -167,7 +194,7 @@ export default function MyUploader({ setSteps, carouselApi }) {
     }
 
     const statusArray = ["done", "uploading", "headers_received"];
-    
+
     update();
 
     /* if (status === "done") {
@@ -178,7 +205,14 @@ export default function MyUploader({ setSteps, carouselApi }) {
   };
 
   const handleSubmit = (files) => {
-    console.log(files.map((f) => f.meta));
+    console.log("files: ", files);
+    const allFiles = files.map((f) => f.meta);
+
+    localforage.setItem("uploadedFiles", allFiles);
+
+    setSteps((prev) =>
+      prev.map((step) => (step.id === 2 ? { ...step, status: "done" } : step))
+    );
   };
 
   const getFilesFromEvent = (e) => {
@@ -189,19 +223,8 @@ export default function MyUploader({ setSteps, carouselApi }) {
     });
   };
 
-  const saveAndNext = () => {
-    //localforage.setItem("uploadedFiles", uploadedFiles);
-    setSteps((prev) =>
-      prev.map((step) => (step.id === 2 ? { ...step, status: "done" } : step))
-    );
-  };
-
   return (
     <>
-      <button className="" onClick={saveAndNext}>
-        click
-      </button>
-
       <Dropzone
         getUploadParams={getUploadParams}
         onChangeStatus={handleChangeStatus}
