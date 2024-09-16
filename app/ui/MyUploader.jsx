@@ -14,21 +14,18 @@ import {
 } from "@/app/icons/icons";
 import localforage from "localforage";
 import { useUpdate } from "react-use";
+import axios from "axios";
 
 const greenColor = "#05C851";
 
 export default function MyUploader({ setSteps, carouselApi }) {
-  const [uploadedFiles, setUploadedFiles] = useState([]);
   const update = useUpdate();
 
   const getUploadParams = ({ meta }) => {
-    console.log("meta from getUploadParams: ", meta);
     return { url: "https://httpbin.org/post" };
   };
 
   const Preview = (props) => {
-    //console.log("props: ", props);
-
     const { cancel, restart, remove, xhr, file, meta } = props?.fileWithMeta;
     const { name, percent, status, previewUrl } = meta;
 
@@ -97,7 +94,6 @@ export default function MyUploader({ setSteps, carouselApi }) {
   };
 
   const Input = (props) => {
-    //console.log("props from Input: ", props);
     const { accept, onFiles, files, getFilesFromEvent, extra } = props;
     const { active } = extra;
 
@@ -203,11 +199,7 @@ export default function MyUploader({ setSteps, carouselApi }) {
   };
 
   const handleChangeStatus = ({ meta }, status) => {
-    console.log("status: ", status);
-    console.log("meta from handleChangeStatus: ", meta);
-
     if (status === "uploading") {
-      console.log(`${meta?.name} uploading: ${meta?.percent}%`);
     }
 
     const statusArray = ["done", "uploading", "headers_received"];
@@ -229,12 +221,14 @@ export default function MyUploader({ setSteps, carouselApi }) {
     setSteps((prev) =>
       prev.map((step) =>
         step.id === 1
-          ? { ...step, status: "done" }
+          ? { ...step, status: "complete" }
           : step.id === 2
           ? { ...step, status: "current" }
           : step
       )
     );
+
+    carouselApi.scrollNext();
   };
 
   const getFilesFromEvent = (e) => {
@@ -247,6 +241,25 @@ export default function MyUploader({ setSteps, carouselApi }) {
 
   return (
     <>
+      <button
+        onClick={() => {
+          setSteps((prev) =>
+            prev.map((step) =>
+              step.id === 1
+                ? { ...step, status: "complete" }
+                : step.id === 2
+                ? { ...step, status: "current" }
+                : step
+            )
+          );
+
+          carouselApi.scrollNext();
+        }}
+        className=""
+      >
+        next
+      </button>
+
       <Dropzone
         getUploadParams={getUploadParams}
         onChangeStatus={handleChangeStatus}

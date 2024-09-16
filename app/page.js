@@ -1,6 +1,7 @@
 import LetterPullup from "@/components/magicui/letter-pullup";
 import WordRotate from "@/components/magicui/word-rotate";
 import { cn } from "@/lib/utils";
+import { Background_Wave } from "./ui/backgrounds";
 
 export default function Home() {
   const animations = [
@@ -22,11 +23,8 @@ export default function Home() {
 
   return (
     <div className="size-full flex-col-center bg-indigo-900">
-      {/* <LetterPullup
-        words="הזמנות מזל טוב"
-        delay={0.15}
-        className="!text-9xl text-white"
-      /> */}
+      {/* <Background_Wave /> */}
+      home
     </div>
   );
 }

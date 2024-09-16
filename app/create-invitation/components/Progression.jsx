@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/carousel";
 import SlideUploadImage from "./SlideUploadImage";
 import StepsBar from "@/app/ui/StepsBar";
-import SlideTwo from "./SlideTwo";
+import SlideOptions from "./SlideOptions";
 import SlideThree from "./SlideThree";
 
 const stepsData = [
@@ -17,14 +17,14 @@ const stepsData = [
     name: "העלאת הזמנה",
     description: "העלאת הזמנה",
     Component: SlideUploadImage,
-    status: "done",
+    status: "current",
   },
   {
     id: 2,
     name: "העלאת תמונות",
     description: "העלאת תמונות",
-    Component: SlideTwo,
-    status: "current",
+    Component: SlideOptions,
+    status: "",
   },
   {
     id: 3,
@@ -37,19 +37,18 @@ const stepsData = [
 
 export default function Progression() {
   const [carouselApi, setCarouselApi] = useState(null);
+  /* current for the StepsBar */
   const [current, setCurrent] = React.useState(0);
   const [count, setCount] = React.useState(0);
+  /* steps for the slides */
   const [steps, setSteps] = React.useState(stepsData);
-  console.log('steps: ', steps);
 
   useEffect(() => {
     if (!carouselApi) {
       return;
     }
-
     setCount(carouselApi.scrollSnapList().length);
     setCurrent(carouselApi.selectedScrollSnap() + 1);
-
     carouselApi.on("select", () => {
       setCurrent(carouselApi.selectedScrollSnap() + 1);
     });

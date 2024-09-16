@@ -37,25 +37,23 @@ export default function NewSteps({ steps, setSteps, current }) {
     <nav>
       <ol role="list" className="flex items-center">
         {steps.map((step, stepIdx) => (
-          <li key={step.name} className="">
+          <li key={step?.name}>
             <div
               className={cn(
                 "relative text-center",
                 stepIdx !== 0 && "pr-16 sm:pr-20"
               )}
             >
-              {step.status === "complete" ? (
+              {step?.status === "complete" ? (
                 <>
-                  <div className="absolute inset-0 flex items-center">
-                    <div className="h-0.5 w-full bg-indigo-600" />
-                  </div>
+                  <div className="absolute left-0 top-4 h-0.5 w-full bg-indigo-600" />
 
-                  <div className="relative flex h-8 w-8 items-center justify-center rounded-full bg-indigo-600 hover:bg-indigo-900">
-                    <Tick02Icon className="h-5 w-5 text-white" />
+                  <div className="relative size-8 flex items-center justify-center rounded-full border-2 border-indigo-600 bg-indigo-600 hover:bg-indigo-900">
+                    <Tick02Icon className="size-[70%] text-white" />
                     <Text step={step} />
                   </div>
                 </>
-              ) : step.status === "current" ? (
+              ) : step?.status === "current" ? (
                 <>
                   <div className="absolute left-0 top-4 h-0.5 w-full bg-slate-200" />
 
