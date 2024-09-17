@@ -3,17 +3,17 @@ import { cn } from "@/lib/utils";
 import { useForm } from "react-hook-form";
 import Input from "./Input";
 import MySelect from "./MySelect";
+import MyRadioGroup from "./MyRadioGroup";
 
 const MyForm = forwardRef(
   (
     {
       children,
-      formClassName,
-      submitClassName,
+      classNames = {},
       fieldsClassName,
       fields,
       onSubmit,
-      submitName,
+      Submit,
       success,
       error,
     },
@@ -32,14 +32,15 @@ const MyForm = forwardRef(
         ref={ref}
         onSubmit={handleSubmit(onSubmit)}
         className={cn(
-          "w-full h-fit max-w-96 p-4 rounded flex flex-col gap-4 relative",
-          formClassName
+          "relative w-full h-fit max-w-96",
+          "flex flex-col gap-4 rounded",
+          classNames?.form
         )}
       >
         <div
           className={cn(
             "overflow-y-auto",
-            "md:h-auto pt-2",
+            "md:h-auto w-full",
             "grid grid-cols-12 gap-4"
           )}
         >
@@ -79,8 +80,17 @@ const MyForm = forwardRef(
                     value={value}
                     errors={errors}
                     setValue={setValue}
-                    fieldsClassName={fieldsClassName}
+                    fieldsClassName={classNames?.fields}
                     className={fieldData?.className}
+                  />
+                ) : field?.type === "radioGroup" ? (
+                  <MyRadioGroup
+                    title={field?.title}
+                    name={field?.name}
+                    register={register}
+                    watch={watch}
+                    options={field?.options}
+                    classNames={field?.classNames}
                   />
                 ) : (
                   <Input
@@ -88,7 +98,7 @@ const MyForm = forwardRef(
                     field={field}
                     register={register}
                     errors={errors}
-                    fieldsClassName={fieldsClassName}
+                    fieldsClassName={classNames?.fields}
                     className={fieldData?.className}
                   />
                 )}
@@ -97,20 +107,7 @@ const MyForm = forwardRef(
           })}
         </div>
         {children}
-
-        {/* Button stays fixed */}
-        <div className="w-full sticky bottom-0 bg-white py-2">
-          <button
-            type="submit"
-            className={cn(
-              "w-full px-4 py-2",
-              "bg-indigo-800 text-indigo-50",
-              submitClassName
-            )}
-          >
-            {submitName}
-          </button>
-        </div>
+        {Submit}
       </form>
     );
   }
@@ -118,3 +115,17 @@ const MyForm = forwardRef(
 MyForm.displayName = "MyForm";
 
 export default MyForm;
+
+/* Button stays fixed
+<div className="w-full sticky bottom-0 bg-white py-2">
+<button
+  type="submit"
+  className={cn(
+    "w-full px-4 py-2",
+    "bg-indigo-800 text-indigo-50",
+    submitClassName
+  )}
+>
+  {submitName}
+</button>
+</div> */

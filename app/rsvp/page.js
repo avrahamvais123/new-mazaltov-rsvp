@@ -1,11 +1,12 @@
-import React from 'react';
+import dynamic from "next/dynamic";
+import GuestsTable from "./components/GuestsTable";
+
+/* const GuestsTable = dynamic(() => import("./components/GuestsTable"), {
+  ssr: false,
+}); */
 
 const Page = () => {
-    return (
-        <div>
-            אישורי הגעה
-        </div>
-    );
-}
+  return <GuestsTable />;
+};
 
 export default Page;

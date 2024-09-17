@@ -9,7 +9,7 @@ import {
 import SlideUploadImage from "./SlideUploadImage";
 import StepsBar from "@/app/ui/StepsBar";
 import SlideOptions from "./SlideOptions";
-import SlideThree from "./SlideThree";
+import SlidePayment from "./SlidePayment";
 
 const stepsData = [
   {
@@ -21,8 +21,8 @@ const stepsData = [
   },
   {
     id: 2,
-    name: "העלאת תמונות",
-    description: "העלאת תמונות",
+    name: "כמות מוזמנים",
+    description: "כמות מוזמנים",
     Component: SlideOptions,
     status: "",
   },
@@ -30,7 +30,7 @@ const stepsData = [
     id: 3,
     name: "תשלום",
     description: "תשלום",
-    Component: SlideThree,
+    Component: SlidePayment,
     status: "",
   },
 ];

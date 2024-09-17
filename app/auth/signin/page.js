@@ -74,9 +74,18 @@ export default function SignIn() {
           fields={fields}
           onSubmit={onSubmit}
           submitName="כניסה"
-          formClassName="p-0"
-          fieldsClassName="rounded-sm"
-          submitClassName="rounded-sm"
+          classNames={{
+            form: "pt-4",
+            fields: "rounded-sm",
+          }}
+          Submit={
+            <button
+              type="submit"
+              className="w-full p-2 mt-5 text-lg bg-indigo-600 text-indigo-50 rounded-sm"
+            >
+              כניסה
+            </button>
+          }
           success={success}
           error={error}
         >

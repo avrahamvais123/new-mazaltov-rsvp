@@ -4,7 +4,7 @@ import Main from "./components/Main";
 import { cn } from "@/lib/utils";
 
 const fredoka = Fredoka({ subsets: ["hebrew"] });
-const noto_Sans_Hebrew = Noto_Sans_Hebrew({ subsets: ["hebrew"] });
+const notoSansHebrew = Noto_Sans_Hebrew({ subsets: ["hebrew"] });
 
 export const metadata = {
   title: "מזל טוב אישורי הגעה",
@@ -16,7 +16,7 @@ export default function RootLayout({ children }) {
     <html lang="he" dir="rtl" className="*:box-border h-dvh w-dvw">
       <body
         className={cn(
-          noto_Sans_Hebrew.className,
+          notoSansHebrew.className,
           "overflow-hidden size-full flex flex-col items-center"
         )}
       >
