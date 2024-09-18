@@ -6,7 +6,9 @@ const PayPal = ({ amount = "10.00", onPay }) => {
   const clientId = process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID;
 
   return (
-    <PayPalScriptProvider options={{ "client-id": clientId }}>
+    <PayPalScriptProvider
+      options={{ "client-id": clientId, currency: "ILS", intent: "capture" }}
+    >
       <PayPalButtons
         onCancel={(data) => onPay({})}
         createOrder={(data, actions) => {
@@ -16,7 +18,6 @@ const PayPal = ({ amount = "10.00", onPay }) => {
             purchase_units: [
               {
                 amount: {
-                  currency_code: "ILS", // הגדרת המטבע לשקלים
                   value: amount, // סכום התשלום מועבר מהפרופס או דיפולט של 50.00
                 },
               },
