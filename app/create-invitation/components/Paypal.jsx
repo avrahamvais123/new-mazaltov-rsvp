@@ -2,9 +2,8 @@
 
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 
-const PayPal = ({ amount, onPay }) => {
+const PayPal = ({ amount = "10.00", onPay }) => {
   const clientId = process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID;
-  console.log('clientId: ', clientId);
 
   return (
     <PayPalScriptProvider options={{ "client-id": clientId }}>
@@ -17,7 +16,8 @@ const PayPal = ({ amount, onPay }) => {
             purchase_units: [
               {
                 amount: {
-                  value: amount || "100.00", // סכום התשלום
+                  currency_code: "ILS", // הגדרת המטבע לשקלים
+                  value: amount, // סכום התשלום מועבר מהפרופס או דיפולט של 50.00
                 },
               },
             ],

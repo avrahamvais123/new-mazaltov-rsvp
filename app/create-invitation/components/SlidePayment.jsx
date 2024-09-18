@@ -24,7 +24,7 @@ const SlidePayment = () => {
       <h1 className="font-medium text-xl">תשלום</h1>
       <p className="text-xs">כאן תוכל לבחור את אמצעי התשלום שלך</p>
       <div className="mt-6 flex-grow overflow-auto">
-        <PayPal onPay={onPay} amount="50.00" />
+        <PayPal onPay={onPay} amount="20.00" />
       </div>
     </div>
   );
