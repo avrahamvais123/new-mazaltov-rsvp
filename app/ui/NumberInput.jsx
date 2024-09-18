@@ -9,11 +9,10 @@ const NumberInput = ({
   onInput = () => {},
   min = 1,
   max = 100,
+  classNames = () => {},
+  props = {},
 }) => {
   const [value, setValue] = useState(min);
-  console.log("value: ", value);
-  console.log("min: ", min);
-  console.log("max: ", max);
 
   const increment = () => {
     if (value < max) {
@@ -44,8 +43,15 @@ const NumberInput = ({
   };
 
   return (
-    <div className="flex-center border border-slate-200 px-1 gap-1 rounded-full">
+    <div
+      {...props?.wrapper}
+      className={cn(
+        "flex-center border border-slate-200 px-1 gap-1 rounded-full",
+        classNames(value)?.wrapper
+      )}
+    >
       <button
+        {...props?.buttonDecrement}
         onClick={decrement}
         disabled={value == min}
         className={cn(
@@ -54,21 +60,25 @@ const NumberInput = ({
           "focus:outline-none transition-all duration-300",
           value == min
             ? "cursor-not-allowed border-slate-200 text-slate-300"
-            : "border-indigo-600 hover:text-white hover:bg-indigo-600"
+            : "border-indigo-600 hover:text-white hover:bg-indigo-600",
+          classNames(value)?.buttonDecrement
         )}
       >
         -
       </button>
       <input
+        {...props?.input}
         type="text"
         value={value}
         onChange={onChange}
         inputMode="numeric"
         className={cn(
-          "w-14 h-10 text-center text-lg text-slate-600 outline-none"
+          "w-14 h-10 text-center text-lg text-slate-600 outline-none",
+          classNames(value)?.input
         )}
       />
       <button
+        {...props?.increment}
         onClick={increment}
         disabled={value == max}
         className={cn(
@@ -77,7 +87,8 @@ const NumberInput = ({
           "focus:outline-none transition-all duration-300",
           value == max
             ? "cursor-not-allowed border-slate-200 text-slate-300"
-            : "border-indigo-600 hover:text-white hover:bg-indigo-600"
+            : "border-indigo-600 hover:text-white hover:bg-indigo-600",
+          classNames(value)?.buttonIncrement
         )}
       >
         +
