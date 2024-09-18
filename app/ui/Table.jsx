@@ -1,34 +1,9 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import {
-  useReactTable,
-  getCoreRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  flexRender,
-} from "@tanstack/react-table";
-import { useEffect } from "react";
+import { flexRender } from "@tanstack/react-table";
 
-const Table = ({
-  data,
-  columns,
-  classNames = () => {},
-  getTable = () => {},
-}) => {
-  const table = useReactTable({
-    columns,
-    data,
-    getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    //initialState: { pagination: { pageSize: 50 } }, // למשל 50 שורות בעמוד
-  });
-
-  useEffect(() => {
-    getTable(table);
-  }, [table]);
-
+const Table = ({ classNames = () => {}, table }) => {
   return (
     <div className={cn(classNames()?.wrapper)}>
       <table

@@ -3,7 +3,13 @@
 import NumberInput from "@/app/ui/NumberInput";
 import Table from "@/app/ui/Table";
 import { cn } from "@/lib/utils";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
+import {
+  useReactTable,
+  getCoreRowModel,
+  getPaginationRowModel,
+  getSortedRowModel,
+} from "@tanstack/react-table";
 
 const initialData = [
   {
@@ -224,52 +230,8 @@ const Total = ({ status }) => {
   );
 };
 
-const Pagination = ({ table }) => {
-  return (
-    <div className="h-14 w-full py-8 border-t border-slate-200 flex-center gap-2">
-      <button
-        className={cn("bg-indigo-600 text-white px-4 py-2 rounded-md")}
-        onClick={() => table?.previousPage()}
-        disabled={Object.values(table) > 0 && !table?.getCanPreviousPage()}
-      >
-        הקודם
-      </button>
-
-      {/* מעבר לעמוד */}
-      {/* <label htmlFor="" className="">
-        <input
-          type="number"
-          min="1"
-          max={Object.values(table) > 0 ? table.getPageCount() : 10}
-          defaultValue={
-            Object.values(table) > 0
-              ? table.getState().pagination.pageIndex + 1
-              : 1
-          }
-          onChange={(e) => {
-            const page = e.target.value ? Number(e.target.value) - 1 : 0;
-            table.setPageIndex(page);
-          }}
-          className="appearance-none border p-1 rounded w-16"
-        />
-      </label> */}
-      <NumberInput />
-
-      <button
-        className={cn("bg-indigo-600 text-white px-4 py-2 rounded-md")}
-        onClick={() => table?.nextPage()}
-        disabled={Object.values(table) > 0 && !table?.getCanNextPage()}
-      >
-        הבא
-      </button>
-    </div>
-  );
-};
-
 const GuestsTable = () => {
   const [data, setData] = useState(initialData);
-  const [table, setTable] = useState({});
-  console.log("table: ", table);
   const [status, setStatus] = useState({});
 
   useEffect(() => {
@@ -289,16 +251,43 @@ const GuestsTable = () => {
       return acc;
     }, {});
 
-    // המרה למבנה המבוקש
-    /* const result = Object.keys(statusSummary).map((status) => ({
-      text: status,
-      amount: statusSummary[status],
-    })); */
-
-    console.log("result: ", result);
-
     setStatus(result);
   }, [data]);
+
+  const table = useReactTable({
+    columns: columns(setData),
+    data: data,
+    getCoreRowModel: getCoreRowModel(),
+    getPaginationRowModel: getPaginationRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    //initialState: { pagination: { pageSize: 50 } }, // למשל 50 שורות בעמוד
+  });
+
+  const Pagination = useCallback(() => {
+    return (
+      <div className="h-14 w-full py-8 border-t border-slate-200 flex-center gap-2">
+        {/* מעבר לעמוד */}
+
+        <NumberInput
+          min={1}
+          max={table.getPageCount()}
+          onInput={(e) => {
+            const page = e.target.value ? Number(e.target.value) - 1 : 0;
+            table.setPageIndex(page);
+          }}
+          onIncrement={() => table?.nextPage()}
+          onDecrement={() => table?.previousPage()}
+        />
+
+        <span className="flex items-center gap-1">
+          <span>
+            עמוד {table.getState().pagination.pageIndex + 1} מתוך{" "}
+            {table.getPageCount().toLocaleString()}
+          </span>
+        </span>
+      </div>
+    );
+  }, [table]);
 
   return (
     <div className="size-full p-4 pb-0 overflow-hidden flex-col-center gap-2">
@@ -310,21 +299,16 @@ const GuestsTable = () => {
 
       {/* table */}
       <Table
-        data={data}
-        columns={columns(setData)}
-        getTable={(table) => setTable(table)}
+        table={table}
         classNames={() => ({
           wrapper: "size-full border-t overflow-auto border-slate-200",
-          table: "",
           thead: "sticky top-0 ring-[.5px] ring-slate-200",
-          tbody: "",
-          tr: "",
           th: "text-center",
           td: "text-center border-y border-gray-200",
         })}
       />
 
-      <Pagination table={table} />
+      <Pagination />
     </div>
   );
 };

@@ -1,28 +1,81 @@
+"use client";
+
+import { cn } from "@/lib/utils";
 import React, { useState } from "react";
 
-const NumberInput = () => {
-  const [value, setValue] = useState(0);
+const NumberInput = ({
+  onIncrement = () => {},
+  onDecrement = () => {},
+  onInput = () => {},
+  min = 1,
+  max = 100,
+}) => {
+  const [value, setValue] = useState(min);
+  console.log("value: ", value);
+  console.log("min: ", min);
+  console.log("max: ", max);
 
-  const increment = () => setValue(value + 1);
-  const decrement = () => setValue(value > 0 ? value - 1 : 0); // לא יורד מתחת לאפס
+  const increment = () => {
+    if (value < max) {
+      setValue((prevValue) => prevValue + 1);
+      onIncrement();
+    }
+  };
+
+  const decrement = () => {
+    if (value > min) {
+      setValue((prevValue) => prevValue - 1);
+      onDecrement();
+    }
+  };
+
+  const onChange = (e) => {
+    const inputValue = e.target.value;
+
+    // הסר תווים שאינם ספרות
+    const cleanedValue = inputValue.replace(/\D/g, "");
+
+    // עדכן את הסטייט אם יש ערך
+    setValue(cleanedValue ? parseInt(cleanedValue, 10) : value);
+    onInput(e);
+  };
 
   return (
-    <div className="flex items-center space-x-2">
+    <div className="flex-center border border-slate-200 px-1 gap-1 rounded-full">
       <button
         onClick={decrement}
-        className="px-4 py-2 text-lg text-gray-600 bg-gray-200 hover:bg-gray-300 rounded-r-md focus:outline-none transition-all duration-300"
+        disabled={value == min}
+        className={cn(
+          "size-8 text-lg ",
+          "border rounded-full",
+          "focus:outline-none transition-all duration-300",
+          value == min
+            ? "cursor-not-allowed border-slate-200 text-slate-300"
+            : "border-indigo-600 hover:text-white hover:bg-indigo-600"
+        )}
       >
         -
       </button>
       <input
-        type="number"
+        type="text"
         value={value}
-        onChange={(e) => setValue(Number(e.target.value))}
-        className="w-20 text-center px-2 py-2 text-lg border-t border-b border-gray-300 focus:outline-none focus:border-blue-500 transition-all duration-300"
+        onChange={onChange}
+        inputMode="numeric"
+        className={cn(
+          "w-14 h-10 text-center text-lg text-slate-600 outline-none"
+        )}
       />
       <button
         onClick={increment}
-        className="px-4 py-2 text-lg text-gray-600 bg-gray-200 hover:bg-gray-300 rounded-l-md focus:outline-none transition-all duration-300"
+        disabled={value == max}
+        className={cn(
+          "size-8 text-lg text-slate-600",
+          "border rounded-full",
+          "focus:outline-none transition-all duration-300",
+          value == max
+            ? "cursor-not-allowed border-slate-200 text-slate-300"
+            : "border-indigo-600 hover:text-white hover:bg-indigo-600"
+        )}
       >
         +
       </button>
