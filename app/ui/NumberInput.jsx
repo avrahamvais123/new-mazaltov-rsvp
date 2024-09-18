@@ -35,9 +35,12 @@ const NumberInput = ({
     // הסר תווים שאינם ספרות
     const cleanedValue = inputValue.replace(/\D/g, "");
 
-    // עדכן את הסטייט אם יש ערך
-    setValue(cleanedValue ? parseInt(cleanedValue, 10) : value);
-    onInput(e);
+    if (cleanedValue <= max && cleanedValue >= min) {
+      // עדכן את הסטייט אם יש ערך
+      console.log("cleanedValue: ", cleanedValue);
+      setValue(Number(cleanedValue));
+      onInput(e);
+    }
   };
 
   return (
