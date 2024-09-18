@@ -4,6 +4,7 @@ import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 
 const PayPal = ({ amount, onPay }) => {
   const clientId = process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID;
+  console.log('clientId: ', clientId);
 
   return (
     <PayPalScriptProvider options={{ "client-id": clientId }}>
