@@ -3,14 +3,17 @@
 import React, { useState } from "react";
 import PayPal from "./Paypal";
 import { cn } from "@/lib/utils";
+import { useAtom } from "jotai";
+import { eventAtom } from "@/lib/jotai";
+import { useRouter } from "next/router";
 
 const SlidePayment = () => {
   const [paymentSource, setPaymentSource] = useState(null);
-  console.log("paymentSource: ", paymentSource);
+  const [event, setEvent] = useAtom(eventAtom);
+
+  console.log("event: ", event);
 
   const onPay = ({ data, actions }) => {
-    console.log("actions: ", actions);
-    console.log("data: ", data);
     setPaymentSource(data?.paymentSource);
   };
 
@@ -24,7 +27,7 @@ const SlidePayment = () => {
       <h1 className="font-medium text-xl">תשלום</h1>
       <p className="text-xs">כאן תוכל לבחור את אמצעי התשלום שלך</p>
       <div className="mt-6 flex-grow overflow-auto">
-        <PayPal onPay={onPay} amount="20.00" />
+        <PayPal onPay={onPay} amount={event?.price} />
       </div>
     </div>
   );

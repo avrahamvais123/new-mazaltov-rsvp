@@ -3,13 +3,17 @@
 import NumberInput from "@/app/ui/NumberInput";
 import Table from "@/app/ui/Table";
 import { cn } from "@/lib/utils";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { Fragment, useCallback, useEffect, useState } from "react";
 import {
   useReactTable,
   getCoreRowModel,
   getPaginationRowModel,
   getSortedRowModel,
+  useRowSelection,
 } from "@tanstack/react-table";
+import Checkbox from "@/app/ui/Checkbox";
+import TotalGuests from "./TotalGuests";
+import Pagination from "./Pagination";
 
 const initialData = [
   {
@@ -114,52 +118,13 @@ const initialData = [
 
 const GuestsTable = () => {
   const [data, setData] = useState(initialData);
-  const [status, setStatus] = useState({});
+  const [status, setStatus] = useState({
+    "אולי מגיעים": 0,
+    "לא מגיעים": 0,
+    מגיעים: 0,
+  });
   const [mode, setMode] = useState(""); // שורה שנמצאת במצב עריכה
   const [editValue, setEditValue] = useState(""); // הערך החדש של התוכן הנערך
-
-  useEffect(() => {
-    const result = data.reduce((acc, curr) => {
-      // אם הסטטוס לא קיים במצבר, נתחיל אותו ב-0
-      if (!acc[curr.status]) {
-        acc[curr.status] = 0;
-      }
-
-      // אם הסטטוס הוא "לא מגיעים", נוסיף 1, אחרת נוסיף את הכמות
-      if (curr.status === "לא מגיעים") {
-        acc[curr.status] += 1;
-      } else {
-        acc[curr.status] += curr.quantity;
-      }
-
-      return acc;
-    }, {});
-
-    setStatus(result);
-  }, [data]);
-
-  const Total = ({ status }) => {
-    return (
-      <div className="w-full flex-center gap-2">
-        {Object.entries(status)?.map(([key, value], idx) => {
-          return (
-            <div
-              key={idx}
-              className={cn("w-32 py-4 border flex-col-center rounded-sm", {
-                "bg-green-50 text-green-600 border-green-200": key === "מגיעים",
-                "bg-red-50 text-red-600 border-red-200": key === "לא מגיעים",
-                "bg-slate-50 text-slate-600 border-slate-200":
-                  key === "אולי מגיעים",
-              })}
-            >
-              <span className="text-3xl font-bold">{value}</span>
-              <span>{key}</span>
-            </div>
-          );
-        })}
-      </div>
-    );
-  };
 
   const columns = () => {
     const handleSave = (rowName) => {
@@ -171,6 +136,29 @@ const GuestsTable = () => {
       setMode(""); // יציאה ממצב עריכה
     };
     return [
+      {
+        id: "select",
+        header: ({ table }) => {
+          const isSomeRowSelected = table.getIsSomeRowsSelected();
+          return (
+            <Checkbox
+              checked={table.getIsAllRowsSelected()}
+              indeterminate={isSomeRowSelected ? isSomeRowSelected : undefined}
+              onChange={table.getToggleAllRowsSelectedHandler()}
+            />
+          );
+        },
+        cell: ({ row }) => {
+          const isSomeSelected = row.getIsSomeSelected();
+          return (
+            <Checkbox
+              checked={row.getIsSelected()}
+              indeterminate={isSomeSelected ? isSomeSelected : undefined}
+              onChange={row.getToggleSelectedHandler()}
+            />
+          );
+        },
+      },
       {
         id: "name",
         header: "שם",
@@ -245,11 +233,6 @@ const GuestsTable = () => {
         header: "כמות מגיעים",
         accessorKey: "quantity",
       },
-      {
-        id: "actions",
-        header: "פעולות",
-        accessorKey: "actions",
-      },
     ];
   };
 
@@ -260,38 +243,14 @@ const GuestsTable = () => {
     getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
     //initialState: { pagination: { pageSize: 50 } }, // למשל 50 שורות בעמוד
+    enableRowSelection: true,
+    getRowId: (row, index) => index, // או כל מזהה ייחודי אחר
   });
 
-  const Pagination = useCallback(() => {
-    return (
-      <div className="h-14 w-full py-8 border-t border-slate-200 flex-center gap-2">
-        {/* מעבר לעמוד */}
-
-        <NumberInput
-          min={1}
-          max={table.getPageCount()}
-          onInput={(e) => {
-            const page = e.target.value ? Number(e.target.value) - 1 : 1;
-            table.setPageIndex(page);
-          }}
-          onIncrement={() => table?.nextPage()}
-          onDecrement={() => table?.previousPage()}
-        />
-
-        <span className="flex items-center gap-1 text-sm">
-          <span className="">
-            עמוד {table.getState().pagination.pageIndex + 1}
-          </span>
-          <span className="">מתוך {table.getPageCount().toLocaleString()}</span>
-        </span>
-      </div>
-    );
-  }, [table]);
-
   return (
-    <div className="size-full p-4 pb-0 overflow-hidden flex-col-center gap-2">
+    <div className="size-full p-4 py-8 pb-0 overflow-hidden flex-col-center gap-2">
       {/* total */}
-      <Total status={status} />
+      <TotalGuests status={status} data={data} setStatus={setStatus} />
 
       {/* title */}
       <h1 className="py-4 text-xl text-slate-400 font-medium">טבלת מוזמנים</h1>
@@ -307,7 +266,7 @@ const GuestsTable = () => {
         })}
       />
 
-      <Pagination />
+      <Pagination table={table} />
     </div>
   );
 };

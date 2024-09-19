@@ -1,9 +1,9 @@
 "use client";
 
 import React, { useState } from "react";
-import MyRadioGroup from "@/app/ui/MyRadioGroup";
-import { useForm } from "react-hook-form";
 import MyForm from "@/app/ui/Form";
+import { eventAtom } from "@/lib/jotai";
+import { useAtom } from "jotai";
 import localforage from "localforage";
 
 const fields = [
@@ -12,9 +12,24 @@ const fields = [
     name: "sms",
     title: "בחר כמות מוזמנים",
     options: [
-      { text: "עד 100 מוזמנים", value: 50, description: "תוספת 50 ש׳׳ח" },
-      { text: "עד 200 מוזמנים", value: 100, description: "תוספת 100 ש׳׳ח" },
-      { text: "עד 300 מוזמנים", value: 150, description: "תוספת 150 ש׳׳ח" },
+      {
+        text: "עד 100 מוזמנים",
+        amountSms: 100,
+        value: 50,
+        description: "תוספת 50 ש׳׳ח",
+      },
+      {
+        text: "עד 200 מוזמנים",
+        amountSms: 200,
+        value: 100,
+        description: "תוספת 100 ש׳׳ח",
+      },
+      {
+        text: "עד 300 מוזמנים",
+        amountSms: 300,
+        value: 150,
+        description: "תוספת 150 ש׳׳ח",
+      },
     ],
     classNames: {
       wrapper: "",
@@ -23,9 +38,21 @@ const fields = [
 ];
 
 const SlideOptions = ({ setSteps, carouselApi }) => {
-  const onSubmit = (data) => {
-    console.log("data: ", data);
-    localforage.setItem("sms", data.sms);
+  const [event, setEvent] = useAtom(eventAtom);
+
+  const onSubmit = async (data) => {
+    const updatedPrice = event.price + Number(data?.sms);
+
+    const amountSms = fields[0].options.filter(
+      (option) => option.value == data?.sms
+    )[0].amountSms;
+
+    setEvent((prev) => {
+      return { ...prev, sms: amountSms, price: updatedPrice };
+    });
+
+    await localforage.setItem("event-price", updatedPrice);
+
     carouselApi.scrollNext();
   };
 

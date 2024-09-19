@@ -60,7 +60,7 @@ const NumberInput = ({
           "focus:outline-none transition-all duration-300",
           value == min
             ? "cursor-not-allowed border-slate-200 text-slate-300"
-            : "border-indigo-600 hover:text-white hover:bg-indigo-600",
+            : "border-slate-400 text-slate-400 hover:bg-slate-400 hover:text-white",
           classNames(value)?.buttonDecrement
         )}
       >
@@ -87,7 +87,7 @@ const NumberInput = ({
           "focus:outline-none transition-all duration-300",
           value == max
             ? "cursor-not-allowed border-slate-200 text-slate-300"
-            : "border-indigo-600 hover:text-white hover:bg-indigo-600",
+            : "border-slate-400 text-slate-400 hover:bg-slate-400 hover:text-white",
           classNames(value)?.buttonIncrement
         )}
       >

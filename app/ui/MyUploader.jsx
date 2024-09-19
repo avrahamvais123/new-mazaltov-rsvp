@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import "react-dropzone-uploader/dist/styles.css";
 import Dropzone from "react-dropzone-uploader";
 import { FileUploadIcon } from "../icons/icons";
@@ -12,13 +11,11 @@ import {
   Delete02Icon,
   ReloadIcon,
 } from "@/app/icons/icons";
-import localforage from "localforage";
 import { useUpdate } from "react-use";
-import axios from "axios";
 
 const greenColor = "#05C851";
 
-export default function MyUploader({ setSteps, carouselApi }) {
+export default function MyUploader({ onSubmit = () => {} }) {
   const update = useUpdate();
 
   const getUploadParams = ({ meta }) => {
@@ -213,24 +210,6 @@ export default function MyUploader({ setSteps, carouselApi }) {
     } */
   };
 
-  const handleSubmit = (files) => {
-    const allFiles = files.map((f) => f.meta);
-
-    localforage.setItem("uploadedFiles", allFiles);
-
-    setSteps((prev) =>
-      prev.map((step) =>
-        step.id === 1
-          ? { ...step, status: "complete" }
-          : step.id === 2
-          ? { ...step, status: "current" }
-          : step
-      )
-    );
-
-    carouselApi.scrollNext();
-  };
-
   const getFilesFromEvent = (e) => {
     return new Promise((resolve) => {
       getDroppedOrSelectedFiles(e).then((chosenFiles) => {
@@ -240,46 +219,25 @@ export default function MyUploader({ setSteps, carouselApi }) {
   };
 
   return (
-    <>
-      <button
-        onClick={() => {
-          setSteps((prev) =>
-            prev.map((step) =>
-              step.id === 1
-                ? { ...step, status: "complete" }
-                : step.id === 2
-                ? { ...step, status: "current" }
-                : step
-            )
-          );
-
-          carouselApi.scrollNext();
-        }}
-        className=""
-      >
-        next
-      </button>
-
-      <Dropzone
-        getUploadParams={getUploadParams}
-        onChangeStatus={handleChangeStatus}
-        onSubmit={handleSubmit}
-        getFilesFromEvent={getFilesFromEvent}
-        LayoutComponent={Layout}
-        InputComponent={Input}
-        PreviewComponent={Preview}
-        SubmitButtonComponent={SubmitButton}
-        accept="image/*,audio/*,video/*"
-        inputContent="העלה קבצים"
-        inputLabel="גרור קבצים לכאן או לחץ כדי לבחור"
-        submitButtonContent="העלה"
-        inputWithFilesContent={(files) => `${files.length} קבצים נבחרו`}
-        classNames={{
-          dropzoneActive: "border-indigo-500",
-          inputLabel: "text-blue-500 text-lg font-semibold",
-          previewImage: "rounded-lg shadow-lg flex-grow",
-        }}
-      />
-    </>
+    <Dropzone
+      getUploadParams={getUploadParams}
+      onChangeStatus={handleChangeStatus}
+      onSubmit={onSubmit}
+      getFilesFromEvent={getFilesFromEvent}
+      LayoutComponent={Layout}
+      InputComponent={Input}
+      PreviewComponent={Preview}
+      SubmitButtonComponent={SubmitButton}
+      accept="image/*,audio/*,video/*"
+      inputContent="העלה קבצים"
+      inputLabel="גרור קבצים לכאן או לחץ כדי לבחור"
+      submitButtonContent="העלה"
+      inputWithFilesContent={(files) => `${files.length} קבצים נבחרו`}
+      classNames={{
+        dropzoneActive: "border-indigo-500",
+        inputLabel: "text-blue-500 text-lg font-semibold",
+        previewImage: "rounded-lg shadow-lg flex-grow",
+      }}
+    />
   );
 }

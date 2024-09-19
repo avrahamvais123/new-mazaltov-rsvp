@@ -43,17 +43,22 @@ const Table = ({ classNames = () => {}, table }) => {
         >
           {table.getRowModel().rows.map((row, rowIndex) => (
             <tr key={row.id} className={cn(classNames()?.tr)}>
-              {row.getVisibleCells().map((cell) => (
-                <td
-                  key={cell.id}
-                  className={cn(
-                    "p-4 whitespace-nowrap text-sm text-slate-900",
-                    classNames()?.td
-                  )}
-                >
-                  {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                </td>
-              ))}
+              {row.getVisibleCells().map((cell) => {
+                const isSelectedRow = cell.row.getIsSelected();
+
+                return (
+                  <td
+                    key={cell.id}
+                    className={cn(
+                      "p-4 whitespace-nowrap text-sm text-slate-900",
+                      isSelectedRow && "bg-slate-50",
+                      classNames()?.td
+                    )}
+                  >
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  </td>
+                );
+              })}
             </tr>
           ))}
         </tbody>

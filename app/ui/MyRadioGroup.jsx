@@ -10,7 +10,6 @@ export default function MyRadioGroup({
   title,
   classNames = {},
 }) {
-  //console.log("watch: ", watch);
   return (
     <fieldset className={cn("flex-col-center gap-2", classNames?.wrapper)}>
       {title && <legend className="text-lg font-medium">{title}</legend>}
