@@ -4,6 +4,7 @@ import {
   CancelCircleFillIcon as CancelIcon,
   CheckmarkCircle02Icon as CheckmarkIcon,
   HelpCircleIcon as QuestionmarkIcon,
+  AlertCircleIcon as AlertIcon,
 } from "@/app/icons/icons";
 import { cn } from "@/lib/utils";
 import { useEffect } from "react";

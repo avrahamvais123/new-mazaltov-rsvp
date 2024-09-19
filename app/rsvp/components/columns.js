@@ -1,5 +1,3 @@
-"use client";
-
 import Checkbox from "@/app/ui/Checkbox";
 import { cn } from "@/lib/utils";
 
