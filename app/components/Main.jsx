@@ -4,6 +4,10 @@ import React from "react";
 import Header from "./Header";
 import { SessionProvider } from "next-auth/react";
 import localforage from "localforage";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
+// Create a client
+const queryClient = new QueryClient();
 
 const Main = ({ children }) => {
   // הגדרת ה-driver ל-localStorage
@@ -16,10 +20,12 @@ const Main = ({ children }) => {
   });
 
   return (
-    <SessionProvider>
-      <Header />
-      {children}
-    </SessionProvider>
+    <QueryClientProvider client={queryClient}>
+      <SessionProvider>
+        <Header />
+        {children}
+      </SessionProvider>
+    </QueryClientProvider>
   );
 };
 

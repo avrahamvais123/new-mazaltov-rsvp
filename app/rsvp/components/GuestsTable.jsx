@@ -15,6 +15,8 @@ import Checkbox from "@/app/ui/Checkbox";
 import TotalGuests from "./TotalGuests";
 import Pagination from "./Pagination";
 import { columns } from "./columns";
+import axios from "axios";
+import TableHeader from "./TableHeader";
 
 const initialData = [
   {
@@ -119,13 +121,12 @@ const initialData = [
 
 const GuestsTable = () => {
   const [data, setData] = useState(initialData);
+  const [mode, setMode] = useState(""); // שורה שנמצאת במצב עריכה
   const [status, setStatus] = useState({
     "אולי מגיעים": 0,
     "לא מגיעים": 0,
     מגיעים: 0,
   });
-  const [mode, setMode] = useState(""); // שורה שנמצאת במצב עריכה
-  const [editValue, setEditValue] = useState(""); // הערך החדש של התוכן הנערך
 
   const table = useReactTable({
     columns: columns({ setData, mode, setMode }),
@@ -139,12 +140,12 @@ const GuestsTable = () => {
   });
 
   return (
-    <div className="size-full p-4 py-8 pb-0 overflow-hidden flex-col-center gap-2">
+    <div className="size-full p-4 py-8 pb-0 overflow-hidden flex-col-center gap-4">
       {/* total */}
       <TotalGuests status={status} data={data} setStatus={setStatus} />
 
-      {/* title */}
-      <h1 className="py-4 text-xl text-slate-400 font-medium">טבלת מוזמנים</h1>
+      {/* table header */}
+      <TableHeader />
 
       {/* table */}
       <Table

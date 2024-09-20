@@ -13,7 +13,7 @@ const MyForm = forwardRef(
       fieldsClassName,
       fields,
       onSubmit,
-      Submit,
+      customSubmit,
       success,
       error,
     },
@@ -107,7 +107,7 @@ const MyForm = forwardRef(
           })}
         </div>
         {children}
-        {Submit}
+        {customSubmit}
       </form>
     );
   }

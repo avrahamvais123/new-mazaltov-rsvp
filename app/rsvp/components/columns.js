@@ -1,3 +1,4 @@
+import { Delete02Icon, Edit02Icon } from "@/app/icons/icons";
 import Checkbox from "@/app/ui/Checkbox";
 import { cn } from "@/lib/utils";
 
@@ -110,6 +111,30 @@ export const columns = ({ mode, setMode, setData }) => {
       id: "quantity",
       header: "כמות מגיעים",
       accessorKey: "quantity",
+    },
+    {
+      id: "actions",
+      header: "פעולות",
+      cell: ({ row }) => {
+        return (
+          <div className="size-full flex-center gap-2">
+            <Edit02Icon
+              className={cn(
+                "size-5 cursor-pointer",
+                "text-slate-600 transition-all",
+                "hover:text-blue-600 active:text-blue-700"
+              )}
+            />
+            <Delete02Icon
+              className={cn(
+                "size-5 cursor-pointer",
+                "text-slate-600 transition-all",
+                "hover:text-red-600 active:text-red-700"
+              )}
+            />
+          </div>
+        );
+      },
     },
   ];
 };
