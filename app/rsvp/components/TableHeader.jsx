@@ -1,6 +1,6 @@
 "use client";
 
-import { Add01Icon, RefreshIcon } from "@/app/icons/icons";
+import { RefreshIcon, Delete02Icon } from "@/app/icons/icons";
 import { cn } from "@/lib/utils";
 import axios from "axios";
 import React from "react";
@@ -19,8 +19,20 @@ const TableHeader = () => {
     }
   };
 
+  const removeAllGuests = async () => {
+    try {
+      const res = await axios.delete("/api/guests");
+      console.log("res: ", res);
+    } catch (error) {
+      console.error(
+        "Error removing all guests: ",
+        error.response?.data || error.message
+      );
+    }
+  };
+
   return (
-    <div className="w-full flex-center justify-between gap-2">
+    <div className="w-full mb-3 mt-10 flex-center justify-between gap-2">
       {/* title */}
       <h1 className="text-xl text-slate-400 font-medium">טבלת מוזמנים</h1>
 
@@ -32,11 +44,19 @@ const TableHeader = () => {
           onClick={getAllGuests}
           className={cn(
             "bg-indigo-600 text-white",
-            "px-4 py-2 rounded-sm flex-center gap-2"
+            "p-2 rounded-sm flex-center gap-2"
           )}
         >
           <RefreshIcon className="size-4 text-white" />
-          קבלת כל המוזמנים
+        </button>
+        <button
+          onClick={removeAllGuests}
+          className={cn(
+            "bg-indigo-600 text-white",
+            "p-2 rounded-sm flex-center gap-2"
+          )}
+        >
+          <Delete02Icon className="size-4 text-white" />
         </button>
       </div>
     </div>

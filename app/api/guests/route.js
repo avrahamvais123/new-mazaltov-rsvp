@@ -87,14 +87,21 @@ export const POST = async (req) => {
   }
 };
 
-export const DELETE = async () => {
+export const DELETE = async (req) => {
   try {
+    const res = await req.json();
+    console.log("res: ", res);
+
     const client = await clientPromise;
     const db = client.db("mazaltov-rsvp");
 
     // מחיקת כל המוזמנים
-    const deleteAllGuests = await db.collection("guests").deleteMany({});
-    console.log("deleteAllGuests: ", deleteAllGuests);
+    //const deleteAllGuests = await db.collection("guests").deleteMany({});
+    //console.log("deleteAllGuests: ", deleteAllGuests);
+
+    // מחיקת מוזמן לפי מערך של ids
+    const deleteGuestsByIds = await db.collection("guests").deleteMany({ _id: { $in: res.ids } });
+    console.log("deleteGuestsByIds: ", deleteGuestsByIds);
 
     return new Response(
       JSON.stringify({

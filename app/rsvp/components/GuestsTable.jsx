@@ -1,22 +1,19 @@
 "use client";
 
-import NumberInput from "@/app/ui/NumberInput";
 import Table from "@/app/ui/Table";
-import { cn } from "@/lib/utils";
-import React, { Fragment, useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   useReactTable,
   getCoreRowModel,
   getPaginationRowModel,
   getSortedRowModel,
-  useRowSelection,
 } from "@tanstack/react-table";
-import Checkbox from "@/app/ui/Checkbox";
 import TotalGuests from "./TotalGuests";
 import Pagination from "./Pagination";
 import { columns } from "./columns";
-import axios from "axios";
 import TableHeader from "./TableHeader";
+import { useMutation } from "@tanstack/react-query";
+import axios from "axios";
 
 const initialData = [
   {
@@ -120,7 +117,8 @@ const initialData = [
 ];
 
 const GuestsTable = () => {
-  const [data, setData] = useState(initialData);
+  const [data, setData] = useState([]);
+  const [editValue, setEditValue] = useState("");
   const [mode, setMode] = useState(""); // שורה שנמצאת במצב עריכה
   const [status, setStatus] = useState({
     "אולי מגיעים": 0,
@@ -128,8 +126,32 @@ const GuestsTable = () => {
     מגיעים: 0,
   });
 
+  const getData = useMutation({
+    mutationFn: async () => {
+      try {
+        const res = await axios.get("/api/guests");
+        console.log("res: ", res);
+
+        return res?.data?.data || [];
+      } catch (error) {
+        console.error(
+          "Error getting all guests: ",
+          error.response?.data || error.message
+        );
+      }
+    },
+    onSuccess: async (data) => {
+      console.log("data: ", data);
+      setData(data);
+    },
+  });
+
+  useEffect(() => {
+    getData.mutate();
+  }, []);
+
   const table = useReactTable({
-    columns: columns({ setData, mode, setMode }),
+    columns: columns({ setData, mode, setMode, editValue, setEditValue }),
     data: data,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
@@ -140,7 +162,7 @@ const GuestsTable = () => {
   });
 
   return (
-    <div className="size-full p-4 py-8 pb-0 overflow-hidden flex-col-center gap-4">
+    <div className="size-full p-4 py-8 pb-0 overflow-hidden flex-col-center">
       {/* total */}
       <TotalGuests status={status} data={data} setStatus={setStatus} />
 

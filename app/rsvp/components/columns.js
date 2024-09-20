@@ -2,7 +2,13 @@ import { Delete02Icon, Edit02Icon } from "@/app/icons/icons";
 import Checkbox from "@/app/ui/Checkbox";
 import { cn } from "@/lib/utils";
 
-export const columns = ({ mode, setMode, setData }) => {
+export const columns = ({
+  mode,
+  setMode,
+  setData,
+  editValue,
+  setEditValue,
+}) => {
   const handleSave = (rowName) => {
     setData((prevData) =>
       prevData.map((row) =>

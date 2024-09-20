@@ -81,11 +81,10 @@ const AddGuest = ({}) => {
           onClick={() => setOpen(true)}
           className={cn(
             "bg-indigo-600 text-white",
-            "px-4 py-2 rounded-sm flex-center gap-2"
+            "p-2 rounded-sm flex-center gap-2"
           )}
         >
           <Add01Icon className="size-4 text-white" />
-          יצירת אורח חדש
         </button>
       )}
       content={({ setOpen }) => (
