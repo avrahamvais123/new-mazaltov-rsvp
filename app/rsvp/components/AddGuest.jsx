@@ -1,15 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+import React from "react";
 import MyForm from "@/app/ui/Form";
 import MyDialog from "@/app/ui/MyDialog";
 import { Add01Icon } from "@/app/icons/icons";
@@ -52,13 +43,14 @@ const fields = [
   },
 ];
 
-const AddGuest = ({}) => {
+const AddGuest = ({ setData }) => {
   const createGuest = async (data) => {
     try {
       const res = await axios.post("/api/guests", {
         ...data,
       });
       console.log("res: ", res);
+      setData((prev) => [...prev, res?.data?.data]);
     } catch (error) {
       console.error(
         "Error creating guest: ",
@@ -68,46 +60,43 @@ const AddGuest = ({}) => {
   };
 
   const onSubmit = (data, setOpen) => {
-    console.log("setOpen: ", setOpen);
     console.log("data: ", data);
     createGuest(data);
     setOpen(false);
   };
 
-  return (
-    <MyDialog
-      customTrigger={({ open, setOpen }) => (
+  const CustomTrigger = ({ setOpen }) => (
+    <button
+      onClick={() => setOpen(true)}
+      className={cn(
+        "bg-indigo-600 text-white",
+        "p-2 rounded-sm flex-center gap-2"
+      )}
+    >
+      <Add01Icon className="size-4 text-white" />
+    </button>
+  );
+
+  const content = ({ setOpen }) => (
+    <MyForm
+      onSubmit={(data) => onSubmit(data, setOpen)}
+      fields={fields}
+      customSubmit={
         <button
-          onClick={() => setOpen(true)}
+          type="submit"
           className={cn(
+            "w-fit self-end px-4 py-2",
             "bg-indigo-600 text-white",
-            "p-2 rounded-sm flex-center gap-2"
+            "rounded-sm flex-center gap-2"
           )}
         >
-          <Add01Icon className="size-4 text-white" />
+          אישור
         </button>
-      )}
-      content={({ setOpen }) => (
-        <MyForm
-          onSubmit={(data) => onSubmit(data, setOpen)}
-          fields={fields}
-          customSubmit={
-            <button
-              type="submit"
-              className={cn(
-                "w-fit self-end px-4 py-2",
-                "bg-indigo-600 text-white",
-                "rounded-sm flex-center gap-2"
-              )}
-            >
-              אישור
-            </button>
-          }
-        />
-      )}
-      noFooter
+      }
     />
   );
+
+  return <MyDialog noFooter customTrigger={CustomTrigger} content={content} />;
 };
 
 export default AddGuest;

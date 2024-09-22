@@ -12,7 +12,7 @@ import TotalGuests from "./TotalGuests";
 import Pagination from "./Pagination";
 import { columns } from "./columns";
 import TableHeader from "./TableHeader";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import axios from "axios";
 
 const initialData = [
@@ -121,9 +121,9 @@ const GuestsTable = () => {
   const [editValue, setEditValue] = useState("");
   const [mode, setMode] = useState(""); // שורה שנמצאת במצב עריכה
   const [status, setStatus] = useState({
-    "אולי מגיעים": 0,
-    "לא מגיעים": 0,
     מגיעים: 0,
+    "לא מגיעים": 0,
+    "אולי מגיעים": 0,
   });
 
   const getData = useMutation({
@@ -151,14 +151,20 @@ const GuestsTable = () => {
   }, []);
 
   const table = useReactTable({
-    columns: columns({ setData, mode, setMode, editValue, setEditValue }),
+    columns: columns({
+      setData,
+      mode,
+      setMode,
+      editValue,
+      setEditValue,
+    }),
     data: data,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
     //initialState: { pagination: { pageSize: 50 } }, // למשל 50 שורות בעמוד
     enableRowSelection: true,
-    getRowId: (row, index) => index, // או כל מזהה ייחודי אחר
+    getRowId: (row, index) => row?._id, // או כל מזהה ייחודי אחר
   });
 
   return (
@@ -167,7 +173,7 @@ const GuestsTable = () => {
       <TotalGuests status={status} data={data} setStatus={setStatus} />
 
       {/* table header */}
-      <TableHeader />
+      <TableHeader table={table} setData={setData} />
 
       {/* table */}
       <Table
@@ -180,6 +186,7 @@ const GuestsTable = () => {
         })}
       />
 
+      {/* table pagination */}
       <Pagination table={table} />
     </div>
   );

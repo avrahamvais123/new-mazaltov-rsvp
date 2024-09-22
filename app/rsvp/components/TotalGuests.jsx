@@ -28,7 +28,7 @@ const TotalGuests = ({ status, data, setStatus }) => {
       if (curr.status === "לא מגיעים") {
         acc[curr.status] += 1;
       } else {
-        acc[curr.status] += curr.quantity;
+        acc[curr.status] += Number(curr.quantity);
       }
 
       return acc;

@@ -6,11 +6,12 @@ import axios from "axios";
 import React from "react";
 import AddGuest from "./AddGuest";
 
-const TableHeader = () => {
+const TableHeader = ({ table, setData }) => {
   const getAllGuests = async () => {
     try {
       const res = await axios.get("/api/guests");
       console.log("res: ", res);
+      setData(res.data.data);
     } catch (error) {
       console.error(
         "Error getting all guests: ",
@@ -19,9 +20,17 @@ const TableHeader = () => {
     }
   };
 
-  const removeAllGuests = async () => {
+  const removeGuests = async () => {
+    const guestsToRemove = table
+      ?.getSelectedRowModel()
+      .rows.map((row) => row?.id);
+    console.log("guestsToRemove: ", guestsToRemove);
+
     try {
-      const res = await axios.delete("/api/guests");
+      const res = await axios.delete("/api/guests", {
+        data: { ids: guestsToRemove },
+      });
+      getAllGuests();
       console.log("res: ", res);
     } catch (error) {
       console.error(
@@ -38,8 +47,10 @@ const TableHeader = () => {
 
       {/* buttons */}
       <div className="flex-center gap-2">
-        <AddGuest />
+        {/* add */}
+        <AddGuest setData={setData} />
 
+        {/* reload */}
         <button
           onClick={getAllGuests}
           className={cn(
@@ -49,8 +60,10 @@ const TableHeader = () => {
         >
           <RefreshIcon className="size-4 text-white" />
         </button>
+
+        {/* remove */}
         <button
-          onClick={removeAllGuests}
+          onClick={removeGuests}
           className={cn(
             "bg-indigo-600 text-white",
             "p-2 rounded-sm flex-center gap-2"

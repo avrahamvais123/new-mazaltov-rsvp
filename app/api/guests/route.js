@@ -1,4 +1,5 @@
 import clientPromise from "@/lib/mongoDB";
+import { ObjectId } from "mongodb";
 
 export const GET = async () => {
   try {
@@ -8,7 +9,7 @@ export const GET = async () => {
     // שליפת כל המוזמנים והמרתם למערך
     const allGuests = await db.collection("guests").find({}).toArray();
 
-    console.log("allGuests: ", allGuests);
+    //console.log("allGuests: ", allGuests);
 
     if (allGuests.length === 0) {
       return new Response(
@@ -87,25 +88,65 @@ export const POST = async (req) => {
   }
 };
 
+export const PATCH = async (req) => {
+  try {
+    const res = await req.json();
+
+    if (!res?.id) {
+      return new Response(
+        JSON.stringify({
+          status: 400,
+          message: "לא נמצא מזהה לעדכון",
+        })
+      );
+    }
+
+    const client = await clientPromise;
+    const db = client.db("mazaltov-rsvp").collection("guests");
+
+    // עדכון המסמך
+    const result = await db.updateOne(
+      { _id: new ObjectId(res?.id) },
+      { $set: res?.updates }
+    );
+
+    return new Response(
+      JSON.stringify({
+        data: result,
+        status: 200,
+        message: "המוזמנים עודכנו בהצלחה",
+      }),
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error("error: ", error);
+    return new Response(
+      JSON.stringify({
+        status: 500,
+        message: "שגיאה בעדכון המוזמנים",
+      }),
+      { status: 500 }
+    );
+  }
+};
+
 export const DELETE = async (req) => {
   try {
     const res = await req.json();
-    console.log("res: ", res);
+    console.log("Received IDs: ", res.ids);
 
     const client = await clientPromise;
     const db = client.db("mazaltov-rsvp");
 
-    // מחיקת כל המוזמנים
-    //const deleteAllGuests = await db.collection("guests").deleteMany({});
-    //console.log("deleteAllGuests: ", deleteAllGuests);
-
     // מחיקת מוזמן לפי מערך של ids
-    const deleteGuestsByIds = await db.collection("guests").deleteMany({ _id: { $in: res.ids } });
+    const deleteGuestsByIds = await db
+      .collection("guests")
+      .deleteMany({ _id: { $in: res.ids.map((id) => new ObjectId(id)) } });
     console.log("deleteGuestsByIds: ", deleteGuestsByIds);
 
     return new Response(
       JSON.stringify({
-        data: deleteAllGuests,
+        data: deleteGuestsByIds,
         status: 200,
         message: "המוזמנים נמחקו בהצלחה",
       }),
