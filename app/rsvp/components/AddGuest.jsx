@@ -7,6 +7,7 @@ import { Add01Icon } from "@/app/icons/icons";
 import { cn } from "@/lib/utils";
 import axios from "axios";
 import { useForm } from "react-hook-form";
+import { useSession } from "next-auth/react";
 
 const fields = (watch) => [
   {
@@ -47,6 +48,7 @@ const fields = (watch) => [
 
 const AddGuest = ({ setData }) => {
   const form = useForm();
+  const { data: session } = useSession();
 
   useEffect(() => {
     const status = form?.watch("status");
@@ -56,6 +58,7 @@ const AddGuest = ({ setData }) => {
   }, [form?.watch("status"), form?.setValue]);
 
   const createGuest = async (data) => {
+    data.belongsTo = session?.user?.email;
     try {
       const res = await axios.post("/api/guests", {
         ...data,

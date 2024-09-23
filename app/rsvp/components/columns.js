@@ -4,25 +4,7 @@ import { cn } from "@/lib/utils";
 import RemoveGuests from "./RemoveGuests";
 import EditGuest from "./EditGuest";
 
-export const columns = ({
-  mode,
-  setMode,
-  data,
-  setData,
-  editValue,
-  setEditValue,
-  editGuest,
-  removeGuests,
-}) => {
-  const handleSave = (rowName) => {
-    setData((prevData) =>
-      prevData.map((row) =>
-        row.name === rowName ? { ...row, name: editValue } : row
-      )
-    );
-    setMode(""); // יציאה ממצב עריכה
-  };
-
+export const columns = ({ editGuest, removeGuests, belongsTo }) => {
   return [
     {
       id: "select",

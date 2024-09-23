@@ -13,38 +13,21 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import Menu from "./Menu";
-import { userAtom } from "@/lib/jotai";
-import { useAtom } from "jotai";
 
 const Header = () => {
-  const [user, setUser] = useAtom(userAtom);
   const [isOpen, setOpen] = useState(false);
   const { data: session } = useSession();
 
-  useEffect(() => {
-    if (session) {
-      console.log("session: ", session);
-      const { user } = session;
-      //setUser({ ...user, ...session.user });
-
-      setUser((prev) => ({
-        ...prev,
-        id: user?.id,
-        name: user?.name,
-        email: user?.email,
-        image: user?.image
-      }));
-    }
-  }, [session]);
-
   const GenerateImage = () => {
-    if (user?.name !== "אורח") {
-      if (user?.image) {
-        return <img src={user?.image} className="size-10 rounded-full" />;
+    if (session) {
+      if (session?.user?.image) {
+        return (
+          <img src={session?.user?.image} className="size-10 rounded-full" />
+        );
       } else {
         return (
           <div className="size-10 rounded-full bg-indigo-600 text-indigo-50 text-2xl flex-center">
-            {user?.name[0]}
+            {session?.user?.name[0]}
           </div>
         );
       }
@@ -84,7 +67,7 @@ const Header = () => {
 
           <DropdownMenuContent className="ml-2">
             <DropdownMenuLabel>
-              <p className="leading-4 text-sm text-slate-400">{`${user?.name}`}</p>
+              <p className="leading-4 text-center text-sm text-slate-400">{`${session?.user?.name}`}</p>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuItem onClick={() => (session ? signOut() : signIn())}>

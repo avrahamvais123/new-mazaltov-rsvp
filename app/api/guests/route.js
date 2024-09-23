@@ -1,13 +1,23 @@
 import clientPromise from "@/lib/mongoDB";
 import { ObjectId } from "mongodb";
 
-export const GET = async () => {
+export const GET = async (req) => {
+  // קבלת ה-URL מהבקשה
+  const url = new URL(req.url);
+
+  // קבלת הפרמטרים מה-URL
+  const belongsTo = url.searchParams.get("belongsTo");
+  console.log("belongsTo: ", belongsTo);
+
   try {
     const client = await clientPromise;
     const db = client.db("mazaltov-rsvp");
 
     // שליפת כל המוזמנים והמרתם למערך
-    const allGuests = await db.collection("guests").find({}).toArray();
+    const allGuests = await db
+      .collection("guests")
+      .find({ belongsTo })
+      .toArray();
 
     //console.log("allGuests: ", allGuests);
 
@@ -17,7 +27,7 @@ export const GET = async () => {
           data: [],
           status: 400,
           message: "לא נמצאו מוזמנים",
-        }),
+        })
       );
     }
 
@@ -107,7 +117,7 @@ export const PATCH = async (req) => {
 
     // עדכון המסמך
     const result = await db.updateOne(
-      { _id: new ObjectId(res?.id) },
+      { _id: new ObjectId(res?.id), belongsTo: res?.belongsTo },
       { $set: res?.updates }
     );
 
@@ -140,9 +150,10 @@ export const DELETE = async (req) => {
     const db = client.db("mazaltov-rsvp");
 
     // מחיקת מוזמן לפי מערך של ids
-    const deleteGuestsByIds = await db
-      .collection("guests")
-      .deleteMany({ _id: { $in: res?.ids.map((id) => new ObjectId(id)) } });
+    const deleteGuestsByIds = await db.collection("guests").deleteMany({
+      belongTo: res?.belongTo,
+      _id: { $in: res?.ids.map((id) => new ObjectId(id)) },
+    });
     console.log("deleteGuestsByIds: ", deleteGuestsByIds);
 
     return new Response(

@@ -12,8 +12,9 @@ import TotalGuests from "./TotalGuests";
 import Pagination from "./Pagination";
 import { columns } from "./columns";
 import TableHeader from "./TableHeader";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
+import { useSession } from "next-auth/react";
 
 const initialData = [
   {
@@ -117,20 +118,25 @@ const initialData = [
 ];
 
 const GuestsTable = () => {
+  const { data: session } = useSession();
+  console.log("session: ", session);
+
   const [data, setData] = useState([]);
-  const [editValue, setEditValue] = useState("");
-  const [mode, setMode] = useState(""); // שורה שנמצאת במצב עריכה
+  console.log("data: ", data);
+
   const [status, setStatus] = useState({
     מגיעים: 0,
     "לא מגיעים": 0,
     "אולי מגיעים": 0,
   });
 
-
   const getAllGuests = useMutation({
     mutationFn: async () => {
+      const email = session?.user?.email;
+      console.log("email: ", email);
+
       try {
-        const res = await axios.get("/api/guests");
+        const res = await axios.get(`/api/guests?belongsTo=${email}`);
         //console.log("res: ", res);
 
         return res?.data?.data;
@@ -151,7 +157,7 @@ const GuestsTable = () => {
     mutationFn: async (ids) => {
       try {
         const res = await axios.delete("/api/guests", {
-          data: { ids: ids },
+          data: { ids, belongsTo: session?.user?.email },
         });
         console.log("res: ", res);
       } catch (error) {
@@ -172,6 +178,7 @@ const GuestsTable = () => {
       try {
         const res = await axios.patch("/api/guests", {
           id: _id,
+          belongsTo: session?.user?.email,
           updates: updates,
         });
         console.log("res: ", res);
@@ -187,18 +194,9 @@ const GuestsTable = () => {
     },
   });
 
-  useEffect(() => {
-    getAllGuests.mutate();
-  }, []);
-
+  /* tableApi */
   const table = useReactTable({
     columns: columns({
-      data,
-      setData,
-      mode,
-      setMode,
-      editValue,
-      setEditValue,
       editGuest,
       removeGuests,
     }),
@@ -210,6 +208,12 @@ const GuestsTable = () => {
     enableRowSelection: true,
     getRowId: (row, index) => row?._id,
   });
+
+  useEffect(() => {
+    if (session) {
+      getAllGuests.mutate();
+    }
+  }, [session]);
 
   return (
     <div className="size-full p-4 py-8 pb-0 overflow-hidden flex-col-center">

@@ -2,19 +2,22 @@
 "use client";
 
 import MyForm from "@/app/ui/MyForm";
+import { userAtom } from "@/lib/jotai";
 import { cn } from "@/lib/utils";
-import { signIn } from "next-auth/react";
+import { useAtom, useSetAtom } from "jotai";
+import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
 export default function SignIn() {
   const form = useForm();
+  const router = useRouter();
+  const setUser = useSetAtom(userAtom);
+  const { data: session } = useSession();
 
   const [success, setSuccess] = useState();
   const [error, setError] = useState();
-
-  const router = useRouter();
 
   const onSubmit = async (data) => {
     const result = await signIn("credentials", {
@@ -56,6 +59,21 @@ export default function SignIn() {
       span: 12,
     },
   ];
+
+  useEffect(() => {
+    if (session) {
+      console.log("session: ", session);
+      const { user } = session;
+
+      setUser((prev) => ({
+        ...prev,
+        id: user?.id,
+        name: user?.name,
+        email: user?.email,
+        image: user?.image,
+      }));
+    }
+  }, [session]);
 
   return (
     <div className="size-full flex-col-center bg-slate-50">

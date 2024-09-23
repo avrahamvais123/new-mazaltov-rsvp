@@ -3,19 +3,15 @@
 import Form from "@/app/ui/MyForm";
 import { cn } from "@/lib/utils";
 import { signIn } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import { userAtom, eventAtom } from "@/lib/jotai";
-import { useAtom } from "jotai";
 import axios from "axios";
 import { useState } from "react";
+import { useForm } from "react-hook-form";
 
 export default function SignUp() {
-  const [user, setUser] = useAtom(userAtom);
-  const [event, setEvent] = useAtom(eventAtom);
+  const form = useForm();
+
   const [success, setSuccess] = useState();
   const [error, setError] = useState();
-
-  const router = useRouter();
 
   const onSubmit = async (data) => {
     console.log("data: ", data);
@@ -90,14 +86,23 @@ export default function SignUp() {
 
         <Form
           title="כניסה"
+          form={form}
           fields={fields}
           onSubmit={onSubmit}
           submitName="הרשמה"
           formClassName="p-0"
           fieldsClassName="rounded-sm"
           submitClassName="rounded-sm"
-          error={error}
+          customSubmit={
+            <button
+              type="submit"
+              className="w-full p-2 mt-5 text-lg bg-indigo-600 text-indigo-50 rounded-sm"
+            >
+              כניסה
+            </button>
+          }
           success={success}
+          error={error}
         >
           <div className="relative h- w-full h-[1px] my-4 bg-slate-200">
             <span className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white px-2 text-sm text-gray-500">
