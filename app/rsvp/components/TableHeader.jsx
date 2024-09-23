@@ -13,7 +13,7 @@ const TableHeader = ({ table, setData, getAllGuests, removeGuests }) => {
     mutationFn: async () => {
       const res = await axios.post("/api/whatsapp", {
         to: "534272182",
-        body: "בתי ראית אני יכול לשלוח גם ווצאפ מהאפליקציה שלי!!!",
+        body: "בתי ראית אני יכול לשלוח גם ווצאפ מהאפליקציה שלי!!! אליפות!!!",
       });
 
       console.log("res: ", res);
