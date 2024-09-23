@@ -34,12 +34,15 @@ const fields = [
     required: true,
     span: 6,
   },
-  {
-    name: "quantity",
-    label: "כמות",
-    type: "number",
-    required: true,
-    span: 6,
+  ({ watch }) => {
+    return {
+      name: "quantity",
+      label: "כמות",
+      type: "number",
+      required: true,
+      span: 6,
+      appear: watch("status") === "לא מגיעים" ? false : true,
+    };
   },
 ];
 

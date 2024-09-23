@@ -7,6 +7,7 @@ import EditGuest from "./EditGuest";
 export const columns = ({
   mode,
   setMode,
+  data,
   setData,
   editValue,
   setEditValue,
@@ -127,7 +128,7 @@ export const columns = ({
       cell: ({ row }) => {
         return (
           <div className="size-full flex-center gap-2">
-            <EditGuest />
+            <EditGuest row={row} />
             <RemoveGuests
               remove={() => removeGuests.mutate([row?.id])}
               CustomTrigger={({ setOpen }) => (

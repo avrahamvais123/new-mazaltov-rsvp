@@ -1,6 +1,6 @@
 import React, { forwardRef } from "react";
 import { cn } from "@/lib/utils";
-import { useForm } from "react-hook-form";
+import { Controller, useController, useForm } from "react-hook-form";
 import Input from "./Input";
 import MySelect from "./MySelect";
 import MyRadioGroup from "./MyRadioGroup";
@@ -16,6 +16,7 @@ const MyForm = forwardRef(
       customSubmit,
       success,
       error,
+      initialValues = {},
     },
     ref
   ) => {
@@ -25,7 +26,11 @@ const MyForm = forwardRef(
       formState: { errors },
       watch,
       setValue,
-    } = useForm();
+    } = useForm({
+      defaultValues: {
+        ...initialValues,
+      },
+    });
 
     return (
       <form
@@ -75,7 +80,7 @@ const MyForm = forwardRef(
               >
                 {field?.type === "select" ? (
                   <MySelect
-                    defaultValue={field?.defaultValue}
+                    defaultValue={initialValues[field?.name]}
                     field={field}
                     value={value}
                     errors={errors}

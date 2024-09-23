@@ -28,6 +28,7 @@ const fields = [
     type: "select",
     required: true,
     span: 6,
+    //defaultValue: "מגיעים",
     options: [
       { value: "מגיעים", label: "מגיעים" },
       { value: "לא מגיעים", label: "לא מגיעים" },
@@ -46,7 +47,10 @@ const fields = [
   },
 ];
 
-const EditGuest = ({ setData }) => {
+const EditGuest = ({ row }) => {
+  console.log("row?.original: ", row?.original);
+  const { contact, name, status, quantity } = row?.original;
+
   const editGuest = async (data) => {
     try {
       const res = await axios.patch("/api/guests", {
@@ -82,6 +86,7 @@ const EditGuest = ({ setData }) => {
   const content = ({ setOpen }) => (
     <MyForm
       onSubmit={(data) => onSubmit(data, setOpen)}
+      initialValues={{ ...row?.original }}
       fields={fields}
       customSubmit={
         <button

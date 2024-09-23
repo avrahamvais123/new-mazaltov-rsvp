@@ -171,6 +171,7 @@ const GuestsTable = () => {
 
   const table = useReactTable({
     columns: columns({
+      data,
       setData,
       mode,
       setMode,
