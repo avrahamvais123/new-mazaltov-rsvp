@@ -131,7 +131,7 @@ const GuestsTable = () => {
     mutationFn: async () => {
       try {
         const res = await axios.get("/api/guests");
-        console.log("res: ", res);
+        //console.log("res: ", res);
 
         return res?.data?.data;
       } catch (error) {
@@ -142,7 +142,7 @@ const GuestsTable = () => {
       }
     },
     onSuccess: async (data) => {
-      console.log("data: ", data);
+      //console.log("data: ", data);
       setData(data);
     },
   });

@@ -18,6 +18,13 @@ const TotalGuests = ({ status, data, setStatus }) => {
   };
 
   useEffect(() => {
+    // אתחול הסטטוסים ל-0
+    const initialStatus = {
+      מגיעים: 0,
+      "לא מגיעים": 0,
+      "אולי מגיעים": 0,
+    };
+
     const result = data?.reduce((acc, curr) => {
       // אם הסטטוס לא קיים במצבר, נתחיל אותו ב-0
       if (!acc[curr.status]) {
@@ -32,9 +39,12 @@ const TotalGuests = ({ status, data, setStatus }) => {
       }
 
       return acc;
-    }, {});
+    }, initialStatus);
 
-    if (Object.keys(result).length > 0) return setStatus(result);
+    // עדכון הסטטוסים
+    if (result && Object.keys(result).length > 0) {
+      setStatus(result);
+    }
   }, [data]);
 
   return (
