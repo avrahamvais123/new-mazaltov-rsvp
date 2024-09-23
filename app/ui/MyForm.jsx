@@ -16,21 +16,18 @@ const MyForm = forwardRef(
       customSubmit,
       success,
       error,
-      initialValues = {},
+      form,
     },
     ref
   ) => {
     const {
-      register,
       handleSubmit,
-      formState: { errors },
-      watch,
+      register,
       setValue,
-    } = useForm({
-      defaultValues: {
-        ...initialValues,
-      },
-    });
+      watch,
+      formState: { errors },
+    } = form;
+    console.log("form: ", form);
 
     return (
       <form
@@ -62,10 +59,6 @@ const MyForm = forwardRef(
           )}
 
           {fields.map((field, i) => {
-            if (typeof field === "function") {
-              field = field({ watch, fields });
-            }
-
             if (!field || field?.appear === false) return;
 
             const value = watch(field?.name);
@@ -80,7 +73,7 @@ const MyForm = forwardRef(
               >
                 {field?.type === "select" ? (
                   <MySelect
-                    defaultValue={initialValues[field?.name]}
+                    defaultValue={form?.watch(field?.name)}
                     field={field}
                     value={value}
                     errors={errors}

@@ -1,13 +1,14 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import MyForm from "@/app/ui/MyForm";
 import MyDialog from "@/app/ui/MyDialog";
 import { Add01Icon } from "@/app/icons/icons";
 import { cn } from "@/lib/utils";
 import axios from "axios";
+import { useForm } from "react-hook-form";
 
-const fields = [
+const fields = (watch) => [
   {
     name: "name",
     label: "שם",
@@ -34,19 +35,26 @@ const fields = [
     required: true,
     span: 6,
   },
-  ({ watch }) => {
-    return {
-      name: "quantity",
-      label: "כמות",
-      type: "number",
-      required: true,
-      span: 6,
-      appear: watch("status") === "לא מגיעים" ? false : true,
-    };
+  {
+    name: "quantity",
+    label: "כמות",
+    type: "number",
+    required: true,
+    span: 6,
+    appear: watch("status") === "לא מגיעים" ? false : true,
   },
 ];
 
 const AddGuest = ({ setData }) => {
+  const form = useForm();
+
+  useEffect(() => {
+    const status = form?.watch("status");
+    if (status === "לא מגיעים") {
+      form?.setValue("quantity", 0);
+    }
+  }, [form?.watch("status"), form?.setValue]);
+
   const createGuest = async (data) => {
     try {
       const res = await axios.post("/api/guests", {
@@ -66,6 +74,7 @@ const AddGuest = ({ setData }) => {
     console.log("data: ", data);
     createGuest(data);
     setOpen(false);
+    form?.reset();
   };
 
   const CustomTrigger = ({ setOpen }) => (
@@ -83,7 +92,8 @@ const AddGuest = ({ setData }) => {
   const content = ({ setOpen }) => (
     <MyForm
       onSubmit={(data) => onSubmit(data, setOpen)}
-      fields={fields}
+      fields={fields(form?.watch)}
+      form={form}
       customSubmit={
         <button
           type="submit"

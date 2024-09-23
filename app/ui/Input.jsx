@@ -11,6 +11,9 @@ const Input = ({
   errors,
   register = () => {},
 }) => {
+  console.log("errors from Input: ", errors);
+
+  console.log("Object.values(errors).length: ", Object.values(errors).length);
 
   const required =
     typeof field?.required === "string"
@@ -48,16 +51,16 @@ const Input = ({
           value
             ? "bg-white -translate-y-5 scale-75 px-2 mx-0"
             : "bg-white peer-placeholder-shown:translate-y-0 peer-placeholder-shown:scale-100",
-          errors[field?.name] && "text-red-500"
+          //errors[field?.name] && "text-red-500"
         )}
       >
         {field?.label}
       </label>
-      {errors[field?.name] && (
+      {/* {errors[field?.name] && (
         <span className="text-red-500 text-sm">
           {errors[field?.name]?.message}
         </span>
-      )}
+      )} */}
     </>
   );
 };

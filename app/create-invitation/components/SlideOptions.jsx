@@ -5,6 +5,7 @@ import MyForm from "@/app/ui/MyForm";
 import { eventAtom } from "@/lib/jotai";
 import { useAtom } from "jotai";
 import localforage from "localforage";
+import { useForm } from "react-hook-form";
 
 const fields = [
   {
@@ -38,6 +39,8 @@ const fields = [
 ];
 
 const SlideOptions = ({ setSteps, carouselApi }) => {
+  const form = useForm();
+
   const [event, setEvent] = useAtom(eventAtom);
 
   const onSubmit = async (data) => {
@@ -60,6 +63,7 @@ const SlideOptions = ({ setSteps, carouselApi }) => {
     <div className="size-full p-4 flex-col-center">
       <MyForm
         onSubmit={onSubmit}
+        form={form}
         fields={fields}
         classNames={{
           form: "w-full p-4 flex-col-center rounded-sm",

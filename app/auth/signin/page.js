@@ -1,13 +1,16 @@
 // app/auth/signin/page.js
 "use client";
 
-import Form from "@/app/ui/MyForm";
+import MyForm from "@/app/ui/MyForm";
 import { cn } from "@/lib/utils";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { useForm } from "react-hook-form";
 
 export default function SignIn() {
+  const form = useForm();
+
   const [success, setSuccess] = useState();
   const [error, setError] = useState();
 
@@ -69,8 +72,9 @@ export default function SignIn() {
           וסיסמה צריך להיכנס גם כן רק בדרך זו
         </span>
 
-        <Form
+        <MyForm
           title="כניסה"
+          form={form}
           fields={fields}
           onSubmit={onSubmit}
           submitName="כניסה"
@@ -113,7 +117,7 @@ export default function SignIn() {
             />
             כניסה עם גוגל
           </button>
-        </Form>
+        </MyForm>
 
         {/* להרשמה */}
         <span className="text-xs text-center text-slate-400">
