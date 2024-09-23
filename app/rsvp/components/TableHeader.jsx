@@ -5,8 +5,20 @@ import { cn } from "@/lib/utils";
 import React from "react";
 import AddGuest from "./AddGuest";
 import RemoveGuests from "./RemoveGuests";
+import { useMutation } from "@tanstack/react-query";
+import axios from "axios";
 
 const TableHeader = ({ table, setData, getAllGuests, removeGuests }) => {
+  const sendWhatsapp = useMutation({
+    mutationFn: async () => {
+      const res = await axios.post("/api/whatsapp", {
+        to: "534272182",
+        body: "בתי ראית אני יכול לשלוח גם ווצאפ מהאפליקציה שלי!!!",
+      });
+
+      console.log("res: ", res);
+    },
+  });
   return (
     <div className="w-full mb-3 mt-10 flex-center justify-between gap-2">
       {/* title */}
@@ -14,6 +26,11 @@ const TableHeader = ({ table, setData, getAllGuests, removeGuests }) => {
 
       {/* buttons */}
       <div className="flex-center gap-2">
+        {/* whatsapp */}
+        <button onClick={() => sendWhatsapp.mutate()} className="">
+          שלח ווצאפ
+        </button>
+
         {/* add */}
         <AddGuest setData={setData} />
 
