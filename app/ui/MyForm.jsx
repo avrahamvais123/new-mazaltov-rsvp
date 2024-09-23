@@ -11,7 +11,7 @@ const MyForm = forwardRef(
       children,
       classNames = {},
       fieldsClassName,
-      fields,
+      fields = [],
       onSubmit,
       customSubmit,
       success,
@@ -39,7 +39,7 @@ const MyForm = forwardRef(
       >
         <div
           className={cn(
-            "overflow-y-auto",
+            "overflow-y-auto pt-1",
             "md:h-auto w-full",
             "grid grid-cols-12 gap-4"
           )}
@@ -56,12 +56,12 @@ const MyForm = forwardRef(
             </span>
           )}
 
-          {fields.map((fieldData, i) => {
-            const field =
-              typeof fieldData === "function"
-                ? fieldData({ watch, fields })
-                : fieldData;
-            if (!field) return;
+          {fields.map((field, i) => {
+            if (typeof field === "function") {
+              field = field({ watch, fields });
+            }
+
+            if (!field || field?.appear === false) return;
 
             const value = watch(field?.name);
 
@@ -81,7 +81,7 @@ const MyForm = forwardRef(
                     errors={errors}
                     setValue={setValue}
                     fieldsClassName={classNames?.fields}
-                    className={fieldData?.className}
+                    className={field?.className}
                   />
                 ) : field?.type === "radioGroup" ? (
                   <MyRadioGroup
@@ -99,7 +99,7 @@ const MyForm = forwardRef(
                     register={register}
                     errors={errors}
                     fieldsClassName={classNames?.fields}
-                    className={fieldData?.className}
+                    className={field?.className}
                   />
                 )}
               </div>

@@ -2,44 +2,11 @@
 
 import { RefreshIcon, Delete02Icon } from "@/app/icons/icons";
 import { cn } from "@/lib/utils";
-import axios from "axios";
 import React from "react";
 import AddGuest from "./AddGuest";
+import RemoveGuests from "./RemoveGuests";
 
-const TableHeader = ({ table, setData }) => {
-  const getAllGuests = async () => {
-    try {
-      const res = await axios.get("/api/guests");
-      console.log("res: ", res);
-      setData(res.data.data);
-    } catch (error) {
-      console.error(
-        "Error getting all guests: ",
-        error.response?.data || error.message
-      );
-    }
-  };
-
-  const removeGuests = async () => {
-    const guestsToRemove = table
-      ?.getSelectedRowModel()
-      .rows.map((row) => row?.id);
-    console.log("guestsToRemove: ", guestsToRemove);
-
-    try {
-      const res = await axios.delete("/api/guests", {
-        data: { ids: guestsToRemove },
-      });
-      getAllGuests();
-      console.log("res: ", res);
-    } catch (error) {
-      console.error(
-        "Error removing all guests: ",
-        error.response?.data || error.message
-      );
-    }
-  };
-
+const TableHeader = ({ table, setData, getAllGuests, removeGuests }) => {
   return (
     <div className="w-full mb-3 mt-10 flex-center justify-between gap-2">
       {/* title */}
@@ -51,26 +18,41 @@ const TableHeader = ({ table, setData }) => {
         <AddGuest setData={setData} />
 
         {/* reload */}
-        <button
-          onClick={getAllGuests}
+        {/* <button
+          onClick={() => getAllGuests.mutate()}
           className={cn(
             "bg-indigo-600 text-white",
             "p-2 rounded-sm flex-center gap-2"
           )}
         >
           <RefreshIcon className="size-4 text-white" />
-        </button>
+        </button> */}
 
         {/* remove */}
-        <button
-          onClick={removeGuests}
-          className={cn(
-            "bg-indigo-600 text-white",
-            "p-2 rounded-sm flex-center gap-2"
-          )}
-        >
-          <Delete02Icon className="size-4 text-white" />
-        </button>
+        <RemoveGuests
+          remove={() => {
+            const guestsToRemove = table
+              ?.getSelectedRowModel()
+              .rows.map((row) => row?.id);
+
+            removeGuests.mutate(guestsToRemove);
+          }}
+          CustomTrigger={({ setOpen }) => {
+            return (
+              <button
+                onClick={() => {
+                  setOpen(true);
+                }}
+                className={cn(
+                  "bg-indigo-600 text-white",
+                  "p-2 rounded-sm flex-center gap-2"
+                )}
+              >
+                <Delete02Icon className="size-4 text-white" />
+              </button>
+            );
+          }}
+        />
       </div>
     </div>
   );

@@ -126,7 +126,7 @@ const GuestsTable = () => {
     "אולי מגיעים": 0,
   });
 
-  const getData = useMutation({
+  const getAllGuests = useMutation({
     mutationFn: async () => {
       try {
         const res = await axios.get("/api/guests");
@@ -146,8 +146,27 @@ const GuestsTable = () => {
     },
   });
 
+  const removeGuests = useMutation({
+    mutationFn: async (ids) => {
+      try {
+        const res = await axios.delete("/api/guests", {
+          data: { ids: ids },
+        });
+        console.log("res: ", res);
+      } catch (error) {
+        console.error(
+          "Error removing all guests: ",
+          error.response?.data || error.message
+        );
+      }
+    },
+    onSuccess: async () => {
+      getAllGuests.mutate();
+    },
+  });
+
   useEffect(() => {
-    getData.mutate();
+    getAllGuests.mutate();
   }, []);
 
   const table = useReactTable({
@@ -157,6 +176,7 @@ const GuestsTable = () => {
       setMode,
       editValue,
       setEditValue,
+      removeGuests,
     }),
     data: data,
     getCoreRowModel: getCoreRowModel(),
@@ -173,7 +193,12 @@ const GuestsTable = () => {
       <TotalGuests status={status} data={data} setStatus={setStatus} />
 
       {/* table header */}
-      <TableHeader table={table} setData={setData} />
+      <TableHeader
+        table={table}
+        getAllGuests={getAllGuests}
+        removeGuests={removeGuests}
+        setData={setData}
+      />
 
       {/* table */}
       <Table
@@ -193,3 +218,23 @@ const GuestsTable = () => {
 };
 
 export default GuestsTable;
+
+/* const removeGuests = async () => {
+    const guestsToRemove = table
+      ?.getSelectedRowModel()
+      .rows.map((row) => row?.id);
+    console.log("guestsToRemove: ", guestsToRemove);
+
+    try {
+      const res = await axios.delete("/api/guests", {
+        data: { ids: guestsToRemove },
+      });
+      getAllGuests();
+      console.log("res: ", res);
+    } catch (error) {
+      console.error(
+        "Error removing all guests: ",
+        error.response?.data || error.message
+      );
+    }
+  }; */

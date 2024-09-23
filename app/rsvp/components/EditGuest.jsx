@@ -3,11 +3,11 @@
 import React from "react";
 import MyForm from "@/app/ui/MyForm";
 import MyDialog from "@/app/ui/MyDialog";
-import { Add01Icon } from "@/app/icons/icons";
+import { Edit02Icon } from "@/app/icons/icons";
 import { cn } from "@/lib/utils";
 import axios from "axios";
 
-const fields = () => [
+const fields = [
   {
     name: "name",
     label: "שם",
@@ -26,31 +26,34 @@ const fields = () => [
     name: "status",
     label: "סטטוס",
     type: "select",
+    required: true,
+    span: 6,
     options: [
       { value: "מגיעים", label: "מגיעים" },
       { value: "לא מגיעים", label: "לא מגיעים" },
       { value: "אולי מגיעים", label: "אולי מגיעים" },
     ],
-    required: true,
-    span: 6,
   },
-  {
-    name: "quantity",
-    label: "כמות",
-    type: "number",
-    required: true,
-    span: 6,
+  ({ watch }) => {
+    return {
+      name: "quantity",
+      label: "כמות",
+      type: "number",
+      required: true,
+      span: 6,
+      appear: watch("status") === "לא מגיעים" ? false : true,
+    };
   },
 ];
 
-const AddGuest = ({ setData }) => {
-  const createGuest = async (data) => {
+const EditGuest = ({ setData }) => {
+  const editGuest = async (data) => {
     try {
-      const res = await axios.post("/api/guests", {
-        ...data,
+      const res = await axios.patch("/api/guests", {
+        id: data?.id,
+        updates: data?.updates,
       });
       console.log("res: ", res);
-      setData((prev) => [...prev, res?.data?.data]);
     } catch (error) {
       console.error(
         "Error creating guest: ",
@@ -61,19 +64,18 @@ const AddGuest = ({ setData }) => {
 
   const onSubmit = (data, setOpen) => {
     console.log("data: ", data);
-    createGuest(data);
+    editGuest(data);
     setOpen(false);
   };
 
   const CustomTrigger = ({ setOpen }) => (
-    <button
-      onClick={() => setOpen(true)}
-      className={cn(
-        "bg-indigo-600 text-white",
-        "p-2 rounded-sm flex-center gap-2"
-      )}
-    >
-      <Add01Icon className="size-4 text-white" />
+    <button onClick={() => setOpen(true)}>
+      <Edit02Icon
+        className={cn(
+          "size-5 text-slate-600 transition-all",
+          "hover:text-blue-600 active:text-blue-700"
+        )}
+      />
     </button>
   );
 
@@ -99,12 +101,12 @@ const AddGuest = ({ setData }) => {
   return (
     <MyDialog
       noFooter
-      title="הוספת מוזמן"
-      description="מלא פרטים על המוזמן"
+      title="עדכון מוזמן"
+      description="עדכון פרטים על המוזמן"
       customTrigger={CustomTrigger}
       content={content}
     />
   );
 };
 
-export default AddGuest;
+export default EditGuest;

@@ -30,7 +30,14 @@ const SlideUploadImage = ({ setSteps, carouselApi }) => {
 
   return (
     <>
-      <button
+      <MyUploader onSubmit={onSubmit} />
+    </>
+  );
+};
+
+export default SlideUploadImage;
+
+/* <button
         onClick={() => {
           setSteps((prev) =>
             prev.map((step) =>
@@ -47,10 +54,4 @@ const SlideUploadImage = ({ setSteps, carouselApi }) => {
         className=""
       >
         next
-      </button>
-      <MyUploader onSubmit={onSubmit} />
-    </>
-  );
-};
-
-export default SlideUploadImage;
+      </button> */

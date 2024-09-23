@@ -133,7 +133,7 @@ export const PATCH = async (req) => {
 export const DELETE = async (req) => {
   try {
     const res = await req.json();
-    console.log("Received IDs: ", res.ids);
+    console.log("Received IDs: ", res?.ids);
 
     const client = await clientPromise;
     const db = client.db("mazaltov-rsvp");
@@ -141,7 +141,7 @@ export const DELETE = async (req) => {
     // מחיקת מוזמן לפי מערך של ids
     const deleteGuestsByIds = await db
       .collection("guests")
-      .deleteMany({ _id: { $in: res.ids.map((id) => new ObjectId(id)) } });
+      .deleteMany({ _id: { $in: res?.ids.map((id) => new ObjectId(id)) } });
     console.log("deleteGuestsByIds: ", deleteGuestsByIds);
 
     return new Response(

@@ -6,8 +6,8 @@ import {
   CarouselContent,
   CarouselItem,
 } from "@/components/ui/carousel";
-import SlideUploadImage from "./SlideUploadImage";
 import StepsBar from "@/app/ui/StepsBar";
+import SlideUploadImage from "./SlideUploadImage";
 import SlideOptions from "./SlideOptions";
 import SlidePayment from "./SlidePayment";
 

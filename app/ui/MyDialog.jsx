@@ -15,6 +15,8 @@ const MyDialog = ({
   customTrigger = () => {},
   content = () => {},
   customSubmit = () => {},
+  title = "מודאל",
+  description = "פרטים על המודאל",
   noFooter = false,
   open,
   setOpen,
@@ -42,11 +44,9 @@ const MyDialog = ({
         }}
         className="sm:max-w-[425px]"
       >
-        <DialogHeader className="">
-          <DialogTitle>הוספת מוזמן</DialogTitle>
-          <DialogDescription>
-            בחר את מאפייני המוזמן החדש ואשר.
-          </DialogDescription>
+        <DialogHeader>
+          <DialogTitle>{title}</DialogTitle>
+          <DialogDescription>{description}</DialogDescription>
         </DialogHeader>
 
         {content({ open: currentOpen, setOpen: currentSetOpen })}

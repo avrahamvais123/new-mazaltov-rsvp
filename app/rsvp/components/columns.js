@@ -1,6 +1,8 @@
 import { Delete02Icon, Edit02Icon } from "@/app/icons/icons";
 import Checkbox from "@/app/ui/Checkbox";
 import { cn } from "@/lib/utils";
+import RemoveGuests from "./RemoveGuests";
+import EditGuest from "./EditGuest";
 
 export const columns = ({
   mode,
@@ -8,6 +10,7 @@ export const columns = ({
   setData,
   editValue,
   setEditValue,
+  removeGuests,
 }) => {
   const handleSave = (rowName) => {
     setData((prevData) =>
@@ -124,18 +127,18 @@ export const columns = ({
       cell: ({ row }) => {
         return (
           <div className="size-full flex-center gap-2">
-            <Edit02Icon
-              className={cn(
-                "size-5 cursor-pointer",
-                "text-slate-600 transition-all",
-                "hover:text-blue-600 active:text-blue-700"
-              )}
-            />
-            <Delete02Icon
-              className={cn(
-                "size-5 cursor-pointer",
-                "text-slate-600 transition-all",
-                "hover:text-red-600 active:text-red-700"
+            <EditGuest />
+            <RemoveGuests
+              remove={() => removeGuests.mutate([row?.id])}
+              CustomTrigger={({ setOpen }) => (
+                <button onClick={() => setOpen(true)}>
+                  <Delete02Icon
+                    className={cn(
+                      "size-5 text-slate-600 transition-all",
+                      "hover:text-red-600 active:text-red-700"
+                    )}
+                  />
+                </button>
               )}
             />
           </div>

@@ -43,7 +43,7 @@ const SlideOptions = ({ setSteps, carouselApi }) => {
   const onSubmit = async (data) => {
     const updatedPrice = event.price + Number(data?.sms);
 
-    const amountSms = fields[0].options.filter(
+    const amountSms = fields()[0].options.filter(
       (option) => option.value == data?.sms
     )[0].amountSms;
 
@@ -64,7 +64,7 @@ const SlideOptions = ({ setSteps, carouselApi }) => {
         classNames={{
           form: "w-full p-4 flex-col-center rounded-sm",
         }}
-        Submit={
+        customSubmit={
           <button
             type="submit"
             className="w-full p-3 mt-5 text-lg bg-indigo-600 text-indigo-50 rounded-sm"
