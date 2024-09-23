@@ -190,8 +190,6 @@ const GuestsTable = () => {
     getAllGuests.mutate();
   }, []);
 
-  const a = "";
-
   const table = useReactTable({
     columns: columns({
       data,

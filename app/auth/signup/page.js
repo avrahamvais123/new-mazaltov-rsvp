@@ -1,6 +1,6 @@
 "use client";
 
-import Form from "@/app/ui/Form";
+import Form from "@/app/ui/MyForm";
 import { cn } from "@/lib/utils";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
