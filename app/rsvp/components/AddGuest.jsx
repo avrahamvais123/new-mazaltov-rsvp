@@ -7,7 +7,7 @@ import { Add01Icon } from "@/app/icons/icons";
 import { cn } from "@/lib/utils";
 import axios from "axios";
 
-const fields = () => [
+const fields = [
   {
     name: "name",
     label: "שם",
