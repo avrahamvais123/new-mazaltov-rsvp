@@ -11,6 +11,7 @@ export const columns = ({
   setData,
   editValue,
   setEditValue,
+  editGuest,
   removeGuests,
 }) => {
   const handleSave = (rowName) => {
@@ -128,7 +129,7 @@ export const columns = ({
       cell: ({ row }) => {
         return (
           <div className="size-full flex-center gap-2">
-            <EditGuest row={row} />
+            <EditGuest editGuest={editGuest} row={row} />
             <RemoveGuests
               remove={() => removeGuests.mutate([row?.id])}
               CustomTrigger={({ setOpen }) => (

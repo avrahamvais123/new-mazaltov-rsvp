@@ -91,6 +91,7 @@ export const POST = async (req) => {
 export const PATCH = async (req) => {
   try {
     const res = await req.json();
+    console.log('res: ', res);
 
     if (!res?.id) {
       return new Response(

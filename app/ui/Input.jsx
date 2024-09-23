@@ -11,7 +11,6 @@ const Input = ({
   errors,
   register = () => {},
 }) => {
-  console.log("field: ", field);
 
   const required =
     typeof field?.required === "string"

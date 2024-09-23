@@ -47,28 +47,10 @@ const fields = [
   },
 ];
 
-const EditGuest = ({ row }) => {
-  console.log("row?.original: ", row?.original);
-  const { contact, name, status, quantity } = row?.original;
-
-  const editGuest = async (data) => {
-    try {
-      const res = await axios.patch("/api/guests", {
-        id: data?.id,
-        updates: data?.updates,
-      });
-      console.log("res: ", res);
-    } catch (error) {
-      console.error(
-        "Error creating guest: ",
-        error.response?.data || error.message
-      );
-    }
-  };
-
+const EditGuest = ({ editGuest, row }) => {
   const onSubmit = (data, setOpen) => {
     console.log("data: ", data);
-    editGuest(data);
+    editGuest.mutate(data);
     setOpen(false);
   };
 

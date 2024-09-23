@@ -165,6 +165,27 @@ const GuestsTable = () => {
     },
   });
 
+  const editGuest = useMutation({
+    mutationFn: async (data) => {
+      const { _id, ...updates } = data;
+      try {
+        const res = await axios.patch("/api/guests", {
+          id: _id,
+          updates: updates,
+        });
+        console.log("res: ", res);
+      } catch (error) {
+        console.error(
+          "Error creating guest: ",
+          error.response?.data || error.message
+        );
+      }
+    },
+    onSuccess: async () => {
+      getAllGuests.mutate();
+    },
+  });
+
   useEffect(() => {
     getAllGuests.mutate();
   }, []);
@@ -177,6 +198,7 @@ const GuestsTable = () => {
       setMode,
       editValue,
       setEditValue,
+      editGuest,
       removeGuests,
     }),
     data: data,
