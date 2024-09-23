@@ -126,13 +126,14 @@ const GuestsTable = () => {
     "אולי מגיעים": 0,
   });
 
+
   const getAllGuests = useMutation({
     mutationFn: async () => {
       try {
         const res = await axios.get("/api/guests");
         console.log("res: ", res);
 
-        return res?.data?.data || [];
+        return res?.data?.data;
       } catch (error) {
         console.error(
           "Error getting all guests: ",
@@ -208,7 +209,6 @@ const GuestsTable = () => {
     //initialState: { pagination: { pageSize: 50 } }, // למשל 50 שורות בעמוד
     enableRowSelection: true,
     getRowId: (row, index) => row?._id,
-    enableHiding: true,
   });
 
   return (

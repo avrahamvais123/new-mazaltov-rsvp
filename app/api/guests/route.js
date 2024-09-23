@@ -14,10 +14,10 @@ export const GET = async () => {
     if (allGuests.length === 0) {
       return new Response(
         JSON.stringify({
+          data: [],
           status: 400,
           message: "לא נמצאו מוזמנים",
         }),
-        { status: 400 }
       );
     }
 
@@ -91,7 +91,7 @@ export const POST = async (req) => {
 export const PATCH = async (req) => {
   try {
     const res = await req.json();
-    console.log('res: ', res);
+    console.log("res: ", res);
 
     if (!res?.id) {
       return new Response(

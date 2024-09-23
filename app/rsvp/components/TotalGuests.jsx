@@ -18,7 +18,7 @@ const TotalGuests = ({ status, data, setStatus }) => {
   };
 
   useEffect(() => {
-    const result = data.reduce((acc, curr) => {
+    const result = data?.reduce((acc, curr) => {
       // אם הסטטוס לא קיים במצבר, נתחיל אותו ב-0
       if (!acc[curr.status]) {
         acc[curr.status] = 0;
@@ -34,19 +34,17 @@ const TotalGuests = ({ status, data, setStatus }) => {
       return acc;
     }, {});
 
-    setStatus(result);
+    if (Object.keys(result).length > 0) return setStatus(result);
   }, [data]);
 
   return (
     <div className="w-full flex-center gap-2">
-      {Object.entries(status)?.map(([key, value], idx) => {
+      {Object.entries(status).map(([key, value], idx) => {
         const Icon = iconsMap[key]; // קבלת האייקון המתאים מהאובייקט
         return (
           <div
             key={idx}
-            className={cn(
-              "relative w-32 py-4 text-slate-600 border flex-col-center rounded-sm"
-            )}
+            className="relative w-32 py-4 text-slate-600 border flex-col-center rounded-sm"
           >
             {Icon && (
               <Icon

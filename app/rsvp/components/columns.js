@@ -114,10 +114,5 @@ export const columns = ({
         );
       },
     },
-    {
-      id: "belongs-to",
-      header: "שייך ל",
-      accessorKey: "belongs-to",
-    },
   ];
 };
