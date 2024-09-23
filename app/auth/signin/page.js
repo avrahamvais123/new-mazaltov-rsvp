@@ -82,7 +82,7 @@ export default function SignIn() {
             form: "pt-4",
             fields: "rounded-sm",
           }}
-          Submit={
+          customSubmit={
             <button
               type="submit"
               className="w-full p-2 mt-5 text-lg bg-indigo-600 text-indigo-50 rounded-sm"

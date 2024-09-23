@@ -46,7 +46,7 @@ const SlideOptions = ({ setSteps, carouselApi }) => {
   const onSubmit = async (data) => {
     const updatedPrice = event.price + Number(data?.sms);
 
-    const amountSms = fields()[0].options.filter(
+    const amountSms = fields[0].options.filter(
       (option) => option.value == data?.sms
     )[0].amountSms;
 

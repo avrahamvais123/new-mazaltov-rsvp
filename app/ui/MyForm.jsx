@@ -20,6 +20,8 @@ const MyForm = forwardRef(
     },
     ref
   ) => {
+    console.log("customSubmit: ", customSubmit);
+
     const {
       handleSubmit,
       register,
