@@ -190,6 +190,8 @@ const GuestsTable = () => {
     getAllGuests.mutate();
   }, []);
 
+  const a = "";
+
   const table = useReactTable({
     columns: columns({
       data,
@@ -207,7 +209,8 @@ const GuestsTable = () => {
     getSortedRowModel: getSortedRowModel(),
     //initialState: { pagination: { pageSize: 50 } }, // למשל 50 שורות בעמוד
     enableRowSelection: true,
-    getRowId: (row, index) => row?._id, // או כל מזהה ייחודי אחר
+    getRowId: (row, index) => row?._id,
+    enableHiding: true,
   });
 
   return (

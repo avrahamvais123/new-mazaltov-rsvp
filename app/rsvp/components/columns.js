@@ -51,39 +51,6 @@ export const columns = ({
       id: "name",
       header: "שם",
       accessorKey: "name",
-      cell: (props) => {
-        const isEditMode = props?.row?.original?.name === mode;
-        return (
-          <>
-            {isEditMode ? (
-              <div className="flex justify-center">
-                <input
-                  type="text"
-                  className="text-center w-fit border border-gray-300"
-                  value={editValue}
-                  onChange={(e) => setEditValue(e.target.value)}
-                  autoFocus
-                />
-                <button
-                  className="ml-2 px-4 py-1 bg-green-500 text-white rounded"
-                  onClick={() => handleSave(props?.row?.original?.name)}
-                >
-                  שמור
-                </button>
-              </div>
-            ) : (
-              <div
-                onClick={() => {
-                  setMode(props?.row?.original?.name);
-                  setEditValue(props?.row?.original?.name); // כדי לאתחל את שדה העריכה
-                }}
-              >
-                {props?.row?.original?.name}
-              </div>
-            )}
-          </>
-        );
-      },
     },
     {
       id: "contact",
@@ -146,6 +113,11 @@ export const columns = ({
           </div>
         );
       },
+    },
+    {
+      id: "belongs-to",
+      header: "שייך ל",
+      accessorKey: "belongs-to",
     },
   ];
 };
