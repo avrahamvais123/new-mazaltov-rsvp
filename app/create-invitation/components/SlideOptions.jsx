@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import MyForm from "@/app/ui/Form";
+import MyForm from "@/app/ui/MyForm";
 import { eventAtom } from "@/lib/jotai";
 import { useAtom } from "jotai";
 import localforage from "localforage";
