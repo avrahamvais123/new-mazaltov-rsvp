@@ -3,42 +3,29 @@
 import { cn } from "@/lib/utils";
 import React from "react";
 
-const Input = ({
+const Textarea = ({
+  className,
   value,
   field,
-  className,
   fieldsClassName,
   errors = {},
   register = () => {},
+  ...props
 }) => {
-  const required =
-    typeof field?.required === "string"
-      ? field.required
-      : field?.required === true
-      ? "זהו שדה חובה"
-      : null;
-
   return (
     <>
-      <input
-        id={field?.name}
-        type={field?.type}
-        placeholder=" "
-        {...register(field?.name, {
-          required: required,
-          pattern: field?.pattern && {
-            value: field?.pattern,
-            message: "הערך אינו תואם את התבנית הנדרשת",
-          },
-        })}
+      <textarea
+        {...props}
+        {...register(field?.name)}
+        placeholder=""
         className={cn(
-          "w-full border px-4 py-2 peer",
-          "focus:outline-indigo-800",
-          errors[field?.name] && "border-red-500",
-          fieldsClassName,
+          "w-full p-2 peer",
+          "border border-slate-200",
+          "rounded-md resize-none",
           className
         )}
-      />
+      ></textarea>
+
       <label
         htmlFor={field?.name}
         className={cn(
@@ -61,4 +48,4 @@ const Input = ({
   );
 };
 
-export default Input;
+export default Textarea;

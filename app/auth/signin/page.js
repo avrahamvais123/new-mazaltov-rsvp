@@ -14,16 +14,15 @@ export default function SignIn() {
   const form = useForm();
   const router = useRouter();
   const setUser = useSetAtom(userAtom);
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
 
   const [success, setSuccess] = useState();
   const [error, setError] = useState();
 
   const onSubmit = async (data) => {
     const result = await signIn("credentials", {
+      ...data,
       redirect: false,
-      email: data?.email,
-      password: data?.password,
       callbackUrl: "/",
     });
 
@@ -42,6 +41,14 @@ export default function SignIn() {
   };
 
   const fields = [
+    {
+      name: "name",
+      label: "שם",
+      type: "text",
+      placeholder: "שם",
+      required: true,
+      span: 12,
+    },
     {
       name: "email",
       label: "אימייל",
@@ -64,14 +71,7 @@ export default function SignIn() {
     if (session) {
       console.log("session: ", session);
       const { user } = session;
-
-      setUser((prev) => ({
-        ...prev,
-        id: user?.id,
-        name: user?.name,
-        email: user?.email,
-        image: user?.image,
-      }));
+      setUser((prev) => ({ ...prev, ...user }));
     }
   }, [session]);
 

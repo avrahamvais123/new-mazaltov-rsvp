@@ -19,7 +19,7 @@ export async function POST(request) {
       .then((message) => console.log("message.sid: ", message.sid))
       .done();
 
-    return Response(
+    return new Response(
       JSON.stringify({
         data: message,
         message: "ההודעה נשלחה בהצלחה",
@@ -28,7 +28,7 @@ export async function POST(request) {
       })
     );
   } catch (error) {
-    return Response(
+    return new Response(
       JSON.stringify({
         error: error,
         message: "ההודעה לא נשלחה",
@@ -39,3 +39,5 @@ export async function POST(request) {
     );
   }
 }
+
+

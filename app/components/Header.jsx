@@ -1,7 +1,12 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { useSession, signIn, signOut } from "next-auth/react";
+import {
+  useSession,
+  signIn,
+  signOut,
+  revalidateSession,
+} from "next-auth/react";
 import { UserCircleIcon } from "../icons/icons";
 import Hamburger from "hamburger-react";
 import {
@@ -27,7 +32,7 @@ const Header = () => {
       } else {
         return (
           <div className="size-10 rounded-full bg-indigo-600 text-indigo-50 text-2xl flex-center">
-            {session?.user?.name[0]}
+            {session?.user?.name?.[0]}
           </div>
         );
       }
@@ -67,10 +72,21 @@ const Header = () => {
 
           <DropdownMenuContent className="ml-2">
             <DropdownMenuLabel>
-              <p className="leading-4 text-center text-sm text-slate-400">{`${session?.user?.name}`}</p>
+              <p className="leading-4 text-center text-sm text-slate-400">
+                {session?.user?.name || "אורח"}
+              </p>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={() => (session ? signOut() : signIn())}>
+            <DropdownMenuItem
+              onClick={() =>
+                session
+                  ? signOut({
+                      redirect: false,
+                      callbackUrl: "/auth/signIn",
+                    }).then(() => {})
+                  : signIn()
+              }
+            >
               {session ? "יציאה" : "כניסה"}
             </DropdownMenuItem>
           </DropdownMenuContent>
@@ -81,3 +97,8 @@ const Header = () => {
 };
 
 export default Header;
+
+/*
+document.cookie ="next-auth.session-token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+ document.cookie ="next-auth.csrf-token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+ */

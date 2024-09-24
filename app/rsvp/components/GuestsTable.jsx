@@ -119,11 +119,7 @@ const initialData = [
 
 const GuestsTable = () => {
   const { data: session } = useSession();
-  console.log("session: ", session);
-
   const [data, setData] = useState([]);
-  console.log("data: ", data);
-
   const [status, setStatus] = useState({
     מגיעים: 0,
     "לא מגיעים": 0,
@@ -137,7 +133,7 @@ const GuestsTable = () => {
 
       try {
         const res = await axios.get(`/api/guests?belongsTo=${email}`);
-        //console.log("res: ", res);
+        console.log("res: ", res);
 
         return res?.data?.data;
       } catch (error) {
@@ -225,6 +221,7 @@ const GuestsTable = () => {
         table={table}
         getAllGuests={getAllGuests}
         removeGuests={removeGuests}
+        data={data}
         setData={setData}
       />
 

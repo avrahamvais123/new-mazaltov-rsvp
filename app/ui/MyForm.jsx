@@ -4,6 +4,7 @@ import { Controller, useController, useForm } from "react-hook-form";
 import Input from "./Input";
 import MySelect from "./MySelect";
 import MyRadioGroup from "./MyRadioGroup";
+import Textarea from "./Textarea";
 
 const MyForm = forwardRef(
   (
@@ -20,8 +21,6 @@ const MyForm = forwardRef(
     },
     ref
   ) => {
-    console.log("customSubmit: ", customSubmit);
-
     const {
       handleSubmit,
       register,
@@ -29,7 +28,6 @@ const MyForm = forwardRef(
       watch,
       formState: { errors },
     } = form;
-    console.log("form: ", form);
 
     return (
       <form
@@ -91,6 +89,17 @@ const MyForm = forwardRef(
                     watch={watch}
                     options={field?.options}
                     classNames={field?.classNames}
+                  />
+                ) : field?.type === "textarea" ? (
+                  <Textarea
+                    rows={field?.rows}
+                    cols={field?.cols}
+                    value={value}
+                    field={field}
+                    register={register}
+                    errors={errors}
+                    fieldsClassName={classNames?.fields}
+                    className={field?.className}
                   />
                 ) : (
                   <Input

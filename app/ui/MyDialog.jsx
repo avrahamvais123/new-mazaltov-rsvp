@@ -18,6 +18,7 @@ const MyDialog = ({
   title = "מודאל",
   description = "פרטים על המודאל",
   noFooter = false,
+  Icon = () => {},
   open,
   setOpen,
 }) => {
@@ -44,9 +45,12 @@ const MyDialog = ({
         }}
         className="sm:max-w-[425px]"
       >
-        <DialogHeader>
-          <DialogTitle>{title}</DialogTitle>
-          <DialogDescription>{description}</DialogDescription>
+        <DialogHeader className="flex-row items-start">
+          {Icon && <Icon />}
+          <div className="flex-col-center items-start">
+            <DialogTitle>{title}</DialogTitle>
+            <DialogDescription>{description}</DialogDescription>
+          </div>
         </DialogHeader>
 
         {content({ open: currentOpen, setOpen: currentSetOpen })}

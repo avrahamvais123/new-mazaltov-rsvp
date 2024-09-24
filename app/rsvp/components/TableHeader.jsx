@@ -7,8 +7,9 @@ import AddGuest from "./AddGuest";
 import RemoveGuests from "./RemoveGuests";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
+import SendSMS from "./SendSMS";
 
-const TableHeader = ({ table, setData, getAllGuests, removeGuests }) => {
+const TableHeader = ({ table, setData, data, removeGuests }) => {
   const sendWhatsapp = useMutation({
     mutationFn: async () => {
       const res = await axios.post("/api/whatsapp", {
@@ -19,6 +20,7 @@ const TableHeader = ({ table, setData, getAllGuests, removeGuests }) => {
       console.log("res: ", res);
     },
   });
+
   return (
     <div className="w-full mb-3 mt-10 flex-center justify-between gap-2">
       {/* title */}
@@ -26,24 +28,11 @@ const TableHeader = ({ table, setData, getAllGuests, removeGuests }) => {
 
       {/* buttons */}
       <div className="flex-center gap-2">
-        {/* whatsapp */}
-        <button onClick={() => sendWhatsapp.mutate()} className="">
-          שלח ווצאפ
-        </button>
+        {/* send sms */}
+        <SendSMS table={table} data={data} />
 
         {/* add */}
         <AddGuest setData={setData} />
-
-        {/* reload */}
-        {/* <button
-          onClick={() => getAllGuests.mutate()}
-          className={cn(
-            "bg-indigo-600 text-white",
-            "p-2 rounded-sm flex-center gap-2"
-          )}
-        >
-          <RefreshIcon className="size-4 text-white" />
-        </button> */}
 
         {/* remove */}
         <RemoveGuests
@@ -62,10 +51,10 @@ const TableHeader = ({ table, setData, getAllGuests, removeGuests }) => {
                 }}
                 className={cn(
                   "bg-indigo-600 text-white",
-                  "p-2 rounded-sm flex-center gap-2"
+                  "p-2.5 rounded-sm flex-center gap-2"
                 )}
               >
-                <Delete02Icon className="size-4 text-white" />
+                <Delete02Icon className="size-5 text-white" />
               </button>
             );
           }}
