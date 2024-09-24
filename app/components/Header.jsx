@@ -1,12 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import {
-  useSession,
-  signIn,
-  signOut,
-  revalidateSession,
-} from "next-auth/react";
+import { useSession, signIn, signOut } from "next-auth/react";
 import { UserCircleIcon } from "../icons/icons";
 import Hamburger from "hamburger-react";
 import {
@@ -18,10 +13,12 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import Menu from "./Menu";
+import { useRouter } from "next/navigation";
 
 const Header = () => {
   const [isOpen, setOpen] = useState(false);
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
+  const router = useRouter();
 
   const GenerateImage = () => {
     if (session) {
@@ -81,9 +78,8 @@ const Header = () => {
               onClick={() =>
                 session
                   ? signOut({
-                      redirect: false,
-                      callbackUrl: "/auth/signIn",
-                    }).then(() => {})
+                      callbackUrl: "/auth/signin",
+                    })
                   : signIn()
               }
             >

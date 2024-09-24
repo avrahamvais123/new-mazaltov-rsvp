@@ -1,6 +1,6 @@
 "use client";
 
-import { RefreshIcon, Delete02Icon } from "@/app/icons/icons";
+import { Delete02Icon } from "@/app/icons/icons";
 import { cn } from "@/lib/utils";
 import React from "react";
 import AddGuest from "./AddGuest";
@@ -8,8 +8,12 @@ import RemoveGuests from "./RemoveGuests";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import SendSMS from "./SendSMS";
+import { useSession } from "next-auth/react";
 
 const TableHeader = ({ table, setData, data, removeGuests }) => {
+  const { data: session } = useSession();
+
+  /* send whatsapp */
   const sendWhatsapp = useMutation({
     mutationFn: async () => {
       const res = await axios.post("/api/whatsapp", {
@@ -44,11 +48,12 @@ const TableHeader = ({ table, setData, data, removeGuests }) => {
             removeGuests.mutate(guestsToRemove);
           }}
           CustomTrigger={({ setOpen }) => {
+            const isSomeRowsSelected = table?.getIsSomeRowsSelected();
             return (
               <button
-                onClick={() => {
-                  setOpen(true);
-                }}
+                onClick={() =>
+                  session && isSomeRowsSelected ? setOpen(true) : null
+                }
                 className={cn(
                   "bg-indigo-600 text-white",
                   "p-2.5 rounded-sm flex-center gap-2"

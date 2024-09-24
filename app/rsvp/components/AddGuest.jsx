@@ -82,7 +82,7 @@ const AddGuest = ({ setData }) => {
 
   const CustomTrigger = ({ setOpen }) => (
     <button
-      onClick={() => setOpen(true)}
+      onClick={() => (session ? setOpen(true) : null)}
       className={cn(
         "bg-indigo-600 text-white",
         "p-2.5 rounded-sm flex-center gap-2"

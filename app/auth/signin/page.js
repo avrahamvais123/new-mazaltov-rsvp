@@ -2,9 +2,9 @@
 "use client";
 
 import MyForm from "@/app/ui/MyForm";
-import { userAtom } from "@/lib/jotai";
 import { cn } from "@/lib/utils";
-import { useAtom, useSetAtom } from "jotai";
+import { userAtom } from "@/lib/jotai";
+import { useSetAtom } from "jotai";
 import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -19,25 +19,27 @@ export default function SignIn() {
   const [success, setSuccess] = useState();
   const [error, setError] = useState();
 
-  const onSubmit = async (data) => {
-    const result = await signIn("credentials", {
+  const onSubmit = (data) => {
+    signIn("credentials", {
       ...data,
       redirect: false,
-      callbackUrl: "/",
-    });
-
-    console.log("result: ", result);
-
-    if (result?.error) {
-      // handle error
-      console.error("result?.error: ", result?.error);
-      if (result?.error === "CredentialsSignin") {
-        setError("האימייל או הסיסמה אינם נכונים");
-      }
-    } else {
-      // redirect to callbackUrl
-      router.push(result?.url);
-    }
+    })
+      .then((res) => {
+        console.log("res: ", res);
+        if (res?.error) {
+          throw res.error;
+        } else {
+          router.push("/rsvp");
+        }
+      })
+      .catch((error) => {
+        if (error) {
+          console.error("error: ", error);
+          if (error === "CredentialsSignin") {
+            setError("האימייל או הסיסמה אינם נכונים");
+          }
+        }
+      });
   };
 
   const fields = [
@@ -121,11 +123,11 @@ export default function SignIn() {
           <button
             type="button"
             className="w-full rounded-sm px-4 py-2 border text-slate-400 flex justify-center items-center gap-2"
-            onClick={() =>
+            onClick={() => {
               signIn("google", {
-                callbackUrl: "/",
-              })
-            }
+                callbackUrl: "/rsvp",
+              });
+            }}
           >
             <img
               src="/icons/google-icon.png"

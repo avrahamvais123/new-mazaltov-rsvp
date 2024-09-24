@@ -25,7 +25,7 @@ import { cn } from "@/lib/utils";
 
 const Menu = ({ open, setOpen }) => {
   const user = useAtomValue(userAtom);
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const pathname = usePathname();
 
   const links = [
@@ -57,7 +57,12 @@ const Menu = ({ open, setOpen }) => {
       href: "/auth/signin",
       Text: (props) => <span {...props}>{session ? "יציאה" : "כניסה"}</span>,
       Icon: (props) => <Login02Icon {...props} />,
-      onClick: session ? signOut : () => signIn(),
+      onClick: () =>
+        session
+          ? signOut({
+              callbackUrl: "/auth/signin",
+            })
+          : signIn(),
     },
   ];
 
@@ -67,15 +72,15 @@ const Menu = ({ open, setOpen }) => {
         <SheetHeader className="gap-6">
           <SheetTitle className="text-white text-center">
             <div className="flex flex-col items-center justify-center gap-2">
-              {user?.image ? (
+              {session?.user?.image ? (
                 <img
-                  src={user?.image}
+                  src={session?.user?.image}
                   className="size-16 rounded-full border-2 border-indigo-500"
                 />
               ) : (
                 <UserCircleIcon className="text-slate-300 size-16" />
               )}
-              <p className="text-indigo-100">{user?.name}</p>
+              <p className="text-indigo-100">{session?.user?.name}</p>
             </div>
           </SheetTitle>
           <SheetDescription className="hidden" />

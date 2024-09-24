@@ -96,17 +96,16 @@ const handler = NextAuth({
   callbacks: {
     async signIn({ user }) {
       const client = await clientPromise;
-      const db = client.db("mazaltov-rsvp");
-      const usersCollection = db.collection("users");
+      const db = client.db("mazaltov-rsvp").collection("users");
 
       console.log("user: ", user);
 
       // בדיקה אם המשתמש קיים כבר במסד הנתונים
-      const existingUser = await usersCollection.findOne({ email: user.email });
+      const existingUser = await db.findOne({ email: user.email });
 
       if (!existingUser) {
         // יצירת חשבון חדש אם לא קיים
-        await usersCollection.insertOne({
+        await db.insertOne({
           email: user?.email,
           name: user?.name,
           image: user?.image,
@@ -116,7 +115,7 @@ const handler = NextAuth({
 
       //  עדכון התמונה אם המשתמש קיים ואין לו תמונה
       if (!existingUser?.image) {
-        await usersCollection.updateOne(
+        await db.updateOne(
           { email: user?.email },
           { $set: { image: user?.image } }
         );
@@ -141,6 +140,7 @@ const handler = NextAuth({
   },
   pages: {
     signIn: "/auth/signin",
+    signOut: "/auth/signout",
   },
 });
 

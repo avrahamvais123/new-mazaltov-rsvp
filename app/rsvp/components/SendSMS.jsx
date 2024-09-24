@@ -6,10 +6,12 @@ import { Message01Icon } from "@/app/icons/icons";
 import { cn } from "@/lib/utils";
 import axios from "axios";
 import { useMutation } from "@tanstack/react-query";
+import { useSession } from "next-auth/react";
 
 const SendSMS = ({ table, data }) => {
   console.log("table: ", table);
   console.log("data: ", data);
+  const { data: session } = useSession();
 
   const sendSms = useMutation({
     mutationFn: async ({ recipient }) => {
@@ -40,7 +42,7 @@ const SendSMS = ({ table, data }) => {
 
   const CustomTrigger = ({ setOpen }) => (
     <button
-      onClick={() => setOpen(true)}
+      onClick={() => (session ? setOpen(true) : null)}
       className={cn(
         "bg-indigo-600 text-white",
         "p-2.5 rounded-sm flex-center gap-2"
@@ -52,7 +54,7 @@ const SendSMS = ({ table, data }) => {
 
   const content = ({ setOpen }) => {
     const { recipient, length } = getContactsByStatus(data, "אולי מגיעים");
-    console.log('length: ', length);
+    console.log("length: ", length);
     console.log("recipient: ", recipient);
 
     //sendSms.mutate({ recipient });
