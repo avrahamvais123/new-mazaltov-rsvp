@@ -10,11 +10,31 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
+const fields = [
+  {
+    name: "email",
+    label: "אימייל",
+    type: "email",
+    placeholder: "אימייל",
+    required: true,
+    span: 12,
+  },
+  {
+    name: "password",
+    label: "סיסמה",
+    type: "password",
+    placeholder: "סיסמה",
+    required: true,
+    span: 12,
+  },
+];
+
 export default function SignIn() {
   const form = useForm();
   const router = useRouter();
   const setUser = useSetAtom(userAtom);
   const { data: session, status } = useSession();
+  console.log('session: ', session);
 
   const [success, setSuccess] = useState();
   const [error, setError] = useState();
@@ -41,33 +61,6 @@ export default function SignIn() {
         }
       });
   };
-
-  const fields = [
-    {
-      name: "name",
-      label: "שם",
-      type: "text",
-      placeholder: "שם",
-      required: true,
-      span: 12,
-    },
-    {
-      name: "email",
-      label: "אימייל",
-      type: "email",
-      placeholder: "אימייל",
-      required: true,
-      span: 12,
-    },
-    {
-      name: "password",
-      label: "סיסמה",
-      type: "password",
-      placeholder: "סיסמה",
-      required: true,
-      span: 12,
-    },
-  ];
 
   useEffect(() => {
     if (session) {

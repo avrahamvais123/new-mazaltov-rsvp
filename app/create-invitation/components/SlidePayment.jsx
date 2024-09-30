@@ -5,7 +5,6 @@ import PayPal from "./Paypal";
 import { cn } from "@/lib/utils";
 import { useAtom } from "jotai";
 import { eventAtom } from "@/lib/jotai";
-import { useRouter } from "next/router";
 
 const SlidePayment = () => {
   const [paymentSource, setPaymentSource] = useState(null);

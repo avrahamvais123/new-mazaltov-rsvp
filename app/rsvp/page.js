@@ -1,11 +1,15 @@
-import dynamic from "next/dynamic";
 import GuestsTable from "./components/GuestsTable";
+import { redirect } from "next/navigation";
+import { auth } from "@/lib/auth";
 
-/* const GuestsTable = dynamic(() => import("./components/GuestsTable"), {
-  ssr: false,
-}); */
+const Page = async () => {
+  const session = await auth();
 
-const Page = () => {
+  if (!session) {
+    // אם אין session, הפנה את המשתמש לדף הכניסה
+    redirect("/auth/signin");
+  }
+
   return <GuestsTable />;
 };
 

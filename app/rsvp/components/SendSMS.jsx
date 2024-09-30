@@ -9,7 +9,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 
 const SendSMS = ({ table, data }) => {
-  console.log("table: ", table);
+  //console.log("table: ", table);
   console.log("data: ", data);
   const { data: session } = useSession();
 

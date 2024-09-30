@@ -14,11 +14,30 @@ import {
 } from "@/components/ui/dropdown-menu";
 import Menu from "./Menu";
 import { useRouter } from "next/navigation";
+import {
+  SignedIn,
+  SignedOut,
+  SignInButton,
+  UserButton,
+  UserProfile,
+  useAuth,
+  useUser,
+  useSignIn,
+} from "@clerk/nextjs";
+import { DotIcon } from "@radix-ui/react-icons";
+import colors from "tailwindcss/colors";
 
 const Header = () => {
   const [isOpen, setOpen] = useState(false);
   const { data: session, status } = useSession();
   const router = useRouter();
+  //const { isLoaded, signIn, setActive } = useSignIn();
+
+  /* const auth = useAuth();
+  console.log("auth: ", auth);
+
+  const user = useUser();
+  console.log("user: ", user); */
 
   const GenerateImage = () => {
     if (session) {
@@ -62,7 +81,7 @@ const Header = () => {
         </div>
 
         {/* avatar */}
-        <DropdownMenu dir="rtl">
+         <DropdownMenu dir="rtl">
           <DropdownMenuTrigger>
             <GenerateImage />
           </DropdownMenuTrigger>
@@ -87,6 +106,31 @@ const Header = () => {
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
+
+        {/* <SignedOut>
+          <SignInButton
+            appearance={{
+              variables: {
+                colorPrimary: "#4f46e5", // צבע מותאם אישית
+              },
+            }}
+          >
+            כניסה
+          </SignInButton>
+        </SignedOut>
+
+        <SignedIn>
+          <UserButton
+            appearance={{
+              variables: {
+                colorPrimary: colors.red[600],
+              },
+              elements: {
+                alertIcon: colors.green[600],
+              },
+            }}
+          />
+        </SignedIn> */}
       </header>
     </>
   );

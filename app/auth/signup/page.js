@@ -6,26 +6,28 @@ import { signIn } from "next-auth/react";
 import axios from "axios";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { useMutation } from "@tanstack/react-query";
 
 export default function SignUp() {
   const form = useForm();
-
   const [success, setSuccess] = useState();
   const [error, setError] = useState();
 
   const onSubmit = async (data) => {
     console.log("data: ", data);
-    const { name, email, password } = data;
 
     try {
-      const response = await axios.post("/api/auth/signup", {
-        name,
-        email,
-        password,
+      const results = await signIn("credentials", {
+        ...data,
+        isSignup: true,
+        redirect: false,
+        callbackUrl: "/rsvp",
       });
+      console.log("results: ", results);
 
-      console.log("response: ", response);
-      signIn();
+      if (results?.code) {
+        setError(results?.code);
+      }
     } catch (error) {
       if (error?.response) {
         // הבעיה מהשרת
@@ -93,6 +95,8 @@ export default function SignUp() {
           formClassName="p-0"
           fieldsClassName="rounded-sm"
           submitClassName="rounded-sm"
+          success={success}
+          error={error}
           customSubmit={
             <button
               type="submit"
@@ -101,8 +105,6 @@ export default function SignUp() {
               כניסה
             </button>
           }
-          success={success}
-          error={error}
         >
           <div className="relative h- w-full h-[1px] my-4 bg-slate-200">
             <span className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white px-2 text-sm text-gray-500">
@@ -114,11 +116,7 @@ export default function SignUp() {
           <button
             type="button"
             className="w-full rounded-sm px-4 py-2 border text-slate-400 flex justify-center items-center gap-2"
-            onClick={() =>
-              signIn("google", {
-                callbackUrl: "/auth/signin",
-              })
-            }
+            onClick={signIn}
           >
             <img
               src="/icons/google-icon.png"
