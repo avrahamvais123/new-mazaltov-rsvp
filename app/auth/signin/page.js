@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 import { userAtom } from "@/lib/jotai";
 import { useSetAtom } from "jotai";
 import { signIn, useSession } from "next-auth/react";
-import { useRouter, useParams, useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
@@ -47,7 +47,7 @@ export default function SignIn() {
       ...data,
       redirect: false,
     });
-    
+
     console.log("results: ", results);
 
     if (results?.code) {

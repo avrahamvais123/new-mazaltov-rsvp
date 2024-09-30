@@ -7,11 +7,13 @@ import axios from "axios";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
 
 export default function SignUp() {
   const form = useForm();
   const [success, setSuccess] = useState();
   const [error, setError] = useState();
+  const router = useRouter();
 
   const onSubmit = async (data) => {
     console.log("data: ", data);
@@ -21,12 +23,13 @@ export default function SignUp() {
         ...data,
         isSignup: true,
         redirect: false,
-        callbackUrl: "/rsvp",
       });
       console.log("results: ", results);
 
       if (results?.code) {
         setError(results?.code);
+      } else {
+        router.push("/rsvp");
       }
     } catch (error) {
       if (error?.response) {
@@ -41,6 +44,21 @@ export default function SignUp() {
         console.error("An error occurred. Please try again.");
         setError("An error occurred. Please try again.");
       }
+    }
+  };
+
+  const googleSignin = async () => {
+    console.log("googleSignin");
+    
+    const results = await signIn("google", {
+      redirect: false,
+    });
+    console.log("results: ", results);
+
+    if (results?.code) {
+      setError(results?.code);
+    } else {
+      router.push("/rsvp");
     }
   };
 
@@ -116,7 +134,7 @@ export default function SignUp() {
           <button
             type="button"
             className="w-full rounded-sm px-4 py-2 border text-slate-400 flex justify-center items-center gap-2"
-            onClick={signIn}
+            onClick={googleSignin}
           >
             <img
               src="/icons/google-icon.png"
