@@ -7,7 +7,7 @@ import { userAtom } from "@/lib/jotai";
 import { useSetAtom } from "jotai";
 import { signIn, useSession } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Suspense, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
 const fields = [
@@ -32,12 +32,9 @@ const fields = [
 export default function SignIn() {
   const form = useForm();
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const errorCode = searchParams.get("code");
+  const searchParams = useSearchParams(); // יכול להישאר כאן
+  const [errorCode, setErrorCode] = useState(null);
   const { data: session, status } = useSession();
-  console.log("session: ", session);
-  console.log("errorCode: ", errorCode);
-
   const [success, setSuccess] = useState();
   const [error, setError] = useState();
   const setUser = useSetAtom(userAtom);
@@ -50,12 +47,20 @@ export default function SignIn() {
 
     console.log("results: ", results);
 
-    if (results?.code) {
-      setError(results?.code);
+    if (results?.error) {
+      setError(results?.error);
     } else {
       router.push("/rsvp");
     }
   };
+
+  useEffect(() => {
+    // נוודא שהקוד מתבצע רק בקליינט על ידי השימוש ב-useEffect
+    const errorCodeFromParams = searchParams.get("code");
+    if (errorCodeFromParams) {
+      setErrorCode(errorCodeFromParams);
+    }
+  }, [searchParams]);
 
   useEffect(() => {
     if (errorCode) {
@@ -65,92 +70,87 @@ export default function SignIn() {
 
   useEffect(() => {
     if (session) {
-      console.log("session: ", session);
       const { user } = session;
       setUser((prev) => ({ ...prev, ...user }));
     }
   }, [session]);
 
   return (
-    <Suspense>
-      <div className="size-full flex-col-center bg-slate-50">
-        <div
-          className={cn(
-            "size-full flex-col-center gap-2",
-            "md:h-fit md:max-w-96",
-            "bg-white rounded-sm p-4"
-          )}
+    <div className="size-full flex-col-center bg-slate-50">
+      <div
+        className={cn(
+          "size-full flex-col-center gap-2",
+          "md:h-fit md:max-w-96",
+          "bg-white rounded-sm p-4"
+        )}
+      >
+        <h2 className="text-2xl text-center text-slate-400 font-bold">כניסה</h2>
+        <span className="text-xs text-center text-slate-400">
+          משתמש שנרשם דרך גוגל יש להיכנס רק דרך גוגל ומי שנרשם ידנית עם מייל
+          וסיסמה צריך להיכנס גם כן רק בדרך זו
+        </span>
+
+        <MyForm
+          title="כניסה"
+          form={form}
+          fields={fields}
+          onSubmit={onSubmit}
+          submitName="כניסה"
+          classNames={{
+            form: "pt-4",
+            fields: "rounded-sm",
+          }}
+          customSubmit={
+            <button
+              type="submit"
+              className="w-full p-2 mt-5 text-lg bg-indigo-600 text-indigo-50 rounded-sm"
+            >
+              כניסה
+            </button>
+          }
+          success={success}
+          error={error}
         >
-          <h2 className="text-2xl text-center text-slate-400 font-bold">
-            כניסה
-          </h2>
-          <span className="text-xs text-center text-slate-400">
-            משתמש שנרשם דרך גוגל יש להיכנס רק דרך גוגל ומי שנרשם ידנית עם מייל
-            וסיסמה צריך להיכנס גם כן רק בדרך זו
-          </span>
+          <div className="relative h- w-full h-[1px] my-4 bg-slate-200">
+            <span className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white px-2 text-sm text-gray-500">
+              או
+            </span>
+          </div>
 
-          <MyForm
-            title="כניסה"
-            form={form}
-            fields={fields}
-            onSubmit={onSubmit}
-            submitName="כניסה"
-            classNames={{
-              form: "pt-4",
-              fields: "rounded-sm",
-            }}
-            customSubmit={
-              <button
-                type="submit"
-                className="w-full p-2 mt-5 text-lg bg-indigo-600 text-indigo-50 rounded-sm"
-              >
-                כניסה
-              </button>
+          {/* google button */}
+          <button
+            type="button"
+            className="w-full rounded-sm px-4 py-2 border text-slate-400 flex justify-center items-center gap-2"
+            onClick={async () =>
+              signIn("google", {
+                callbackUrl: "/rsvp",
+              })
             }
-            success={success}
-            error={error}
           >
-            <div className="relative h- w-full h-[1px] my-4 bg-slate-200">
-              <span className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white px-2 text-sm text-gray-500">
-                או
-              </span>
-            </div>
+            <img
+              src="/icons/google-icon.png"
+              alt="Google Icon"
+              width={20}
+              height={20}
+            />
+            כניסה עם גוגל
+          </button>
+        </MyForm>
 
-            {/* google button */}
-            <button
-              type="button"
-              className="w-full rounded-sm px-4 py-2 border text-slate-400 flex justify-center items-center gap-2"
-              onClick={async () =>
-                signIn("google", {
-                  callbackUrl: "/rsvp",
-                })
-              }
-            >
-              <img
-                src="/icons/google-icon.png"
-                alt="Google Icon"
-                width={20}
-                height={20}
-              />
-              כניסה עם גוגל
-            </button>
-          </MyForm>
-
-          {/* להרשמה */}
-          <span className="text-xs text-center text-slate-400">
-            עדיין לא רשומים לחצו
-            <button
-              type="button"
-              className="mr-1 text-indigo-600"
-              onClick={() => {
-                router.push("/auth/signup");
-              }}
-            >
-              כאן
-            </button>
-          </span>
-        </div>
+        {/* להרשמה */}
+        <span className="text-xs text-center text-slate-400">
+          עדיין לא רשומים לחצו
+          <button
+            type="button"
+            className="mr-1 text-indigo-600"
+            onClick={() => {
+              router.push("/auth/signup");
+            }}
+          >
+            כאן
+          </button>
+        </span>
       </div>
-    </Suspense>
+    </div>
   );
 }
