@@ -32,7 +32,7 @@ export default function SignIn() {
   const form = useForm();
   const router = useRouter();
   const [errorCode, setErrorCode] = useState(null);
-  const { data: session, status } = useSession();
+  const { data: session } = useSession();
   const [success, setSuccess] = useState();
   const [error, setError] = useState();
   const setUser = useSetAtom(userAtom);
