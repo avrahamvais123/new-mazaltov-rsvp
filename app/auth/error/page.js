@@ -5,8 +5,8 @@ import { cn } from "@/lib/utils";
 import { useRouter, useSearchParams } from "next/navigation";
 
 export default function AuthErrorPage() {
-  const searchParams = useSearchParams();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const error = searchParams.get("error");
 
   let errorMessage = "התרחשה איזו שגיאה";

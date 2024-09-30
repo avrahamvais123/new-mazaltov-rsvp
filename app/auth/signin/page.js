@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 import { userAtom } from "@/lib/jotai";
 import { useSetAtom } from "jotai";
 import { signIn, useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { useRouter, useParams, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
@@ -32,35 +32,36 @@ const fields = [
 export default function SignIn() {
   const form = useForm();
   const router = useRouter();
-  const setUser = useSetAtom(userAtom);
+  const searchParams = useSearchParams();
+  const errorCode = searchParams.get("code");
   const { data: session, status } = useSession();
-  console.log('session: ', session);
+  console.log("session: ", session);
+  console.log("errorCode: ", errorCode);
 
   const [success, setSuccess] = useState();
   const [error, setError] = useState();
+  const setUser = useSetAtom(userAtom);
 
-  const onSubmit = (data) => {
-    signIn("credentials", {
+  const onSubmit = async (data) => {
+    const results = await signIn("credentials", {
       ...data,
       redirect: false,
-    })
-      .then((res) => {
-        console.log("res: ", res);
-        if (res?.error) {
-          throw res.error;
-        } else {
-          router.push("/rsvp");
-        }
-      })
-      .catch((error) => {
-        if (error) {
-          console.error("error: ", error);
-          if (error === "CredentialsSignin") {
-            setError("האימייל או הסיסמה אינם נכונים");
-          }
-        }
-      });
+    });
+    
+    console.log("results: ", results);
+
+    if (results?.code) {
+      setError(results?.code);
+    } else {
+      router.push("/rsvp");
+    }
   };
+
+  useEffect(() => {
+    if (errorCode) {
+      setError(errorCode);
+    }
+  }, [errorCode]);
 
   useEffect(() => {
     if (session) {
@@ -116,11 +117,11 @@ export default function SignIn() {
           <button
             type="button"
             className="w-full rounded-sm px-4 py-2 border text-slate-400 flex justify-center items-center gap-2"
-            onClick={() => {
+            onClick={async () =>
               signIn("google", {
                 callbackUrl: "/rsvp",
-              });
-            }}
+              })
+            }
           >
             <img
               src="/icons/google-icon.png"
