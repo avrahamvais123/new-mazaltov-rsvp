@@ -2,16 +2,17 @@
 
 import { AlertCircleIcon } from "@/app/icons/icons";
 import { cn } from "@/lib/utils";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export default function AuthErrorPage() {
   const router = useRouter();
-  const searchParams = useSearchParams();
   const [errorMessage, setErrorMessage] = useState("התרחשה איזו שגיאה");
 
   useEffect(() => {
-    const error = searchParams.get("error");
+    // גישה לפרמטרים מה-URL בצורה ידנית
+    const params = new URLSearchParams(window.location.search);
+    const error = params.get("error");
 
     // מפענח את סוג השגיאה ומציג הודעה מתאימה
     if (error === "OAuthAccountNotLinked") {
@@ -21,7 +22,7 @@ export default function AuthErrorPage() {
     } else if (error === "AccessDenied") {
       setErrorMessage("המשתמש אינו קיים");
     }
-  }, [searchParams]);
+  }, []);
 
   return (
     <div className="size-full flex-col-center justify-start pt-10 bg-slate-100">

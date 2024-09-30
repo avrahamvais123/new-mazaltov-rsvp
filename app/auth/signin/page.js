@@ -1,4 +1,3 @@
-// app/auth/signin/page.js
 "use client";
 
 import MyForm from "@/app/ui/MyForm";
@@ -6,7 +5,7 @@ import { cn } from "@/lib/utils";
 import { userAtom } from "@/lib/jotai";
 import { useSetAtom } from "jotai";
 import { signIn, useSession } from "next-auth/react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation"; // לא צריך את useSearchParams
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
@@ -32,7 +31,6 @@ const fields = [
 export default function SignIn() {
   const form = useForm();
   const router = useRouter();
-  const searchParams = useSearchParams(); // יכול להישאר כאן
   const [errorCode, setErrorCode] = useState(null);
   const { data: session, status } = useSession();
   const [success, setSuccess] = useState();
@@ -54,13 +52,14 @@ export default function SignIn() {
     }
   };
 
+  // שימוש ב-window.location.search כדי להשיג את הפרמטרים מה-URL
   useEffect(() => {
-    // נוודא שהקוד מתבצע רק בקליינט על ידי השימוש ב-useEffect
-    const errorCodeFromParams = searchParams.get("code");
+    const params = new URLSearchParams(window.location.search);
+    const errorCodeFromParams = params.get("code");
     if (errorCodeFromParams) {
       setErrorCode(errorCodeFromParams);
     }
-  }, [searchParams]);
+  }, []); // יקרה רק פעם אחת אחרי שהקומפוננטה נטענת
 
   useEffect(() => {
     if (errorCode) {
