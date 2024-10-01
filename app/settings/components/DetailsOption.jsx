@@ -7,6 +7,8 @@ import {
 import { cn } from "@/lib/utils";
 import React, { useState, useEffect } from "react";
 import { useCopyToClipboard } from "react-use";
+import AvatarUpload from "./AvatarUpload";
+import { Divider } from "@/app/ui/Divider";
 
 const DetailsOption = ({ session }) => {
   const [copy, copyToClipboard] = useCopyToClipboard();
@@ -24,25 +26,25 @@ const DetailsOption = ({ session }) => {
   return (
     <div className="w-full h-full flex-col-center justify-start gap-2 flex-grow overflow-auto">
       {/* profile */}
-      <section className="size-full flex-col-center items-start text-slate-400 py-4 px-6 gap-4 rounded-md border border-slate-100">
-        <h1 className="text-lg font-semibold text-slate-400">פרופיל</h1>
+      <section className="size-full flex-col-center items-start text-slate-400 py-4 px-6 gap-4 border-slate-100">
+        <h1 className="font-medium border border-slate-200 text-slate-400 bg-slate-50 rounded-sm px-3 py-1">פרופיל</h1>
 
-        <div className="h-[1px] w-full bg-slate-100" />
+        {/* <Divider /> */}
 
         {/* user name */}
         <span className="w-full flex-col-center items-start">
           <p className="text-[0.8rem]">שם משתמש</p>
-          <h2 className="-mt-1 font-semibold text-slate-600 truncate max-w-full hover:text-clip">
+          <h2 className="-mt-1 font-medium text-slate-400 truncate max-w-full hover:text-clip">
             {session?.user?.name}
           </h2>
         </span>
 
-        <div className="h-[1px] w-full bg-slate-100" />
+        <Divider />
 
         {/* user id */}
         <span className="w-full flex-col-center items-start">
           <span className="text-[0.8rem] flex-center gap-1">
-            <p className="">מזהה לקוח</p>
+            <p>מזהה לקוח</p>
             <button onClick={() => copyToClipboard(session?.user?.id)}>
               {isCopy ? (
                 <CheckIcon className="text-green-600 size-5" />
@@ -51,47 +53,34 @@ const DetailsOption = ({ session }) => {
               )}
             </button>
           </span>
-          <h2 className="font-semibold text-slate-600 truncate max-w-full hover:text-clip">
+          <h2 className="font-medium text-slate-400 truncate max-w-full hover:text-clip">
             {session?.user?.id}
           </h2>
         </span>
 
-        <div className="h-[1px] w-full bg-slate-100" />
+        <Divider />
 
         {/* email */}
         <span className="w-full flex-col-center items-start">
           <p className="text-[0.8rem]">אימייל</p>
-          <h2 className="-mt-1 font-semibold text-slate-600 truncate max-w-full hover:text-clip">
+          <h2 className="-mt-1 font-medium text-slate-400 truncate max-w-full hover:text-clip">
             {session?.user?.email}
           </h2>
         </span>
 
-        <div className="h-[1px] w-full bg-slate-100" />
+        <Divider />
 
         {/* image */}
         <span className="w-full flex-center justify-start gap-3">
-          <img
-            src={session?.user?.image}
-            alt="תמונת משתמש"
-            className="size-14 rounded-full"
-          />
-          <button
-            className={cn(
-              "py-1.5 px-3 text-sm",
-              "border rounded-md transition-all",
-              "hover:bg-indigo-600 hover:border-indigo-600 hover:text-white"
-            )}
-          >
-            העלה תמונה
-          </button>
+          <AvatarUpload session={session} />
         </span>
       </section>
 
       {/* password */}
-      <section className="w-full h-full flex-col-center items-start text-slate-400 py-4 px-6 gap-4 rounded-md border border-slate-100">
-        <h1 className="text-lg font-semibold text-slate-400">סיסמה</h1>
+      <section className="w-full h-full flex-col-center items-start text-slate-400 py-4 px-6 gap-4 border-slate-100">
+        <h1 className="font-medium border border-slate-200 text-slate-400 bg-slate-50 rounded-sm px-3 py-1">סיסמה</h1>
 
-        <div className="h-[1px] w-full bg-slate-100" />
+        {/* <Divider /> */}
 
         <label className="w-full flex-col-center items-start">
           <p className="text-[0.8rem]">סיסמה נוכחית</p>
