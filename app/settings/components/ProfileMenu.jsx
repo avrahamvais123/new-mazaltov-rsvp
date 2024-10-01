@@ -19,11 +19,13 @@ function ProfileMenu({ options = [], defaultOption = "", active = () => {} }) {
 
   const icons = (option) => [
     <ProfileIcon
+      key={option.title}
       className={cn(
         activeOption === option.title ? "text-indigo-700" : "text-slate-400"
       )}
     />,
     <CreditCardIcon
+      key={option.title}
       className={cn(
         activeOption === option.title ? "text-indigo-700" : "text-slate-400"
       )}
