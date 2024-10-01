@@ -65,6 +65,10 @@ export default function SignIn() {
     if (errorCode) {
       setError(errorCode);
     }
+    setTimeout(() => {
+      router.push("/auth/signin");
+      setError(null);
+    }, 1500);
   }, [errorCode]);
 
   useEffect(() => {
