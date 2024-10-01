@@ -84,10 +84,10 @@ export default function SignIn() {
         )}
       >
         <h2 className="text-2xl text-center text-slate-400 font-bold">כניסה</h2>
-        <span className="text-xs text-center text-slate-400">
+        {/* <span className="text-xs text-center text-slate-400">
           משתמש שנרשם דרך גוגל יש להיכנס רק דרך גוגל ומי שנרשם ידנית עם מייל
           וסיסמה צריך להיכנס גם כן רק בדרך זו
-        </span>
+        </span> */}
 
         <MyForm
           title="כניסה"
@@ -95,10 +95,7 @@ export default function SignIn() {
           fields={fields}
           onSubmit={onSubmit}
           submitName="כניסה"
-          classNames={{
-            form: "pt-4",
-            fields: "rounded-sm",
-          }}
+          classNames={{ form: "pt-4", fields: "rounded-sm" }}
           customSubmit={
             <button
               type="submit"
@@ -142,9 +139,7 @@ export default function SignIn() {
           <button
             type="button"
             className="mr-1 text-indigo-600"
-            onClick={() => {
-              router.push("/auth/signup");
-            }}
+            onClick={() => router.push("/auth/signup")}
           >
             כאן
           </button>

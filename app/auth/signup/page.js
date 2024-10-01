@@ -47,21 +47,6 @@ export default function SignUp() {
     }
   };
 
-  const googleSignin = async () => {
-    console.log("googleSignin");
-    
-    const results = await signIn("google", {
-      redirect: false,
-    });
-    console.log("results: ", results);
-
-    if (results?.code) {
-      setError(results?.code);
-    } else {
-      router.push("/rsvp");
-    }
-  };
-
   const fields = [
     {
       name: "name",
@@ -99,10 +84,10 @@ export default function SignUp() {
         )}
       >
         <h2 className="text-2xl text-center text-slate-400 font-bold">הרשמה</h2>
-        <span className="text-xs text-center text-slate-400">
+        {/* <span className="text-xs text-center text-slate-400">
           משתמש שנרשם דרך גוגל יש להיכנס רק דרך גוגל ומי שנרשם ידנית עם מייל
           וסיסמה צריך להיכנס גם כן רק בדרך זו
-        </span>
+        </span> */}
 
         <Form
           title="כניסה"
@@ -123,28 +108,7 @@ export default function SignUp() {
               כניסה
             </button>
           }
-        >
-          <div className="relative h- w-full h-[1px] my-4 bg-slate-200">
-            <span className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white px-2 text-sm text-gray-500">
-              או
-            </span>
-          </div>
-
-          {/* google button */}
-          <button
-            type="button"
-            className="w-full rounded-sm px-4 py-2 border text-slate-400 flex justify-center items-center gap-2"
-            onClick={googleSignin}
-          >
-            <img
-              src="/icons/google-icon.png"
-              alt="Google Icon"
-              width={20}
-              height={20}
-            />
-            הרשמה עם גוגל
-          </button>
-        </Form>
+        />
 
         {/* לכניסה */}
         <span className="text-xs text-center text-slate-400">
