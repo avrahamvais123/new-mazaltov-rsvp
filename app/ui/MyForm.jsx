@@ -68,6 +68,7 @@ const MyForm = forwardRef(
                 key={i}
                 style={{
                   gridColumn: `span ${field?.span || 12} / span 12`,
+                  ...field?.styles,
                 }}
                 className="relative max-md:col-span-12"
               >

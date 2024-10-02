@@ -81,7 +81,7 @@ const Header = () => {
         </div>
 
         {/* avatar */}
-         <DropdownMenu dir="rtl">
+        <DropdownMenu dir="rtl">
           <DropdownMenuTrigger>
             <GenerateImage />
           </DropdownMenuTrigger>

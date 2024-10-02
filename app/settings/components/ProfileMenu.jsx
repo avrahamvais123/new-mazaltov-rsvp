@@ -47,7 +47,7 @@ function ProfileMenu({ options = [], defaultOption = "", active = () => {} }) {
               "rounded-md transition-all",
               activeOption === option.title
                 ? "bg-indigo-50 text-indigo-700"
-                : "text-slate-400 hover:bg-slate-50"
+                : "text-slate-400 hover:bg-slate-50",
             )}
           >
             {icons(option)[index]}

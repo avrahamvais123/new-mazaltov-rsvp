@@ -1,18 +1,44 @@
 "use client";
 
-import {
-  TaskEdit02Icon,
-  CheckmarkCircle01Icon as CheckIcon,
-} from "@/app/icons/icons";
+import { TaskEdit02Icon, Tick04Icon as CheckIcon } from "@/app/icons/icons";
 import { cn } from "@/lib/utils";
 import React, { useState, useEffect } from "react";
 import { useCopyToClipboard } from "react-use";
 import AvatarUpload from "./AvatarUpload";
 import { Divider } from "@/app/ui/Divider";
+import MyForm from "@/app/ui/MyForm";
+import { useForm } from "react-hook-form";
+import axios from "axios";
+import { signIn, signOut } from "next-auth/react";
+
+const fields = [
+  {
+    name: "newPassword",
+    label: "סיסמה חדשה",
+    type: "password",
+    placeholder: "הזן סיסמה חדשה",
+    required: true,
+    styles: {
+      gridColumn: `span 6 / span 12`,
+    },
+  },
+  {
+    name: "confirmPassword",
+    label: "אימות סיסמה",
+    type: "password",
+    placeholder: "הזן שוב את הסיסמה החדשה",
+    required: true,
+    styles: {
+      gridColumn: `span 6 / span 12`,
+    },
+  },
+];
 
 const DetailsOption = ({ session }) => {
+  console.log("session: ", session);
   const [copy, copyToClipboard] = useCopyToClipboard();
   const [isCopy, setIsCopy] = useState(false);
+  const form = useForm();
 
   useEffect(() => {
     if (copy?.value) {
@@ -23,11 +49,40 @@ const DetailsOption = ({ session }) => {
     }
   }, [copy]);
 
+  const onSubmit = async (data) => {
+    console.log("data: ", data);
+
+    if (data?.confirmPassword !== data?.newPassword) {
+      alert("הסיסמאות אינן תואמות");
+      return;
+    }
+
+    const updates = {
+      name: "משה",
+    };
+
+    try {
+      const res = await axios.patch("/api/users", {
+        newPassword: data.newPassword,
+        id: session?.user?.id,
+      });
+
+      await signIn({ redirect: false });
+      await signOut({ redirect: false });
+
+      console.log("res: ", res);
+    } catch (error) {
+      console.log("error: ", error);
+    }
+  };
+
   return (
     <div className="w-full h-full flex-col-center justify-start gap-2 flex-grow overflow-auto">
       {/* profile */}
-      <section className="size-full flex-col-center items-start text-slate-400 py-4 px-6 gap-4 border-slate-100">
-        <h1 className="font-medium border border-slate-200 text-slate-400 bg-slate-50 rounded-sm px-3 py-1">פרופיל</h1>
+      <section className="size-full flex-col-center items-start text-slate-400 pb-4 px-6 gap-6 border-slate-100">
+        <h1 className="font-medium border border-slate-200 text-slate-400 bg-slate-50 rounded-sm px-3 py-1">
+          פרופיל
+        </h1>
 
         {/* <Divider /> */}
 
@@ -49,7 +104,7 @@ const DetailsOption = ({ session }) => {
               {isCopy ? (
                 <CheckIcon className="text-green-600 size-5" />
               ) : (
-                <TaskEdit02Icon className="size-5 text-slate-400 hover:text-indigo-600 active:text-indigo-800" />
+                <TaskEdit02Icon className="size-5 text-slate-400 hover:text-indigo-600 active:text-indigo-800 transition-all" />
               )}
             </button>
           </span>
@@ -77,19 +132,26 @@ const DetailsOption = ({ session }) => {
       </section>
 
       {/* password */}
-      <section className="w-full h-full flex-col-center items-start text-slate-400 py-4 px-6 gap-4 border-slate-100">
-        <h1 className="font-medium border border-slate-200 text-slate-400 bg-slate-50 rounded-sm px-3 py-1">סיסמה</h1>
+      <section className="w-full h-full flex-col-center items-start text-slate-400 pb-4 px-6 gap-6 border-slate-100">
+        <h1 className="font-medium border border-slate-200 text-slate-400 bg-slate-50 rounded-sm px-3 py-1">
+          סיסמה
+        </h1>
 
         {/* <Divider /> */}
 
-        <label className="w-full flex-col-center items-start">
-          <p className="text-[0.8rem]">סיסמה נוכחית</p>
-          <input className="border" />
-        </label>
-        <label className="w-full flex-col-center items-start">
-          <p className="text-[0.8rem]">סיסמה נוכחית</p>
-          <input className="border" />
-        </label>
+        <MyForm
+          form={form}
+          onSubmit={onSubmit}
+          fields={fields}
+          customSubmit={
+            <button
+              type="submit"
+              className="bg-indigo-600 text-indigo-50 px-4 py-2"
+            >
+              שלח
+            </button>
+          }
+        />
       </section>
     </div>
   );
