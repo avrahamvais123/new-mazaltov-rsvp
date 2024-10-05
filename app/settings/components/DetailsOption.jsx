@@ -58,7 +58,7 @@ const DetailsOption = ({ session }) => {
     }
 
     const updates = {
-      name: "משה",
+      name: "עודד",
     };
 
     try {

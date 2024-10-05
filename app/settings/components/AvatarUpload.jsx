@@ -92,6 +92,7 @@ export default function AvatarUpload({ session }) {
           >
             {isUploading ? "מעלה..." : "אשר העלאה"}
           </button>
+
           <button
             onClick={handleCancel}
             className={cn(

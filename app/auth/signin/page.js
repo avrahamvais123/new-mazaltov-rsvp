@@ -46,7 +46,7 @@ export default function SignIn() {
     console.log("results: ", results);
 
     if (results?.error) {
-      setError(results?.error);
+      setError(results?.code);
     } else {
       router.push("/rsvp");
     }
@@ -62,13 +62,14 @@ export default function SignIn() {
   }, []); // יקרה רק פעם אחת אחרי שהקומפוננטה נטענת
 
   useEffect(() => {
+    console.log("errorCode: ", errorCode);
     if (errorCode) {
       setError(errorCode);
+      setTimeout(() => {
+        router.push("/auth/signin");
+        setError(null);
+      }, 1500);
     }
-    setTimeout(() => {
-      router.push("/auth/signin");
-      setError(null);
-    }, 1500);
   }, [errorCode]);
 
   useEffect(() => {
