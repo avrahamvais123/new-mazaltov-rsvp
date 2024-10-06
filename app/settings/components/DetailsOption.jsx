@@ -64,11 +64,8 @@ const DetailsOption = ({ session }) => {
     try {
       const res = await axios.patch("/api/users", {
         newPassword: data.newPassword,
-        id: session?.user?.id,
+        email: session?.user?.email,
       });
-
-      await signIn({ redirect: false });
-      await signOut({ redirect: false });
 
       console.log("res: ", res);
     } catch (error) {
