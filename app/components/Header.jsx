@@ -16,6 +16,7 @@ import { useRouter } from "next/navigation";
 import Avatar from "../ui/Avatar";
 import { Login03Icon, Settings04Icon } from "../icons/icons";
 import axios from "axios";
+import { sendGTMEvent } from "@next/third-parties/google";
 
 const Header = () => {
   const [isOpen, setOpen] = useState(false);
@@ -56,6 +57,12 @@ const Header = () => {
 
         <button onClick={deleteTracks} className="">
           מחק מעקבים
+        </button>
+
+        <button
+          onClick={() => sendGTMEvent({ event: "buttonClicked", value: "xyz" })}
+        >
+          Send Event
         </button>
 
         {/* avatar */}
