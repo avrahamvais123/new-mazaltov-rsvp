@@ -2,7 +2,6 @@
 
 import React, { useEffect, useState } from "react";
 import { useSession, signIn, signOut } from "next-auth/react";
-import { UserCircleIcon } from "../icons/icons";
 import Hamburger from "hamburger-react";
 import {
   DropdownMenu,
@@ -14,46 +13,21 @@ import {
 } from "@/components/ui/dropdown-menu";
 import Menu from "./Menu";
 import { useRouter } from "next/navigation";
-import {
-  SignedIn,
-  SignedOut,
-  SignInButton,
-  UserButton,
-  UserProfile,
-  useAuth,
-  useUser,
-  useSignIn,
-} from "@clerk/nextjs";
-import { DotIcon } from "@radix-ui/react-icons";
-import colors from "tailwindcss/colors";
+import Avatar from "../ui/Avatar";
+import { Login03Icon, Settings04Icon } from "../icons/icons";
+import axios from "axios";
 
 const Header = () => {
   const [isOpen, setOpen] = useState(false);
   const { data: session, status } = useSession();
   const router = useRouter();
-  //const { isLoaded, signIn, setActive } = useSignIn();
 
-  /* const auth = useAuth();
-  console.log("auth: ", auth);
-
-  const user = useUser();
-  console.log("user: ", user); */
-
-  const GenerateImage = () => {
-    if (session) {
-      if (session?.user?.image) {
-        return (
-          <img src={session?.user?.image} className="size-10 rounded-full" />
-        );
-      } else {
-        return (
-          <div className="size-10 rounded-full bg-indigo-600 text-indigo-50 text-2xl flex-center">
-            {session?.user?.name?.[0]}
-          </div>
-        );
-      }
-    } else {
-      return <UserCircleIcon className="text-slate-300" />;
+  const deleteTracks = async () => {
+    try {
+      const res = await axios.delete("/api/track/visit");
+      console.log("res: ", res);
+    } catch (error) {
+      console.log("error: ", error);
     }
   };
 
@@ -80,20 +54,44 @@ const Header = () => {
           </div>
         </div>
 
+        <button onClick={deleteTracks} className="">
+          מחק מעקבים
+        </button>
+
         {/* avatar */}
         <DropdownMenu dir="rtl">
           <DropdownMenuTrigger>
-            <GenerateImage />
+            <Avatar />
           </DropdownMenuTrigger>
 
-          <DropdownMenuContent className="ml-2">
-            <DropdownMenuLabel>
-              <p className="leading-4 text-center text-sm text-slate-400">
-                {session?.user?.name || "אורח"}
-              </p>
+          <DropdownMenuContent className="ml-2 min-w-60">
+            <DropdownMenuLabel className="flex-center justify-start gap-2">
+              <Avatar />
+              <span className="flex-col-center items-start">
+                <h2 className="leading-4 text-start text-sm text-slate-400">
+                  {session?.user?.name || "אורח"}
+                </h2>
+                <p className="leading-4 text-start text-xs text-slate-400">
+                  {session?.user?.email}
+                </p>
+              </span>
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
+
+            {/* settings */}
             <DropdownMenuItem
+              className="flex-center justify-start gap-1 px-2 *:text-slate-400 focus:bg-slate-200/40"
+              onClick={() => router.push("/settings")}
+            >
+              <Settings04Icon className="size-5" />
+              <p className="">הגדרות</p>
+            </DropdownMenuItem>
+
+            <DropdownMenuSeparator />
+
+            {/* exit */}
+            <DropdownMenuItem
+              className="bg-red-50 focus:bg-red-200/40 flex-center justify-start gap-1 px-2"
               onClick={() =>
                 session
                   ? signOut({
@@ -102,12 +100,24 @@ const Header = () => {
                   : signIn()
               }
             >
-              {session ? "יציאה" : "כניסה"}
+              <Login03Icon className="text-red-600 size-5" />
+              <p className="text-red-600">{session ? "יציאה" : "כניסה"}</p>
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
+      </header>
+    </>
+  );
+};
 
-        {/* <SignedOut>
+export default Header;
+
+/*
+document.cookie ="next-auth.session-token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+ document.cookie ="next-auth.csrf-token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+ */
+
+/*  <SignedOut>
           <SignInButton
             appearance={{
               variables: {
@@ -130,15 +140,4 @@ const Header = () => {
               },
             }}
           />
-        </SignedIn> */}
-      </header>
-    </>
-  );
-};
-
-export default Header;
-
-/*
-document.cookie ="next-auth.session-token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
- document.cookie ="next-auth.csrf-token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
- */
+        </SignedIn> */

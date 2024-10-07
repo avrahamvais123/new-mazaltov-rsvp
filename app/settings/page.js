@@ -16,11 +16,10 @@ const options = [
 ];
 
 const Page = async () => {
-  const session = await auth();
-  console.log("session: ", session);
+  const session = await auth(); // קריאה ל-auth()
 
   if (!session) {
-    // אם אין session, הפנה את המשתמש לדף הכניסה
+    // הפנה את המשתמש לדף הכניסה אם אין session
     redirect("/auth/signin");
   }
 

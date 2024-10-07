@@ -57,10 +57,6 @@ const DetailsOption = ({ session }) => {
       return;
     }
 
-    const updates = {
-      name: "עודד",
-    };
-
     try {
       const res = await axios.patch("/api/users", {
         newPassword: data.newPassword,

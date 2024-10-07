@@ -33,6 +33,7 @@ export default function SignIn() {
   const router = useRouter();
   const [errorCode, setErrorCode] = useState(null);
   const { data: session } = useSession();
+  console.log('session: ', session);
   const [success, setSuccess] = useState();
   const [error, setError] = useState();
   const setUser = useSetAtom(userAtom);

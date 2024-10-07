@@ -4,7 +4,7 @@ import { auth } from "@/lib/auth";
 
 const Page = async () => {
   const session = await auth();
-  console.log('session: ', session);
+  console.log("session: ", session);
 
   if (!session) {
     // אם אין session, הפנה את המשתמש לדף הכניסה

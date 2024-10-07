@@ -2,8 +2,7 @@ import { Fredoka, Noto_Sans_Hebrew } from "next/font/google";
 import "./globals.css";
 import Main from "./components/Main";
 import { cn } from "@/lib/utils";
-import { ClerkProvider } from "@clerk/nextjs";
-import { heIL } from "@clerk/localizations";
+import { GoogleAnalytics } from "@next/third-parties/google";
 
 const fredoka = Fredoka({ subsets: ["hebrew"] });
 const notoSansHebrew = Noto_Sans_Hebrew({ subsets: ["hebrew"] });

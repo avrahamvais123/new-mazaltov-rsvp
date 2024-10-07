@@ -3,6 +3,7 @@
 import { cn } from "@/lib/utils";
 import { useState, useRef } from "react";
 import axios from "axios"; // ייבוא axios
+import Avatar from "@/app/ui/Avatar";
 
 export default function AvatarUpload({ session }) {
   const [selectedImage, setSelectedImage] = useState(null);
@@ -61,7 +62,8 @@ export default function AvatarUpload({ session }) {
 
   return (
     <span className="w-full flex-center justify-start gap-3">
-      <img src={imageUrl} alt="תמונת משתמש" className="size-14 rounded-full" />
+      {/* <img src={imageUrl} alt="תמונת משתמש" className="size-14 rounded-full" /> */}
+      <Avatar src={imageUrl} size={10} />
       <input
         type="file"
         accept="image/*"
