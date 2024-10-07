@@ -10,6 +10,7 @@ import MyForm from "@/app/ui/MyForm";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import { signIn, signOut } from "next-auth/react";
+import EditableText from "@/app/ui/EditableText";
 
 const fields = [
   {
@@ -35,9 +36,10 @@ const fields = [
 ];
 
 const DetailsOption = ({ session }) => {
-  console.log("session: ", session);
+  console.log("session: ");
   const [copy, copyToClipboard] = useCopyToClipboard();
   const [isCopy, setIsCopy] = useState(false);
+  const [text, setText] = useState("");
   const form = useForm();
 
   useEffect(() => {
@@ -82,9 +84,19 @@ const DetailsOption = ({ session }) => {
         {/* user name */}
         <span className="w-full flex-col-center items-start">
           <p className="text-[0.8rem]">שם משתמש</p>
-          <h2 className="-mt-1 font-medium text-slate-400 truncate max-w-full hover:text-clip">
+          {/* <h2 className="-mt-1 font-medium text-slate-400 truncate max-w-full hover:text-clip">
             {session?.user?.name}
-          </h2>
+          </h2> */}
+
+          <EditableText
+            initialText={session?.user?.name}
+            text={text}
+            setText={setText}
+            classNames={{
+              text:
+                "-mt-1 font-medium text-slate-400 truncate max-w-full hover:text-clip",
+            }}
+          />
         </span>
 
         <Divider />

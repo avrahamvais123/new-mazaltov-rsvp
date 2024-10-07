@@ -1,7 +1,5 @@
-import LetterPullup from "@/components/magicui/letter-pullup";
-import WordRotate from "@/components/magicui/word-rotate";
-import { cn } from "@/lib/utils";
-import { Background_Wave } from "./ui/backgrounds";
+import { Task01Icon as Icon } from '@hugeicons/react';
+
 
 export default function Home() {
   const animations = [
@@ -22,8 +20,9 @@ export default function Home() {
   ];
 
   return (
-    <div className="size-full flex-col-center bg-indigo-900">
+    <div className="size-full flex-col-center">
       {/* <Background_Wave /> */}
+      <Icon className='text-red-700' variant='solid' />
       home
     </div>
   );

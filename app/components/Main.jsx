@@ -27,65 +27,6 @@ const Main = ({ children }) => {
     }
   }, []);
 
-  useEffect(() => {
-    console.log("start fetch");
-
-    let startTime;
-    let ip = "";
-
-    // קבלת ה-IP באמצעות שירות חיצוני (ipify)
-    const fetchIP = async () => {
-      try {
-        const res = await axios.get("https://api.ipify.org?format=json");
-        ip = res.data.ip;
-        startTime = Date.now(); // זמן התחלת הביקור
-        console.log("res: ", res);
-      } catch (error) {
-        console.error("Error fetching IP:", error);
-      }
-    };
-
-    // קריאה לפונקציה שמבצעת מעקב
-    fetchIP();
-
-    return () => {
-      // בעת יציאה מהעמוד, מדוד זמן שהייה ושלח את המידע
-      if (startTime && ip) {
-        console.log("startTime, ip: ", startTime, ip);
-        const endTime = Date.now();
-        const timeSpent = Math.floor((endTime - startTime) / 1000); // זמן בשניות
-        const referrer = document.referrer || "Direct"; // מקור הכניסה (referrer)
-        const page = window.location.pathname; // העמוד הנוכחי
-        console.log("Preparing to send data:", {
-          ip,
-          page,
-          referrer,
-          timeSpent,
-          timestamp,
-        });
-
-        // שלח את המידע ל-API Route
-        axios
-          .post("/api/track/visit", {
-            ip,
-            page,
-            referrer,
-            timeSpent,
-            timestamp: Date.now(),
-          })
-          .then((response) => {
-            console.log("Response from server:", response.data);
-          })
-          .catch((error) => {
-            console.error(
-              "Error in POST request:",
-              error.response ? error.response.data : error.message
-            );
-          });
-      }
-    };
-  }, []);
-
   return (
     <>
       <QueryClientProvider client={queryClient}>
@@ -140,3 +81,62 @@ LogRocket.identify("THE_USER_ID_IN_YOUR_APP", {
   // Add your own custom user variables here, ie:
   subscriptionType: "pro",
 }); */
+
+/* useEffect(() => {
+  console.log("start fetch");
+
+  let startTime;
+  let ip = "";
+
+  // קבלת ה-IP באמצעות שירות חיצוני (ipify)
+  const fetchIP = async () => {
+    try {
+      const res = await axios.get("https://api.ipify.org?format=json");
+      ip = res.data.ip;
+      startTime = Date.now(); // זמן התחלת הביקור
+      console.log("res: ", res);
+    } catch (error) {
+      console.error("Error fetching IP:", error);
+    }
+  };
+
+  // קריאה לפונקציה שמבצעת מעקב
+  fetchIP();
+
+  return () => {
+    // בעת יציאה מהעמוד, מדוד זמן שהייה ושלח את המידע
+    if (startTime && ip) {
+      console.log("startTime, ip: ", startTime, ip);
+      const endTime = Date.now();
+      const timeSpent = Math.floor((endTime - startTime) / 1000); // זמן בשניות
+      const referrer = document.referrer || "Direct"; // מקור הכניסה (referrer)
+      const page = window.location.pathname; // העמוד הנוכחי
+      console.log("Preparing to send data:", {
+        ip,
+        page,
+        referrer,
+        timeSpent,
+        timestamp,
+      });
+
+      // שלח את המידע ל-API Route
+      axios
+        .post("/api/track/visit", {
+          ip,
+          page,
+          referrer,
+          timeSpent,
+          timestamp: Date.now(),
+        })
+        .then((response) => {
+          console.log("Response from server:", response.data);
+        })
+        .catch((error) => {
+          console.error(
+            "Error in POST request:",
+            error.response ? error.response.data : error.message
+          );
+        });
+    }
+  };
+}, []); */

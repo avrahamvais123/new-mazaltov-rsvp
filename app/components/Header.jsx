@@ -55,15 +55,15 @@ const Header = () => {
           </div>
         </div>
 
-        <button onClick={deleteTracks} className="">
+        {/* <button onClick={deleteTracks} className="">
           מחק מעקבים
-        </button>
+        </button> */}
 
-        <button
+        {/* <button
           onClick={() => sendGTMEvent({ event: "buttonClicked", value: "xyz" })}
         >
           Send Event
-        </button>
+        </button> */}
 
         {/* avatar */}
         <DropdownMenu dir="rtl">
