@@ -3,6 +3,7 @@ import "./globals.css";
 import Main from "./components/Main";
 import { cn } from "@/lib/utils";
 import { GoogleAnalytics } from "@next/third-parties/google";
+import { Analytics } from "@vercel/analytics/react";
 
 const fredoka = Fredoka({ subsets: ["hebrew"] });
 const notoSansHebrew = Noto_Sans_Hebrew({ subsets: ["hebrew"] });
@@ -34,6 +35,7 @@ export default function RootLayout({ children }) {
         )}
       >
         <Main>{children}</Main>
+        <Analytics />
       </body>
     </html>
   );
