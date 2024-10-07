@@ -23,7 +23,7 @@ export default function Home() {
     <div className="size-full flex-col-center">
       {/* <Background_Wave /> */}
       <Icon className='text-red-700' variant='solid' />
-      home
+      home 1
     </div>
   );
 }
