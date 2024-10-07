@@ -25,6 +25,9 @@ const localization = {
   },
 };
 
+const GA_TRACKING_ID = process.env.GA_TRACKING_ID;
+console.log('GA_TRACKING_ID: ', GA_TRACKING_ID);
+
 export default function RootLayout({ children }) {
   return (
     <html lang="he" dir="rtl" className="*:box-border h-dvh w-dvw">
@@ -36,7 +39,7 @@ export default function RootLayout({ children }) {
       >
         <Main>{children}</Main>
         <Analytics />
-        <GoogleTagManager gtmId="GTM-XYZ" />
+        <GoogleTagManager gtmId={GA_TRACKING_ID} />
       </body>
     </html>
   );
