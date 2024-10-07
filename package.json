@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "vercel-build": "echo '//registry.npmjs.org/:_authToken=${HUGEICONS_TOKEN}' > .npmrc && npm run build"
   },
   "dependencies": {
     "@clerk/localizations": "^3.1.0",
