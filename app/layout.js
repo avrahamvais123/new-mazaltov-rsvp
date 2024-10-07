@@ -2,8 +2,8 @@ import { Fredoka, Noto_Sans_Hebrew } from "next/font/google";
 import "./globals.css";
 import Main from "./components/Main";
 import { cn } from "@/lib/utils";
-//import { GoogleAnalytics } from "@next/third-parties/google";
-import { GoogleTagManager } from "@next/third-parties/google";
+import { GoogleAnalytics } from "@next/third-parties/google";
+//import { GoogleTagManager } from "@next/third-parties/google";
 import { Analytics } from "@vercel/analytics/react";
 
 const fredoka = Fredoka({ subsets: ["hebrew"] });
@@ -40,7 +40,8 @@ export default function RootLayout({ children }) {
       >
         <Main>{children}</Main>
         <Analytics />
-        <GoogleTagManager gtmId={GA_TRACKING_ID} />
+        {/* <GoogleTagManager gtmId={GA_TRACKING_ID} /> */}
+        <GoogleAnalytics gaId={GA_TRACKING_ID} />
       </body>
     </html>
   );
