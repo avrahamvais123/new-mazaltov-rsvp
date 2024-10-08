@@ -16,19 +16,20 @@ const Span = ({ title, text, icon }) => {
 
 const Title = () => {
   return (
-    <div className="mb-10 text-center">
+    <div className="z-10 my-10 md:my-16 text-center flex-col-center gap-2">
       <p className="md:text-xl mb-4 text-white">ברוכים הבאים!!</p>
 
-      <h1 className="font-bold text-2xl md:text-4xl text-white">
+      <h1 className="font-bold text-4xl md:text-7xl text-white">
         מזל טוב אישורי הגעה
       </h1>
 
       <p className="md:text-xl text-white">המקום שלכם לאישורי הגעה</p>
 
-      <div className="flex-center gap-4 mt-4">
-        <CallToAction text="להדגמה" navigateTo="/demo" className="" />
-        <CallToAction text="לכניסה" navigateTo="signin" className="" />
-      </div>
+      <CallToAction
+        text="להדגמה"
+        navigateTo="/demo"
+        className="bg-indigo-800 text-indigo-50 px-8 mt-4"
+      />
     </div>
   );
 };
@@ -36,11 +37,12 @@ const Title = () => {
 const Background = () => {
   return (
     <div className="fixed size-full">
-      <div className="z-10 absolute inset-0 size-full bg-gradient-to-r from-indigo-950/90 to-fuchsia-900/90" />
+      <div className="z-10 absolute inset-0 size-full bg-gradient-to-r from-indigo-950/60 to-indigo-900/90" />
       <Image
         src="/images/רקע-בית-1.jpg"
         alt="תמונה של הזמנות לחתונה - רקע לעמוד הבית"
         fill
+        sizes="100%"
         className="object-cover z-0"
       />
     </div>
@@ -48,34 +50,16 @@ const Background = () => {
 };
 
 export default function Home() {
-  const animations = [
-    "starryNight",
-    "floatingBubbles",
-    "gradientWave",
-    "particleNetwork",
-    "galaxySpiral",
-    "rainbowWaves",
-    "geometricShapes",
-    "fireflies",
-    "matrixRain",
-    "quantumField",
-    "electricStorm",
-    "cosmicDust",
-    "neonPulse",
-    "auroraBorealis",
-  ];
-
   return (
     <div className="size-full flex-col-center justify-start bg-slate-50 overflow-auto">
       <Background />
 
-      <section className="z-10 size-full max-w-3xl flex-col-center max-md:justify-start p-4">
-        <Title />
+      <Title />
 
-        <p className="text-white text-sm md:text-xl mb-4">
+      <section className="z-10 size-full max-w-3xl flex-col-center max-md:justify-start p-4">
+        <p className="text-white text-sm md:text-lg mb-4">
           הנה כמה סיבות טובות לעשות את אישורי ההגעה אצלנו
         </p>
-
         {/* grid */}
         <div
           className={cn(
