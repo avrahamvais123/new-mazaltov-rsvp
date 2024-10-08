@@ -1,5 +1,4 @@
 import { cn } from "@/lib/utils";
-import { Target03Icon } from "@hugeicons/react";
 import Image from "next/image";
 import CallToAction from "./components/CallToAction";
 
