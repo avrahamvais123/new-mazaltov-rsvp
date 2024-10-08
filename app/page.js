@@ -16,7 +16,7 @@ const Span = ({ title, text, icon }) => {
 
 const Title = () => {
   return (
-    <div className="z-10 my-10 md:my-16 text-center flex-col-center gap-2">
+    <div className="z-10 my-10 md:my-16 text-center flex-col-center gap-2 md:gap-4">
       <p className="md:text-xl mb-4 text-white">ברוכים הבאים!!</p>
 
       <h1 className="font-bold text-4xl md:text-7xl text-white">
@@ -28,7 +28,12 @@ const Title = () => {
       <CallToAction
         text="להדגמה"
         navigateTo="/demo"
-        className="bg-indigo-800 text-indigo-50 px-8 mt-4"
+        className={cn(
+          "px-3 py-1.5 mt-2",
+          "md:py-2 md:px-8 md:mt-4",
+          "bg-indigo-800 text-indigo-50",
+          "text-sm md:text-base"
+        )}
       />
     </div>
   );
@@ -36,7 +41,7 @@ const Title = () => {
 
 const Background = () => {
   return (
-    <div className="fixed size-full">
+    <div className="z-0 fixed size-full">
       <div className="z-10 absolute inset-0 size-full bg-gradient-to-r from-indigo-950/60 to-indigo-900/90" />
       <Image
         src="/images/רקע-בית-1.jpg"
@@ -51,48 +56,50 @@ const Background = () => {
 
 export default function Home() {
   return (
-    <div className="size-full flex-col-center justify-start bg-slate-50 overflow-auto">
+    <>
       <Background />
 
-      <Title />
+      <div className="z-10 size-full flex-col-center justify-start bg-transparent overflow-auto">
+        <Title />
 
-      <section className="z-10 size-full max-w-3xl flex-col-center max-md:justify-start p-4">
-        <p className="text-white text-sm md:text-lg mb-4">
-          הנה כמה סיבות טובות לעשות את אישורי ההגעה אצלנו
-        </p>
-        {/* grid */}
-        <div
-          className={cn(
-            "w-full pb-4 grid gap-2 md:gap-6",
-            "md:grid-cols-2 md:grid-rows-2",
-            "grid-cols-1 grid-rows-1"
-          )}
-        >
-          <Span
-            title="🎯 חוסכים זמן, שומרים על הסדר"
-            text={`למה להתעסק עם רשימות ידניות ושיחות טלפון מיותרות? עם "מזל טוב", אישורי
+        <section className="z-10 size-full max-w-3xl flex-col-center max-md:justify-start p-4">
+          <p className="text-white text-sm md:text-lg mb-4">
+            הנה כמה סיבות טובות לעשות את אישורי ההגעה אצלנו
+          </p>
+          {/* grid */}
+          <div
+            className={cn(
+              "w-full pb-4 grid gap-2 md:gap-6",
+              "md:grid-cols-2 md:grid-rows-2",
+              "grid-cols-1 grid-rows-1"
+            )}
+          >
+            <Span
+              title="🎯 חוסכים זמן, שומרים על הסדר"
+              text={`למה להתעסק עם רשימות ידניות ושיחות טלפון מיותרות? עם "מזל טוב", אישורי
         ההגעה הופכים למשחק ילדים. שלחו הזמנה דיגיטלית מהממת וקבלו אישורי הגעה
         בלחיצת כפתור!`}
-          />
-          <Span
-            title="🎨 עיצוב הזמנות בלתי נשכח"
-            text={`מחפשים את ההזמנה שתעשה את ההבדל? אנחנו כאן
+            />
+            <Span
+              title="🎨 עיצוב הזמנות בלתי נשכח"
+              text={`מחפשים את ההזמנה שתעשה את ההבדל? אנחנו כאן
           עם עיצובים מרהיבים בהתאמה אישית שישתלבו באופן מושלם עם האירוע שלכם.
           רוצים להזמין ולנהל בסטייל? אתם במקום הנכון.
 `}
-          />
-          <Span
-            title="📲 עדכונים בזמן אמת"
-            text={`מעקב שוטף וקל על כל המוזמנים שלכם – מי אישר הגעה,
+            />
+            <Span
+              title="📲 עדכונים בזמן אמת"
+              text={`מעקב שוטף וקל על כל המוזמנים שלכם – מי אישר הגעה,
           מי עדיין מתלבט, ומי צריך תזכורת קטנה 😉`}
-          />
-          <Span
-            title="✨ כל מה שצריך לאירוע מושלם במקום אחד"
-            text={`אישורי הגעה, עיצוב הזמנות ומערכת
+            />
+            <Span
+              title="✨ כל מה שצריך לאירוע מושלם במקום אחד"
+              text={`אישורי הגעה, עיצוב הזמנות ומערכת
           ניהול קלה ונוחה – הכל כדי שאתם תתמקדו בשמחה.`}
-          />
-        </div>
-      </section>
-    </div>
+            />
+          </div>
+        </section>
+      </div>
+    </>
   );
 }

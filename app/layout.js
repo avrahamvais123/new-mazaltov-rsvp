@@ -35,14 +35,17 @@ export default function RootLayout({ children }) {
       <body
         className={cn(
           notoSansHebrew.className,
-          "overflow-hidden size-full flex flex-col items-center"
+          "overflow-hidden size-full flex-col-center"
         )}
       >
         <Main>{children}</Main>
         <Analytics />
-        {/* <GoogleTagManager gtmId={GA_TRACKING_ID} /> */}
         <GoogleAnalytics gaId={GA_TRACKING_ID} />
       </body>
     </html>
   );
+}
+
+{
+  /* <GoogleTagManager gtmId={GA_TRACKING_ID} /> */
 }
