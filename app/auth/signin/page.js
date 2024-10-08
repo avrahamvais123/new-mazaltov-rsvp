@@ -2,8 +2,6 @@
 
 import MyForm from "@/app/ui/MyForm";
 import { cn } from "@/lib/utils";
-import { userAtom } from "@/lib/jotai";
-import { useSetAtom } from "jotai";
 import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation"; // לא צריך את useSearchParams
 import { useEffect, useState } from "react";
@@ -33,10 +31,9 @@ export default function SignIn() {
   const router = useRouter();
   const [errorCode, setErrorCode] = useState(null);
   const { data: session } = useSession();
-  console.log('session: ', session);
+  console.log("session: ", session);
   const [success, setSuccess] = useState();
   const [error, setError] = useState();
-  const setUser = useSetAtom(userAtom);
 
   const onSubmit = async (data) => {
     const results = await signIn("credentials", {
@@ -72,13 +69,6 @@ export default function SignIn() {
       }, 1500);
     }
   }, [errorCode]);
-
-  useEffect(() => {
-    if (session) {
-      const { user } = session;
-      setUser((prev) => ({ ...prev, ...user }));
-    }
-  }, [session]);
 
   return (
     <div className="size-full flex-col-center bg-slate-50">

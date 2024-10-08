@@ -22,9 +22,6 @@ const Header = () => {
   /* מסתיר את ההידר בעמוד הבית */
   const pathname = usePathname();
   const hiddenHeaderPaths = ["/", "/not-found"];
-  if (hiddenHeaderPaths.includes(pathname)) return null;
-  /* עד כאן */
-
   const [isOpen, setOpen] = useState(false);
   const { data: session, status } = useSession();
   const router = useRouter();
@@ -37,6 +34,8 @@ const Header = () => {
       console.log("error: ", error);
     }
   };
+
+  if (hiddenHeaderPaths.includes(pathname)) return null;
 
   return (
     <>
