@@ -12,13 +12,19 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import Menu from "./Menu";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import Avatar from "../ui/Avatar";
 import { Login03Icon, Settings04Icon } from "../icons/icons";
 import axios from "axios";
 import { sendGTMEvent } from "@next/third-parties/google";
 
 const Header = () => {
+  /* מסתיר את ההידר בעמוד הבית */
+  const pathname = usePathname();
+  const hiddenHeaderPaths = ["/", "/not-found"];
+  if (hiddenHeaderPaths.includes(pathname)) return null;
+  /* עד כאן */
+
   const [isOpen, setOpen] = useState(false);
   const { data: session, status } = useSession();
   const router = useRouter();
@@ -54,16 +60,6 @@ const Header = () => {
             </p>
           </div>
         </div>
-
-        {/* <button onClick={deleteTracks} className="">
-          מחק מעקבים
-        </button> */}
-
-        {/* <button
-          onClick={() => sendGTMEvent({ event: "buttonClicked", value: "xyz" })}
-        >
-          Send Event
-        </button> */}
 
         {/* avatar */}
         <DropdownMenu dir="rtl">
@@ -148,3 +144,17 @@ document.cookie ="next-auth.session-token=; expires=Thu, 01 Jan 1970 00:00:00 UT
             }}
           />
         </SignedIn> */
+
+{
+  /* <button onClick={deleteTracks} className="">
+          מחק מעקבים
+        </button> */
+}
+
+{
+  /* <button
+          onClick={() => sendGTMEvent({ event: "buttonClicked", value: "xyz" })}
+        >
+          Send Event
+        </button> */
+}
