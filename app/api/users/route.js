@@ -57,7 +57,7 @@ export const PATCH = async (req) => {
     const updatedUser = await usersCollection.findOne({ email });
 
     return NextResponse.json(
-      { data: updatedUser, message: "הפרטים שונו בהצלחה!" },
+      { user: updatedUser, message: "הפרטים שונו בהצלחה!" },
       { status: 200 }
     );
   } catch (error) {

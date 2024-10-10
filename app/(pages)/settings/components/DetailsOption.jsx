@@ -8,6 +8,7 @@ import axios from "axios";
 import EditableText from "@/app/ui/EditableText";
 import Button from "@mui/material/Button";
 import InputPassword from "@/app/mui/InputPassword";
+import { signIn, signOut, useSession } from "next-auth/react";
 
 const fields = [
   {
@@ -24,12 +25,13 @@ const fields = [
   },
 ];
 
-const DetailsOption = ({ session }) => {
+const DetailsOption = () => {
   const {
     control,
     handleSubmit,
     formState: { errors },
   } = useForm();
+  const { data: session, status, update } = useSession();
   const [name, setName] = useState("");
   const [fileImage, setFileImage] = useState(null);
 
@@ -61,7 +63,6 @@ const DetailsOption = ({ session }) => {
     console.log("newPassword: ", newPassword);
     try {
       const image = await uploadImageToCloudinary();
-      console.log("image: ", image);
 
       const res = await axios.patch("/api/users", {
         currentPassword,
@@ -71,6 +72,14 @@ const DetailsOption = ({ session }) => {
       });
 
       console.log("res: ", res);
+      const results = await update({
+        user: {
+          ...session.user,
+          name: name || session?.user?.name,
+          image: image || session?.user?.image,
+        },
+      });
+      console.log("results: ", results);
     } catch (error) {
       console.log("error: ", error);
     }
