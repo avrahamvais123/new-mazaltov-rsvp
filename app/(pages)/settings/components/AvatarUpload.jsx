@@ -4,8 +4,14 @@ import { cn } from "@/lib/utils";
 import { useState, useRef } from "react";
 import axios from "axios"; // ייבוא axios
 import Avatar from "@/app/ui/Avatar";
+import { Cancel02Icon, Tick04Icon } from "@/app/icons/icons";
+import LoadingButton from "@mui/lab/LoadingButton";
 
-export default function AvatarUpload({ session }) {
+export default function AvatarUpload({
+  session,
+  avatarClasses,
+  getImageUrl = () => {},
+}) {
   const [selectedImage, setSelectedImage] = useState(null);
   const [imageUrl, setImageUrl] = useState(session?.user?.image);
   const [isUploading, setIsUploading] = useState(false);
@@ -18,6 +24,7 @@ export default function AvatarUpload({ session }) {
       const imageUrl = URL.createObjectURL(file);
       setSelectedImage(file); // שומרים את הקובץ שנבחר
       setImageUrl(imageUrl); // מעדכנים את התצוגה עם התמונה החדשה
+      getImageUrl(imageUrl); // מוציאים את התמונה שנבחרה החוצה
     }
   };
 
@@ -32,16 +39,21 @@ export default function AvatarUpload({ session }) {
       setIsUploading(true);
       const formData = new FormData();
       formData.append("file", selectedImage);
+      formData.append("public_id", `${session?.user?.id}-avatar`);
+      formData.append("folder", "avatars");
 
       try {
-        const response = await axios.post("/api/upload-avatar", formData, {
+        const res = await axios.post("/api/upload-image", formData, {
           headers: {
             "Content-Type": "multipart/form-data",
           },
         });
 
-        if (response.status === 200) {
+        if (res.status === 200) {
+          console.log("res: ", res);
           alert("התמונה הועלתה בהצלחה!");
+          setSelectedImage(null);
+          setIsUploading(false);
         } else {
           alert("שגיאה בהעלאת התמונה");
         }
@@ -61,52 +73,65 @@ export default function AvatarUpload({ session }) {
   };
 
   return (
-    <span className="w-full flex-center justify-start gap-3">
-      {/* <img src={imageUrl} alt="תמונת משתמש" className="size-14 rounded-full" /> */}
-      <Avatar src={imageUrl} size={10} />
-      <input
-        type="file"
-        accept="image/*"
-        onChange={handleImageChange}
-        className="hidden"
-        ref={fileInputRef} // שימוש ב-ref כדי לגשת לקלט
-      />
+    <span className="w-full flex-col-center justify-start gap-2">
       <button
+        type="button"
         onClick={handleFileSelect} // לחיצה על הכפתור תפתח את חלון הבחירה
-        className={cn(
-          "py-1.5 px-3 text-sm",
-          "border rounded-md transition-all",
-          "hover:bg-indigo-600 hover:border-indigo-600 hover:text-white"
-        )}
       >
-        העלה תמונה
+        <Avatar src={imageUrl} classNames={avatarClasses} />
+        <input
+          type="file"
+          accept="image/*"
+          onChange={handleImageChange}
+          className="hidden"
+          ref={fileInputRef} // שימוש ב-ref כדי לגשת לקלט
+        />
       </button>
+
       {selectedImage && (
-        <>
+        <div className="flex-center gap-2">
+          {/* confirm button */}
           <button
             onClick={handleUpload}
             className={cn(
-              "py-1.5 px-3 text-sm",
-              "border rounded-md transition-all",
-              "hover:bg-green-600 hover:border-green-600 hover:text-white"
+              "size-fit aspect-square p-1",
+              "bg-green-50/50 transition-all",
+              "border border-green-700/20 rounded-md",
+              "hover:bg-green-600 hover:border-green-600",
+              "*:hover:text-white"
             )}
             disabled={isUploading}
           >
-            {isUploading ? "מעלה..." : "אשר העלאה"}
+            <Tick04Icon className="size-5 text-green-600 transition-all" />
           </button>
 
+          <LoadingButton
+            loading={isUploading}
+            loadingPosition="start"
+            variant="outlined"
+            onClick={handleUpload}
+          >
+            {isUploading ? "מעלה..." : "אישור"}
+          </LoadingButton>
+
+          {/* cancel button */}
           <button
             onClick={handleCancel}
             className={cn(
-              "py-1.5 px-3 text-sm",
-              "border rounded-md transition-all",
-              "hover:bg-red-600 hover:border-red-600 hover:text-white"
+              "size-fit aspect-square p-1.5",
+              "bg-red-50/50 transition-all",
+              "border border-red-700/20 rounded-md",
+              "hover:bg-red-600 hover:border-red-600 *:hover:text-white"
             )}
           >
-            בטל
+            <Cancel02Icon className="size-4 text-red-600 transition-all" />
           </button>
-        </>
+        </div>
       )}
     </span>
   );
+}
+
+{
+  /* <img src={imageUrl} alt="תמונת משתמש" className="size-14 rounded-full" /> */
 }

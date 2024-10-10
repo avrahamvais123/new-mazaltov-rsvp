@@ -31,8 +31,8 @@ const Title = () => {
         className={cn(
           "px-3 py-1.5 mt-2",
           "md:py-2 md:px-8 md:mt-4",
-          "bg-indigo-800 text-indigo-50",
-          "text-sm md:text-base"
+          "bg-indigo-800 hover:bg-indigo-900",
+          "text-sm text-indigo-50 md:text-base"
         )}
       />
     </div>

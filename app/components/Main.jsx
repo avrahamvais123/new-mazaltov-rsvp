@@ -2,14 +2,12 @@
 
 import React, { useEffect } from "react";
 import Header from "./Header";
-import { SessionProvider, useSession } from "next-auth/react";
+import { SessionProvider } from "next-auth/react";
 import localforage from "localforage";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import axios from "axios";
 import Script from "next/script";
-import { useSetAtom } from "jotai";
-import { userAtom } from "@/lib/jotai";
 import SetUser from "./SetUser";
+import MuiProvider from "./MuiProvider";
 
 const GA_TRACKING_ID = process.env.NEXT_PUBLIC_GA_TRACKING_ID;
 
@@ -34,9 +32,11 @@ const Main = ({ children }) => {
     <>
       <QueryClientProvider client={queryClient}>
         <SessionProvider>
-          <Header />
-          <SetUser />
-          {children}
+          <MuiProvider>
+            <Header />
+            <SetUser />
+            {children}
+          </MuiProvider>
         </SessionProvider>
       </QueryClientProvider>
 

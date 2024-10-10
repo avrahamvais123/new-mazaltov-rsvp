@@ -117,7 +117,19 @@ const MyForm = forwardRef(
           })}
         </div>
         {children}
-        {customSubmit}
+        {customSubmit ? (
+          customSubmit
+        ) : (
+          <button
+            type="submit"
+            className={cn(
+              "bg-indigo-600 text-indigo-50 px-4 py-2 rounded-sm",
+              classNames?.submit
+            )}
+          >
+            שלח
+          </button>
+        )}
       </form>
     );
   }

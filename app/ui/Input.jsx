@@ -33,7 +33,7 @@ const Input = ({
         })}
         className={cn(
           "w-full border px-4 py-2 peer",
-          "focus:outline-indigo-800",
+          "focus:outline-indigo-800 rounded-sm",
           errors[field?.name] && "border-red-500",
           fieldsClassName,
           className

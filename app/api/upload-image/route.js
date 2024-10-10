@@ -10,19 +10,28 @@ cloudinary.config({
 
 export const POST = async (req) => {
   try {
-    console.log("req: ", req);
-    const res = await req.json();
+    const formData = await req.formData();
+    const file = formData.get("file");
+    const public_id = formData.get("public_id");
+    const folder = formData.get("folder");
 
-    console.log("res: ", res);
+    // Convert file to a Base64 string
+    const buffer = await file.arrayBuffer();
+    const base64String = Buffer.from(buffer).toString("base64");
+    const base64Image = `data:${file.type};base64,${base64String}`;
 
-    const uploadResponse = await cloudinary.uploader.upload(res, {
-      upload_preset: "your_upload_preset",
+    // Upload to Cloudinary
+    const uploadResponse = await cloudinary.uploader.upload(base64Image, {
+      upload_preset: "my_upload_preset",
+      folder: `mazaltov-rsvp/${folder}`,
+      unique_filename: true,
+      public_id: public_id,
+      resource_type: "auto",
+      overwrite: true,
     });
 
-    console.log("uploadResponse: ", uploadResponse);
-
     return NextResponse.json(
-      { data: uploadResult, message: "שגיאת שרת" },
+      { data: uploadResponse, message: "Success" },
       { status: 200 }
     );
   } catch (error) {

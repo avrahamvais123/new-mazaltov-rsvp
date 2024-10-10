@@ -10,7 +10,6 @@ import { useSession } from "next-auth/react";
 
 const SendSMS = ({ table, data }) => {
   //console.log("table: ", table);
-  console.log("data: ", data);
   const { data: session } = useSession();
 
   const sendSms = useMutation({
@@ -54,8 +53,6 @@ const SendSMS = ({ table, data }) => {
 
   const content = ({ setOpen }) => {
     const { recipient, length } = getContactsByStatus(data, "אולי מגיעים");
-    console.log("length: ", length);
-    console.log("recipient: ", recipient);
 
     //sendSms.mutate({ recipient });
     //setOpen(false);

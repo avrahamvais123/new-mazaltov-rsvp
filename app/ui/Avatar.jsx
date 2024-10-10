@@ -1,11 +1,39 @@
 import React from "react";
 import { UserCircleIcon } from "../icons/icons";
 import { useSession } from "next-auth/react";
+import { cn } from "@/lib/utils";
 
-const Avatar = ({ src, size }) => {
+const Avatar = ({ src, classNames }) => {
   const { data: session, status } = useSession();
 
-  if (session) {
+  return (
+    <div className={cn("size-10", classNames?.wrapper)}>
+      {session?.user?.image ? (
+        <img
+          src={src || session?.user?.image}
+          className={cn("size-full object-cover rounded-full", classNames?.img)}
+        />
+      ) : session ? (
+        <div
+          className={cn(
+            "size-full rounded-full",
+            "bg-indigo-600 text-indigo-50",
+            "text-2xl flex-center",
+            classNames?.imageName
+          )}
+        >
+          {session?.user?.name?.[0]}
+        </div>
+      ) : (
+        <UserCircleIcon className={cn("size-full text-slate-300", classNames?.icon)} />
+      )}
+    </div>
+  );
+};
+
+export default Avatar;
+
+/* if (session) {
     if (session?.user?.image) {
       return (
         <img
@@ -22,7 +50,4 @@ const Avatar = ({ src, size }) => {
     }
   } else {
     return <UserCircleIcon className="text-slate-300" />;
-  }
-};
-
-export default Avatar;
+  } */
