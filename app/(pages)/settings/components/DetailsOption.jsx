@@ -33,37 +33,41 @@ const DetailsOption = ({ session }) => {
   const [name, setName] = useState("");
   const [fileImage, setFileImage] = useState(null);
 
+  const uploadImageToCloudinary = async () => {
+    if (fileImage) {
+      const formData = new FormData();
+      formData.append("file", fileImage);
+      formData.append("public_id", `${session?.user?.id}-avatar`);
+      formData.append("folder", "avatars");
+
+      const res = await axios.post("/api/upload-image", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      console.log("res from cloudinary: ", res);
+
+      if (res.status === 200) {
+        return res?.data?.data?.secure_url;
+      } else {
+        console.error("שגיאה בהעלאת התמונה לקלאודינרי");
+        return null;
+      }
+    } else return null;
+  };
+
   const onSubmit = async ({ currentPassword, newPassword }) => {
     console.log("currentPassword: ", currentPassword);
     console.log("newPassword: ", newPassword);
     try {
-      let image = null;
-
-      if (fileImage) {
-        const formData = new FormData();
-        formData.append("file", fileImage);
-        formData.append("public_id", `${session?.user?.id}-avatar`);
-        formData.append("folder", "avatars");
-
-        const res = await axios.post("/api/upload-image", formData, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        });
-        console.log("res from cloudinary: ", res);
-
-        if (res.status === 200) {
-          image = res.data.secure_url;
-        } else {
-          console.error("שגיאה בהעלאת התמונה לקלאודינרי");
-        }
-      }
+      const image = await uploadImageToCloudinary();
+      console.log("image: ", image);
 
       const res = await axios.patch("/api/users", {
         currentPassword,
         newPassword,
-        name,
-        image,
+        name: name || session?.user?.name,
+        image: image || session?.user?.image,
       });
 
       console.log("res: ", res);
@@ -121,7 +125,7 @@ const DetailsOption = ({ session }) => {
             label="סיסמה נוכחית"
             control={control}
             variant="outlined"
-            rules={{ required: "זהו שדה חובה" }}
+            rules={{}}
             error={!!errors?.currentPassword}
             helperText={
               errors?.currentPassword
@@ -136,7 +140,7 @@ const DetailsOption = ({ session }) => {
             label="סיסמה חדשה"
             control={control}
             variant="outlined"
-            rules={{ required: "זהו שדה חובה" }}
+            rules={{}}
             error={!!errors?.newPassword}
             helperText={
               errors?.newPassword

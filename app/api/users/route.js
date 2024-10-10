@@ -33,12 +33,12 @@ export const PATCH = async (req) => {
     );
 
     // אם הסיסמאות אינן זהות מחזיר שגיאה
-    if (!confirmPassword)
+    if (!confirmPassword && currentPassword)
       return NextResponse.json({ message: "הסיסמה שגויה" }, { status: 400 });
 
     // אם הסיסמאות זהות מצפין את הסיסמה החדשה (אם ניתנה סיסמה חדשה)
     let updateData = {};
-    
+
     if (newPassword) {
       const hashedPassword = await bcrypt.hash(newPassword, 10);
       console.log("hashedPassword: ", hashedPassword);
@@ -49,11 +49,15 @@ export const PATCH = async (req) => {
     if (name) updateData.name = name;
     if (image) updateData.image = image;
 
+    console.log("updateData: ", updateData);
+
     // מעדכן את המשתמש במסד הנתונים
     await usersCollection.updateOne({ email }, { $set: updateData });
 
+    const updatedUser = await usersCollection.findOne({ email });
+
     return NextResponse.json(
-      { message: "הפרטים שונו בהצלחה!" },
+      { data: updatedUser, message: "הפרטים שונו בהצלחה!" },
       { status: 200 }
     );
   } catch (error) {
