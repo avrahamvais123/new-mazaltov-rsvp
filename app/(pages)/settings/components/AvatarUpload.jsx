@@ -89,7 +89,7 @@ export default function AvatarUpload({
       ) : isImageHovered ? (
         <button
           type="button"
-          className="absolute inset-0 bg-black/30 transition-all flex-center p-6 rounded-full"
+          className="absolute inset-0 bg-black/50 transition-all flex-center p-6 rounded-full"
           onClick={handleCancel}
         >
           <Cancel02Icon className="size-full text-red-600 transition-all" />
