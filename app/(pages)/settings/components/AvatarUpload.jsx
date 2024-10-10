@@ -10,11 +10,12 @@ import LoadingButton from "@mui/lab/LoadingButton";
 export default function AvatarUpload({
   session,
   avatarClasses,
-  getImageUrl = () => {},
+  getFile = () => {},
 }) {
   const [selectedImage, setSelectedImage] = useState(null);
   const [imageUrl, setImageUrl] = useState(session?.user?.image);
   const [isUploading, setIsUploading] = useState(false);
+  const [isImageHovered, setIsImageHovered] = useState(false);
   const fileInputRef = useRef(null); // נשתמש ב-ref כדי לגשת לקלט המוסתר
 
   // פונקציה לטיפול בבחירת קובץ חדש
@@ -24,7 +25,7 @@ export default function AvatarUpload({
       const imageUrl = URL.createObjectURL(file);
       setSelectedImage(file); // שומרים את הקובץ שנבחר
       setImageUrl(imageUrl); // מעדכנים את התצוגה עם התמונה החדשה
-      getImageUrl(imageUrl); // מוציאים את התמונה שנבחרה החוצה
+      getFile(file); // מוציאים את התמונה שנבחרה החוצה
     }
   };
 
@@ -69,65 +70,39 @@ export default function AvatarUpload({
   const handleCancel = () => {
     setSelectedImage(null);
     setImageUrl(session?.user?.image); // מחזירים את תמונת המשתמש המקורית
+    getFile(null);
     fileInputRef.current.value = null; // מאפסים את הערך של קלט הקובץ
   };
 
   return (
-    <span className="w-full flex-col-center justify-start gap-2">
-      <button
-        type="button"
-        onClick={handleFileSelect} // לחיצה על הכפתור תפתח את חלון הבחירה
-      >
-        <Avatar src={imageUrl} classNames={avatarClasses} />
-        <input
-          type="file"
-          accept="image/*"
-          onChange={handleImageChange}
-          className="hidden"
-          ref={fileInputRef} // שימוש ב-ref כדי לגשת לקלט
+    <span
+      onMouseEnter={() => setIsImageHovered(true)}
+      onMouseLeave={() => setIsImageHovered(false)}
+      className="relative w-full flex-col-center justify-start gap-2 rounded-full"
+    >
+      {!selectedImage ? (
+        <button
+          type="button"
+          className="absolute inset-0 rounded-full"
+          onClick={handleFileSelect}
         />
-      </button>
-
-      {selectedImage && (
-        <div className="flex-center gap-2">
-          {/* confirm button */}
-          <button
-            onClick={handleUpload}
-            className={cn(
-              "size-fit aspect-square p-1",
-              "bg-green-50/50 transition-all",
-              "border border-green-700/20 rounded-md",
-              "hover:bg-green-600 hover:border-green-600",
-              "*:hover:text-white"
-            )}
-            disabled={isUploading}
-          >
-            <Tick04Icon className="size-5 text-green-600 transition-all" />
-          </button>
-
-          <LoadingButton
-            loading={isUploading}
-            loadingPosition="start"
-            variant="outlined"
-            onClick={handleUpload}
-          >
-            {isUploading ? "מעלה..." : "אישור"}
-          </LoadingButton>
-
-          {/* cancel button */}
-          <button
-            onClick={handleCancel}
-            className={cn(
-              "size-fit aspect-square p-1.5",
-              "bg-red-50/50 transition-all",
-              "border border-red-700/20 rounded-md",
-              "hover:bg-red-600 hover:border-red-600 *:hover:text-white"
-            )}
-          >
-            <Cancel02Icon className="size-4 text-red-600 transition-all" />
-          </button>
-        </div>
-      )}
+      ) : isImageHovered ? (
+        <button
+          type="button"
+          className="absolute inset-0 bg-black/30 transition-all flex-center p-6 rounded-full"
+          onClick={handleCancel}
+        >
+          <Cancel02Icon className="size-full text-red-600 transition-all" />
+        </button>
+      ) : null}
+      <Avatar src={imageUrl} classNames={avatarClasses} />
+      <input
+        type="file"
+        accept="image/*"
+        onChange={handleImageChange}
+        className="hidden"
+        ref={fileInputRef} // שימוש ב-ref כדי לגשת לקלט
+      />
     </span>
   );
 }
@@ -135,3 +110,42 @@ export default function AvatarUpload({
 {
   /* <img src={imageUrl} alt="תמונת משתמש" className="size-14 rounded-full" /> */
 }
+
+/* {selectedImage && (
+  <div className="flex-center gap-2">
+    <button
+      //onClick={handleUpload}
+      className={cn(
+        "size-fit aspect-square p-1",
+        "bg-green-50/50 transition-all",
+        "border border-green-700/20 rounded-md",
+        "hover:bg-green-600 hover:border-green-600",
+        "*:hover:text-white"
+      )}
+      disabled={isUploading}
+    >
+      <Tick04Icon className="size-5 text-green-600 transition-all" />
+    </button>
+
+    <LoadingButton
+      loading={isUploading}
+      loadingPosition="start"
+      variant="outlined"
+      onClick={handleUpload}
+    >
+      {isUploading ? "מעלה..." : "אישור"}
+    </LoadingButton>
+
+    <button // cancel button
+      onClick={handleCancel}
+      className={cn(
+        "size-fit aspect-square p-1.5",
+        "bg-red-50/50 transition-all",
+        "border border-red-700/20 rounded-md",
+        "hover:bg-red-600 hover:border-red-600 *:hover:text-white"
+      )}
+    >
+      <Cancel02Icon className="size-4 text-red-600 transition-all" />
+    </button>
+  </div>
+)} */

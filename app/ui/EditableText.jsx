@@ -17,7 +17,7 @@ export default function EditableText({
 
   const handleInputChange = (e) => {
     setText(e.target.value);
-    onChange();
+    onChange(e.target.value);
   };
 
   const handleKeyDown = (e) => {

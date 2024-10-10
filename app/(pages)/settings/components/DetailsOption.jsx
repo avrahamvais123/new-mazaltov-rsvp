@@ -30,28 +30,46 @@ const DetailsOption = ({ session }) => {
     handleSubmit,
     formState: { errors },
   } = useForm();
-  const [text, setText] = useState("");
-  const [imageUrl, setImageUrl] = useState("");
-  console.log('imageUrl: ', imageUrl);
+  const [name, setName] = useState("");
+  const [fileImage, setFileImage] = useState(null);
 
-  const onSubmit = async (data) => {
-    console.log("data: ", data);
-
-    /* if (data?.confirmPassword !== data?.newPassword) {
-      alert("הסיסמאות אינן תואמות");
-      return;
-    }
-
+  const onSubmit = async ({ currentPassword, newPassword }) => {
+    console.log("currentPassword: ", currentPassword);
+    console.log("newPassword: ", newPassword);
     try {
+      let image = null;
+
+      if (fileImage) {
+        const formData = new FormData();
+        formData.append("file", fileImage);
+        formData.append("public_id", `${session?.user?.id}-avatar`);
+        formData.append("folder", "avatars");
+
+        const res = await axios.post("/api/upload-image", formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        });
+        console.log("res from cloudinary: ", res);
+
+        if (res.status === 200) {
+          image = res.data.secure_url;
+        } else {
+          console.error("שגיאה בהעלאת התמונה לקלאודינרי");
+        }
+      }
+
       const res = await axios.patch("/api/users", {
-        newPassword: data.newPassword,
-        email: session?.user?.email,
+        currentPassword,
+        newPassword,
+        name,
+        image,
       });
 
       console.log("res: ", res);
     } catch (error) {
       console.log("error: ", error);
-    } */
+    }
   };
 
   return (
@@ -67,16 +85,16 @@ const DetailsOption = ({ session }) => {
         {/* details */}
         <div className="flex-center gap-4">
           <AvatarUpload
-            getImageUrl={(url) => setImageUrl(url)}
-            avatarClasses={{ wrapper: "size-20" }}
+            getFile={(file) => setFileImage(file)}
+            avatarClasses={{ wrapper: "size-20 rounded-full" }}
             session={session}
           />
 
           <span className="flex-col-center items-start">
             <EditableText
               initialText={session?.user?.name}
-              text={text}
-              setText={setText}
+              text={name}
+              setText={setName}
               classNames={{
                 text: cn(
                   "-mt-1 truncate",

@@ -1,13 +1,21 @@
 import { getCollection } from "@/lib/mongoDB";
 import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
+import { auth } from "@/lib/auth";
 
 export const PATCH = async (req) => {
   try {
-    const res = await req.json();
-    console.log("res: ", res);
-    const { email } = res;
+    const {
+      user: { email },
+    } = await auth();
+
     console.log("email: ", email);
+
+    const { currentPassword, newPassword, name, image } = await req.json();
+    console.log("image: ", image);
+    console.log("name: ", name);
+    console.log("currentPassword: ", currentPassword);
+    console.log("newPassword: ", newPassword);
 
     const usersCollection = await getCollection("users");
     const user = await usersCollection.findOne({ email });
@@ -18,25 +26,34 @@ export const PATCH = async (req) => {
       return NextResponse.json({ message: "לא נמצא משתמש" }, { status: 400 });
     }
 
-    // אם יש סיסמה חדשה, מצפין ומשנה אותה
-    if (res?.newPassword) {
-      const hashedPassword = await bcrypt.hash(res?.newPassword, 10);
+    // משווה את הסיסמה הנוכחית עם הסיסמה ממסד הנתונים
+    const confirmPassword = await bcrypt.compare(
+      currentPassword,
+      user?.password
+    );
+
+    // אם הסיסמאות אינן זהות מחזיר שגיאה
+    if (!confirmPassword)
+      return NextResponse.json({ message: "הסיסמה שגויה" }, { status: 400 });
+
+    // אם הסיסמאות זהות מצפין את הסיסמה החדשה (אם ניתנה סיסמה חדשה)
+    let updateData = {};
+    
+    if (newPassword) {
+      const hashedPassword = await bcrypt.hash(newPassword, 10);
       console.log("hashedPassword: ", hashedPassword);
-      console.log("email: ", email);
-
-      await usersCollection.updateOne(
-        { email },
-        { $set: { password: hashedPassword } }
-      );
+      updateData.password = hashedPassword;
     }
 
-    // אם יש עדכונים אחרים, מעדכן אותם
-    if (res?.updates) {
-      await usersCollection.updateOne({ email }, { $set: res?.updates });
-    }
+    // אם יש שם חדש או תמונה חדשה מעדכן גם אותם
+    if (name) updateData.name = name;
+    if (image) updateData.image = image;
+
+    // מעדכן את המשתמש במסד הנתונים
+    await usersCollection.updateOne({ email }, { $set: updateData });
 
     return NextResponse.json(
-      { message: "הסיסמה שונתה בהצלחה" },
+      { message: "הפרטים שונו בהצלחה!" },
       { status: 200 }
     );
   } catch (error) {
