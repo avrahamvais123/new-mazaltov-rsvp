@@ -70,6 +70,7 @@
     "react-resizable": "^3.0.5",
     "react-resizable-panels": "^2.1.2",
     "react-rnd": "^10.4.12",
+    "react-spinners": "^0.14.1",
     "react-use": "^17.5.1",
     "sonner": "^1.5.0",
     "stylis": "^4.3.4",

@@ -9,21 +9,9 @@ import EditableText from "@/app/ui/EditableText";
 import Button from "@mui/material/Button";
 import InputPassword from "@/app/mui/InputPassword";
 import { signIn, signOut, useSession } from "next-auth/react";
-
-const fields = [
-  {
-    name: "currentPassword",
-    label: "סיסמה נוכחית",
-    type: "password",
-    required: true,
-  },
-  {
-    name: "newPassword",
-    label: "סיסמה חדשה",
-    type: "password",
-    required: true,
-  },
-];
+import { useMutation } from "@tanstack/react-query";
+import colors from "tailwindcss/colors";
+import Loader from "@/app/ui/Loader";
 
 const DetailsOption = () => {
   const {
@@ -35,58 +23,78 @@ const DetailsOption = () => {
   const [name, setName] = useState("");
   const [fileImage, setFileImage] = useState(null);
 
-  const uploadImageToCloudinary = async () => {
-    if (fileImage) {
-      const formData = new FormData();
-      formData.append("file", fileImage);
-      formData.append("public_id", `${session?.user?.id}-avatar`);
-      formData.append("folder", "avatars");
+  const uploadImageToCloudinary = useMutation({
+    mutationFn: async () => {
+      if (fileImage) {
+        try {
+          const formData = new FormData();
+          formData.append("file", fileImage);
+          formData.append("public_id", `${session?.user?.id}-avatar`);
+          formData.append("folder", "avatars");
 
-      const res = await axios.post("/api/upload-image", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
-      console.log("res from cloudinary: ", res);
+          const res = await axios.post("/api/upload-image", formData, {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          });
+          console.log("res from cloudinary: ", res);
 
-      if (res.status === 200) {
-        return res?.data?.data?.secure_url;
-      } else {
-        console.error("שגיאה בהעלאת התמונה לקלאודינרי");
-        return null;
-      }
-    } else return null;
-  };
+          if (res.status === 200) {
+            return res?.data?.data?.secure_url;
+          } else {
+            console.error("שגיאה בהעלאת התמונה לקלאודינרי");
+            return null;
+          }
+        } catch (error) {
+          console.log("error: ", error);
+        }
+      } else return null;
+    },
+  });
 
-  const onSubmit = async ({ currentPassword, newPassword }) => {
-    console.log("currentPassword: ", currentPassword);
-    console.log("newPassword: ", newPassword);
-    try {
-      const image = await uploadImageToCloudinary();
-
-      const res = await axios.patch("/api/users", {
-        currentPassword,
-        newPassword,
-        name: name || session?.user?.name,
-        image: image || session?.user?.image,
-      });
-
-      console.log("res: ", res);
-      const results = await update({
-        user: {
-          ...session.user,
+  const updateUser = useMutation({
+    mutationFn: async ({ image, currentPassword, newPassword }) => {
+      try {
+        const res = await axios.patch("/api/users", {
+          currentPassword,
+          newPassword,
           name: name || session?.user?.name,
           image: image || session?.user?.image,
-        },
-      });
-      console.log("results: ", results);
-    } catch (error) {
-      console.log("error: ", error);
-    }
+        });
+
+        console.log("res: ", res);
+        const results = await update({
+          user: {
+            ...session.user,
+            name: name || session?.user?.name,
+            image: image || session?.user?.image,
+          },
+        });
+        console.log("results: ", results);
+      } catch (error) {
+        console.error("error: ", error);
+      }
+    },
+  });
+
+  const onSubmit = async ({ currentPassword, newPassword }) => {
+    const image = await uploadImageToCloudinary.mutate();
+    await updateUser.mutate({ image, currentPassword, newPassword });
   };
 
   return (
     <div className="size-full flex-col-center justify-start items-start gap-2 flex-grow overflow-auto">
+      {(uploadImageToCloudinary.isPending || updateUser.isPending) && (
+        <div className="z-50 fixed inset-0 flex-col-center gap-4 bg-indigo-950/50">
+          <Loader
+            color={colors.indigo[600]}
+            isLoading={
+              uploadImageToCloudinary.isPending || updateUser.isPending
+            }
+          />
+          <h2 className="font-bold text-4xl text-indigo-50">מעדכן נתונים...</h2>
+        </div>
+      )}
       <form
         onSubmit={handleSubmit(onSubmit)}
         className={cn(
@@ -169,7 +177,22 @@ const DetailsOption = () => {
 
 export default DetailsOption;
 
-/* <MyForm
+/*const fields = [
+  {
+    name: "currentPassword",
+    label: "סיסמה נוכחית",
+    type: "password",
+    required: true,
+  },
+  {
+    name: "newPassword",
+    label: "סיסמה חדשה",
+    type: "password",
+    required: true,
+  },
+];
+
+<MyForm
           form={form}
           onSubmit={onSubmit}
           fields={fields}
