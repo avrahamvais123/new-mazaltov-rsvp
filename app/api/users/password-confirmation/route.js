@@ -14,8 +14,8 @@ export const GET = async (req) => {
     console.log("verifyCode: ", verifyCode);
 
     resend.emails.send({
-      from: "מזל טוב אישורי הגעה <onboarding@resend.dev>",
-      //from: "מזל טוב אישורי הגעה <hazmanotmazaltov@gmail.com>",
+      //from: "מזל טוב אישורי הגעה <onboarding@resend.dev>",
+      from: "מזל טוב אישורי הגעה <hazmanotmazaltov@gmail.com>",
       to: ["avrahamvais123@gmail.com", "hazmanotmazaltov@gmail.com"],
       subject: "סיסמה חד פעמית",
       html: `<p>סיסמתך החד פעמית היא: <br /> <strong>${verifyCode}</strong></p>`,
