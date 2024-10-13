@@ -1,8 +1,10 @@
 // middleware.js
 import { NextResponse } from "next/server";
+//import { auth } from "./lib/auth";
 
 export function middleware(req) {
   const url = req.nextUrl.clone();
+  //const session = auth();
 
   // בדיקת סוג הקובץ כדי לנטרל בקשות לקבצים סטטיים
   const isAsset = /\.(png|jpg|jpeg|gif|svg|css|js|ico|woff|woff2|ttf|eot|otf|json)$/.test(
@@ -36,6 +38,7 @@ function isPageExists(pathname) {
     "/",
     "/create-invitation",
     "/rsvp",
+    "/users",
     "/settings",
     "/auth/signin",
     "/auth/signout",

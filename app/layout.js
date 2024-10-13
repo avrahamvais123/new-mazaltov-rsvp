@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import { GoogleAnalytics } from "@next/third-parties/google";
 //import { GoogleTagManager } from "@next/third-parties/google";
 import { Analytics } from "@vercel/analytics/react";
+import { Toaster } from "@/components/ui/sonner";
 
 const fredoka = Fredoka({ subsets: ["hebrew"] });
 const notoSansHebrew = Noto_Sans_Hebrew({ subsets: ["hebrew"] });
@@ -41,6 +42,26 @@ export default function RootLayout({ children }) {
         <Main>{children}</Main>
         <Analytics />
         <GoogleAnalytics gaId={GA_TRACKING_ID} />
+        <Toaster
+          theme="light"
+          position="top-right"
+          toastOptions={{
+            unstyled: true,
+            classNames: {
+              toast: "md:min-w-80 flex-center justify-start gap-2 py-3 px-4 rounded-sm",
+              title: "",
+              description: "",
+              actionButton: "py-1 px-2 rounded-sm text-xs",
+              cancelButton: "",
+              closeButton: "",
+              error: "bg-red-50 border border-red-600/20 text-red-600",
+              success: "bg-green-50 border border-green-600/20 text-green-600",
+              warning:
+                "bg-yellow-50 border border-yellow-600/20 text-yellow-600",
+              info: "bg-blue-50 border border-blue-600/20 text-blue-600",
+            },
+          }}
+        />
       </body>
     </html>
   );

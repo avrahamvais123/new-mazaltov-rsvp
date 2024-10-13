@@ -12,6 +12,7 @@ import { signIn, signOut, useSession } from "next-auth/react";
 import { useMutation } from "@tanstack/react-query";
 import colors from "tailwindcss/colors";
 import Loader from "@/app/ui/Loader";
+import { toast } from "sonner";
 
 const DetailsOption = () => {
   const {
@@ -23,32 +24,28 @@ const DetailsOption = () => {
   const [name, setName] = useState("");
   const [fileImage, setFileImage] = useState(null);
 
+  // הפונקציה הזאת בספוה קוראת לפונקציה updateUser
   const uploadImageToCloudinary = useMutation({
     mutationFn: async () => {
-      if (fileImage) {
-        try {
-          const formData = new FormData();
-          formData.append("file", fileImage);
-          formData.append("public_id", `${session?.user?.id}-avatar`);
-          formData.append("folder", "avatars");
+      try {
+        const formData = new FormData();
+        formData.append("file", fileImage);
+        formData.append("public_id", `${session?.user?.id}-avatar`);
+        formData.append("folder", "avatars");
 
-          const res = await axios.post("/api/upload-image", formData, {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          });
-          console.log("res from cloudinary: ", res);
+        const res = await axios.post("/api/upload-image", formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        });
+        console.log("res from cloudinary: ", res);
 
-          if (res.status === 200) {
-            return res?.data?.data?.secure_url;
-          } else {
-            console.error("שגיאה בהעלאת התמונה לקלאודינרי");
-            return null;
-          }
-        } catch (error) {
-          console.log("error: ", error);
+        if (res.status === 200) {
+          return res?.data?.data?.secure_url;
         }
-      } else return null;
+      } catch (error) {
+        console.log("error: ", error);
+      }
     },
   });
 
@@ -71,6 +68,15 @@ const DetailsOption = () => {
           },
         });
         console.log("results: ", results);
+        toast.success("הפרטים עודכנו בהצלחה", {
+          action: {
+            label: "בסדר",
+          },
+          actionButtonStyle: {
+            backgroundColor: colors.green[700],
+            color: colors.white,
+          },
+        });
       } catch (error) {
         console.error("error: ", error);
       }
@@ -78,12 +84,15 @@ const DetailsOption = () => {
   });
 
   const onSubmit = async ({ currentPassword, newPassword }) => {
-    const image = await uploadImageToCloudinary.mutate();
-    await updateUser.mutate({ image, currentPassword, newPassword });
+    const image = fileImage
+      ? await uploadImageToCloudinary.mutateAsync()
+      : null;
+    await updateUser.mutateAsync({ image, currentPassword, newPassword });
   };
 
   return (
     <div className="size-full flex-col-center justify-start items-start gap-2 flex-grow overflow-auto">
+      {/* loader */}
       {(uploadImageToCloudinary.isPending || updateUser.isPending) && (
         <div className="z-50 fixed inset-0 flex-col-center gap-4 bg-indigo-950/50">
           <Loader
@@ -95,6 +104,7 @@ const DetailsOption = () => {
           <h2 className="font-bold text-4xl text-indigo-50">מעדכן נתונים...</h2>
         </div>
       )}
+
       <form
         onSubmit={handleSubmit(onSubmit)}
         className={cn(
