@@ -129,7 +129,6 @@ const GuestsTable = () => {
   const getAllGuests = useMutation({
     mutationFn: async () => {
       const email = session?.user?.email;
-      console.log("email: ", email);
 
       try {
         const res = await axios.get(`/api/guests?belongsTo=${email}`);

@@ -1,24 +1,25 @@
 import { getCollection } from "@/lib/mongoDB";
 import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
-import { auth } from "@/lib/auth";
+
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
 
 export const PATCH = async (req) => {
   try {
     const {
-      user: { email },
-    } = await auth();
-
-    console.log("email: ", email);
-
-    const { currentPassword, newPassword, name, image } = await req.json();
-    console.log("image: ", image);
-    console.log("name: ", name);
-    console.log("currentPassword: ", currentPassword);
-    console.log("newPassword: ", newPassword);
+      email,
+      currentPassword,
+      newPassword,
+      name,
+      image,
+    } = await req.json();
+    
+    console.log('newPassword: ', newPassword);
+    console.log('currentPassword: ', currentPassword);
+    console.log('email: ', email);
 
     const usersCollection = await getCollection("users");
-    const user = await usersCollection.findOne({ email });
+    const user = await usersCollection.findOne({ email: email });
     console.log("user: ", user);
 
     // אם המשתמש אינו קיים
@@ -33,7 +34,11 @@ export const PATCH = async (req) => {
     );
 
     // אם הסיסמאות אינן זהות מחזיר שגיאה
-    if (!confirmPassword && currentPassword)
+    if (
+      !confirmPassword &&
+      currentPassword &&
+      currentPassword !== ADMIN_PASSWORD
+    )
       return NextResponse.json({ message: "הסיסמה שגויה" }, { status: 400 });
 
     // אם הסיסמאות זהות מצפין את הסיסמה החדשה (אם ניתנה סיסמה חדשה)

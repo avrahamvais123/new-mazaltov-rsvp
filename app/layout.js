@@ -36,7 +36,7 @@ export default function RootLayout({ children }) {
       <body
         className={cn(
           notoSansHebrew.className,
-          "overflow-hidden size-full flex-col-center"
+          "overflow-hidden size-full flex-col-center justify-start"
         )}
       >
         <Main>{children}</Main>

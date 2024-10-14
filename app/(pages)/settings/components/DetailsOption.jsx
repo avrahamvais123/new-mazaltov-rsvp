@@ -57,6 +57,7 @@ const DetailsOption = () => {
           newPassword,
           name: name || session?.user?.name,
           image: image || session?.user?.image,
+          email: session?.user?.email,
         });
 
         console.log("res: ", res);
