@@ -6,7 +6,6 @@ import Image from "next/image";
 
 const Avatar = ({ src, classNames }) => {
   const { data: session, status } = useSession();
-  console.log("session: ", session);
 
   return (
     <div className={cn("relative size-10", classNames?.wrapper)}>

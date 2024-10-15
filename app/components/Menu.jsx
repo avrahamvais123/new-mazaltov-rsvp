@@ -18,6 +18,8 @@ import {
   MailOpenIcon,
   Settings04Icon,
   UserCircleIcon,
+  UserGroup02Icon,
+  UserLock01Icon,
 } from "../icons/icons";
 import { useAtomValue } from "jotai";
 import { userAtom } from "@/lib/jotai";
@@ -51,6 +53,12 @@ const Menu = ({ open, setOpen }) => {
       href: "/settings",
       Text: (props) => <span {...props}>הגדרות</span>,
       Icon: (props) => <Settings04Icon {...props} />,
+      onClick: () => setOpen(false),
+    },
+    {
+      href: "/users-management",
+      Text: (props) => <span {...props}>לוח ניהול משתמשים</span>,
+      Icon: (props) => <UserLock01Icon {...props} />,
       onClick: () => setOpen(false),
     },
     {
@@ -88,6 +96,9 @@ const Menu = ({ open, setOpen }) => {
           <div className="text-right flex flex-col items-start">
             {links.map(({ Icon, href, Text, onClick }) => {
               const isActive = pathname === href;
+              const isAdmin = session?.email === process.env.NEXT_PUBLIC_ADMIN_EMAIL;
+
+              if(href === "/users-management" && !isAdmin) return null;
 
               return (
                 <Link

@@ -17,14 +17,16 @@ import Avatar from "../ui/Avatar";
 import { Login03Icon, Settings04Icon } from "../icons/icons";
 import axios from "axios";
 import { sendGTMEvent } from "@next/third-parties/google";
+import { cn } from "@/lib/utils";
 
 const Header = () => {
   /* מסתיר את ההידר בעמוד הבית */
   const pathname = usePathname();
-  const hiddenHeaderPaths = ["/", "/not-found"];
+  const hiddenHeaderPaths = ["/not-found"];
   const [isOpen, setOpen] = useState(false);
   const { data: session, status } = useSession();
   const router = useRouter();
+  const isHomePage = pathname === "/";
 
   const deleteTracks = async () => {
     try {
@@ -41,7 +43,13 @@ const Header = () => {
     <>
       <Menu open={isOpen} setOpen={setOpen} />
 
-      <header className="w-full min-h-16 px-2 flex items-center justify-between border-b">
+      <header
+        className={cn(
+          "z-50 w-full min-h-16 px-2",
+          "flex items-center justify-between",
+          !isHomePage && "border-b"
+        )}
+      >
         {/* menu */}
         <div className="flex items-center gap-2">
           <Hamburger
@@ -49,21 +57,24 @@ const Header = () => {
             size={22}
             toggled={isOpen}
             toggle={setOpen}
-            color="#94a3b8"
+            color={!isHomePage ? "#94a3b8" : "white"}
             className="text-slate-400"
           />
-          <div className="flex flex-col items-center -space-y-1.5">
-            <h2 className="text-2xl font-bold text-slate-400">מזל טוב</h2>
-            <p className="text-xs tracking-[.1rem] text-slate-400">
-              אישורי הגעה
-            </p>
+          <div
+            className={cn(
+              "flex flex-col items-center -space-y-1.5",
+              !isHomePage ? "*:text-slate-400" : "*:text-white"
+            )}
+          >
+            <h2 className="text-2xl font-bold">מזל טוב</h2>
+            <p className="text-xs tracking-[.1rem]">אישורי הגעה</p>
           </div>
         </div>
 
         {/* avatar */}
         <DropdownMenu dir="rtl">
           <DropdownMenuTrigger>
-            <Avatar />
+            <Avatar classNames={{ icon: isHomePage && "text-white" }} />
           </DropdownMenuTrigger>
 
           <DropdownMenuContent className="ml-2 min-w-60">

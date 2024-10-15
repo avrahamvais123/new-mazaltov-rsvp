@@ -1,9 +1,10 @@
 "use client";
 
 import React from "react";
+import Test from "./components/Test";
 
 const Page = () => {
-  return <div>נסיון</div>;
+  return <Test />;
 };
 
 export default Page;
