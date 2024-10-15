@@ -81,7 +81,6 @@ export default function SignIn() {
           "bg-white rounded-sm p-4"
         )}
       >
-        <h2 className="text-2xl text-center text-slate-400 font-bold">כניסה</h2>
         <MyForm
           title="כניסה"
           form={form}

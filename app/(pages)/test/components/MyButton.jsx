@@ -4,11 +4,9 @@ import { cn } from "@/lib/utils";
 import React from "react";
 
 const MyButton = (props) => {
-  console.log("props: ", props);
-
-
   return (
     <button
+      {...props}
       className={cn(
         "bg-pink-500 text-white",
         "px-4 py-2 rounded-sm transition-all",
@@ -16,7 +14,6 @@ const MyButton = (props) => {
         "active:bg-pink-700 active:text-purple-100",
         props?.className
       )}
-      onClick={() => console.log("click")}
     >
       {props?.children}
     </button>

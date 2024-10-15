@@ -9,6 +9,7 @@ import Textarea from "./Textarea";
 const MyForm = forwardRef(
   (
     {
+      title,
       children,
       classNames = {},
       fieldsClassName,
@@ -39,6 +40,7 @@ const MyForm = forwardRef(
           classNames?.form
         )}
       >
+        <h1 className="font-bold text-2xl text-center">{title}</h1>
         <div
           className={cn(
             "overflow-y-auto pt-1",
@@ -54,7 +56,7 @@ const MyForm = forwardRef(
           )}
           {error && (
             <span className="col-span-12 py-2 text-xs text-center bg-red-50 text-red-500">
-              {/* {error} */}
+              {error}
             </span>
           )}
 

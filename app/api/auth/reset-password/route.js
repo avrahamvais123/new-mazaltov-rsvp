@@ -2,6 +2,7 @@ import { getCollection } from "@/lib/mongoDB";
 import { NextResponse } from "next/server";
 import jwt from "jsonwebtoken";
 import { Resend } from "resend";
+import bcrypt from "bcrypt";
 
 const JWT_SECRET = process.env.JWT_SECRET;
 const BASE_URL = process.env.BASE_URL;
@@ -66,6 +67,42 @@ export const POST = async (req) => {
     console.log("error: ", error);
     return NextResponse.json(
       { message: "שגיאה בשליחת הקישור" },
+      { status: 500 }
+    );
+  }
+};
+
+export const PATCH = async (req) => {
+  try {
+    const { newPassword, email } = await req.json();
+    console.log("newPassword: ", newPassword);
+    console.log("email: ", email);
+
+    const usersCollection = await getCollection("users");
+    const user = await usersCollection.findOne({ email: email });
+
+    if (!user) {
+      return NextResponse.json(
+        { message: "לא נמצא משתמש עם אימייל זה" },
+        { status: 400 }
+      );
+    }
+
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    await usersCollection.updateOne(
+      { email: email },
+      { $set: { password: hashedPassword } }
+    );
+
+    return NextResponse.json(
+      { message: "הסיסמה עודכנה בהצלחה" },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.log("error: ", error);
+    return NextResponse.json(
+      { message: "שגיאה בעדכון הסיסמה" },
       { status: 500 }
     );
   }

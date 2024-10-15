@@ -1,5 +1,5 @@
 import React from "react";
-import FormChangePassword from "./components/FormChangePassword";
+import ResetPassword from "./components/ResetPassword";
 import Link from "next/link";
 import jwt from "jsonwebtoken";
 
@@ -11,7 +11,7 @@ const Page = async ({ searchParams }) => {
   try {
     const verifiedToken = jwt.verify(token, JWT_SECRET);
 
-    return <FormChangePassword token={verifiedToken} />;
+    return <ResetPassword token={verifiedToken} />;
   } catch (error) {
     console.log(error);
     return (
