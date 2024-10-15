@@ -28,13 +28,10 @@ const fields = [
 ];
 
 const ResetPassword = ({ token }) => {
-  console.log("token: ", token);
   const form = useForm();
   const router = useRouter();
 
   const onSubmit = async ({ newPassword, confirmPassword }) => {
-    console.log("confirmPassword: ", confirmPassword);
-    console.log("newPassword: ", newPassword);
     if (newPassword !== confirmPassword) {
       toast.error("הסיסמאות אינן תואמות");
       return;
