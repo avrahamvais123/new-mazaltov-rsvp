@@ -2,18 +2,6 @@ import React from "react";
 import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
 import ProfileMenu from "./components/ProfileMenu";
-import DetailsOption from "./components/DetailsOption";
-
-const options = [
-  {
-    title: "פרטים אישיים",
-    icon: null,
-  },
-  {
-    title: "תשלומים",
-    icon: null,
-  },
-];
 
 const Page = async () => {
   const session = await auth(); // קריאה ל-auth()
@@ -30,8 +18,7 @@ const Page = async () => {
       </h1>
 
       <div className="size-full flex-center gap-4 overflow-hidden">
-        <ProfileMenu options={options} defaultOption={options[0].title} />
-        <DetailsOption session={session} />
+        <ProfileMenu />
       </div>
     </div>
   );
