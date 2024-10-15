@@ -13,13 +13,25 @@ import { useMutation } from "@tanstack/react-query";
 import colors from "tailwindcss/colors";
 import Loader from "@/app/ui/Loader";
 import { toast } from "sonner";
+import MyForm from "@/app/ui/MyForm";
+
+const fields = [
+  {
+    name: "currentPassword",
+    label: "סיסמה נוכחית",
+    type: "password",
+    required: true,
+  },
+  {
+    name: "newPassword",
+    label: "סיסמה חדשה",
+    type: "password",
+    required: true,
+  },
+];
 
 const DetailsOption = () => {
-  const {
-    control,
-    handleSubmit,
-    formState: { errors },
-  } = useForm();
+  const form = useForm();
   const { data: session, status, update } = useSession();
   const [name, setName] = useState("");
   const [fileImage, setFileImage] = useState(null);
@@ -69,6 +81,7 @@ const DetailsOption = () => {
           },
         });
         console.log("results: ", results);
+        form.reset();
         toast.success("הפרטים עודכנו בהצלחה", {
           action: {
             label: "בסדר",
@@ -80,6 +93,15 @@ const DetailsOption = () => {
         });
       } catch (error) {
         console.error("error: ", error);
+        toast.error("אירעה שגיאה בעדכון הפרטים", {
+          action: {
+            label: "אישור",
+          },
+          actionButtonStyle: {
+            backgroundColor: colors.red[700],
+            color: colors.white,
+          },
+        });
       }
     },
   });
@@ -106,7 +128,53 @@ const DetailsOption = () => {
         </div>
       )}
 
-      <form
+      {/* details */}
+      <div className="flex-center gap-4">
+        <AvatarUpload
+          getFile={(file) => setFileImage(file)}
+          avatarClasses={{ wrapper: "size-20 rounded-full" }}
+          session={session}
+        />
+
+        <span className="flex-col-center items-start">
+          <EditableText
+            initialText={session?.user?.name}
+            text={name}
+            setText={setName}
+            classNames={{
+              text: cn(
+                "-mt-1 truncate",
+                "font-bold text-xl text-slate-400",
+                "hover:text-clip"
+              ),
+              input: cn("font-bold text-xl text-slate-400", "hover:text-clip"),
+            }}
+          />
+          <h2 className="-mt-1 font-medium text-slate-400 truncate max-w-full hover:text-clip">
+            {session?.user?.email}
+          </h2>
+        </span>
+      </div>
+
+      <MyForm
+        form={form}
+        onSubmit={onSubmit}
+        fields={fields}
+        classNames={{
+          form: cn(
+            "w-full text-slate-400",
+            "flex-col-center justify-start items-start gap-2"
+          ),
+        }}
+      />
+    </div>
+  );
+};
+
+export default DetailsOption;
+
+/* 
+<form
         onSubmit={handleSubmit(onSubmit)}
         className={cn(
           "size-full max-w-96 p-4",
@@ -114,103 +182,38 @@ const DetailsOption = () => {
           "text-slate-400 border-slate-100"
         )}
       >
-        {/* details */}
-        <div className="flex-center gap-4">
-          <AvatarUpload
-            getFile={(file) => setFileImage(file)}
-            avatarClasses={{ wrapper: "size-20 rounded-full" }}
-            session={session}
-          />
+<div className="w-full flex-col-center gap-4">
+        <InputPassword
+          fullWidth
+          name="currentPassword"
+          label="סיסמה נוכחית"
+          control={control}
+          variant="outlined"
+          rules={{}}
+          error={!!errors?.currentPassword}
+          helperText={
+            errors?.currentPassword
+              ? errors?.currentPassword?.message
+              : "הכנס סיסמה נוכחית"
+          }
+        />
 
-          <span className="flex-col-center items-start">
-            <EditableText
-              initialText={session?.user?.name}
-              text={name}
-              setText={setName}
-              classNames={{
-                text: cn(
-                  "-mt-1 truncate",
-                  "font-bold text-xl text-slate-400",
-                  "hover:text-clip"
-                ),
-                input: cn(
-                  "font-bold text-xl text-slate-400",
-                  "hover:text-clip"
-                ),
-              }}
-            />
-            <h2 className="-mt-1 font-medium text-slate-400 truncate max-w-full hover:text-clip">
-              {session?.user?.email}
-            </h2>
-          </span>
-        </div>
+        <InputPassword
+          fullWidth
+          name="newPassword"
+          label="סיסמה חדשה"
+          control={control}
+          variant="outlined"
+          rules={{}}
+          error={!!errors?.newPassword}
+          helperText={
+            errors?.newPassword
+              ? errors?.newPassword?.message
+              : "הכנס סיסמה חדשה"
+          }
+        />
+      </div>
 
-        {/* password */}
-        <div className="w-full flex-col-center gap-4">
-          <InputPassword
-            fullWidth
-            name="currentPassword"
-            label="סיסמה נוכחית"
-            control={control}
-            variant="outlined"
-            rules={{}}
-            error={!!errors?.currentPassword}
-            helperText={
-              errors?.currentPassword
-                ? errors?.currentPassword?.message
-                : "הכנס סיסמה נוכחית"
-            }
-          />
-
-          <InputPassword
-            fullWidth
-            name="newPassword"
-            label="סיסמה חדשה"
-            control={control}
-            variant="outlined"
-            rules={{}}
-            error={!!errors?.newPassword}
-            helperText={
-              errors?.newPassword
-                ? errors?.newPassword?.message
-                : "הכנס סיסמה חדשה"
-            }
-          />
-        </div>
-
-        <Button type="submit" variant="contained" className="self-end">
-          שמור
-        </Button>
-      </form>
-    </div>
-  );
-};
-
-export default DetailsOption;
-
-/*const fields = [
-  {
-    name: "currentPassword",
-    label: "סיסמה נוכחית",
-    type: "password",
-    required: true,
-  },
-  {
-    name: "newPassword",
-    label: "סיסמה חדשה",
-    type: "password",
-    required: true,
-  },
-];
-
-<MyForm
-          form={form}
-          onSubmit={onSubmit}
-          fields={fields}
-          classNames={{
-            form: cn(
-              "w-full text-slate-400",
-              "flex-col-center justify-start items-start gap-2"
-            ),
-          }}
-        /> */
+      <Button type="submit" variant="contained" className="self-end">
+        שמור
+      </Button> */
