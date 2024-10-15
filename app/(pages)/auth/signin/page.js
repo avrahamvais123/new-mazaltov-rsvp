@@ -3,6 +3,7 @@
 import MyForm from "@/app/ui/MyForm";
 import { cn } from "@/lib/utils";
 import { signIn, useSession } from "next-auth/react";
+import Link from "next/link";
 import { useRouter } from "next/navigation"; // לא צריך את useSearchParams
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -23,6 +24,7 @@ const fields = [
     placeholder: "סיסמה",
     required: true,
     span: 12,
+    helperText: <Link className="text-sm mt-0.5 text-slate-400 hover:text-indigo-600 active:text-indigo-700 transition-all flex-grow text-end" href="/auth/forgot-password">שכחת סיסמה?</Link>,
   },
 ];
 
@@ -80,11 +82,6 @@ export default function SignIn() {
         )}
       >
         <h2 className="text-2xl text-center text-slate-400 font-bold">כניסה</h2>
-        {/* <span className="text-xs text-center text-slate-400">
-          משתמש שנרשם דרך גוגל יש להיכנס רק דרך גוגל ומי שנרשם ידנית עם מייל
-          וסיסמה צריך להיכנס גם כן רק בדרך זו
-        </span> */}
-
         <MyForm
           title="כניסה"
           form={form}

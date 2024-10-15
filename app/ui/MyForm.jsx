@@ -54,7 +54,7 @@ const MyForm = forwardRef(
           )}
           {error && (
             <span className="col-span-12 py-2 text-xs text-center bg-red-50 text-red-500">
-              {error}
+              {/* {error} */}
             </span>
           )}
 

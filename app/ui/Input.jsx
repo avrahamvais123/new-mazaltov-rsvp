@@ -52,11 +52,14 @@ const Input = ({
       >
         {field?.label}
       </label>
-      {errors[field?.name] && (
-        <span className="text-red-500 text-sm">
-          {errors[field?.name]?.message}
-        </span>
-      )}
+      <div className="flex-center justify-start gap-2">
+        {errors[field?.name] && (
+          <span className="text-red-500 text-sm">
+            {errors[field?.name]?.message}
+          </span>
+        )}
+        {field?.helperText}
+      </div>
     </>
   );
 };

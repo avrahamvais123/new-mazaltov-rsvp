@@ -3,8 +3,8 @@ import { Resend } from "resend";
 import jwt from "jsonwebtoken";
 
 const JWT_SECRET = process.env.JWT_SECRET;
-
 const RESEND_API_KEY = process.env.RESEND_API_KEY;
+const BASE_URL = process.env.BASE_URL;
 const resend = new Resend(RESEND_API_KEY);
 
 export const POST = async () => {
@@ -15,7 +15,7 @@ export const POST = async () => {
     });
     console.log("Token: ", token);
 
-    const verificationUrl = `${process.env.NEXT_PUBLIC_BASE_URL}/users-management?token=${token}`;
+    const verificationUrl = `${BASE_URL}/users-management?token=${token}`;
 
     resend.emails.send({
       from: "מזל טוב אישורי הגעה <support@mazaltov-rsvp.co.il>",

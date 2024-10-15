@@ -38,6 +38,8 @@ export function middleware(req) {
       "/auth/signin",
       "/auth/signout",
       "/auth/signup",
+      "/auth/forgot-password",
+      "/auth/reset-password",
     ]; // נתיבים קיימים
     return existingPages.includes(pathname);
   }
