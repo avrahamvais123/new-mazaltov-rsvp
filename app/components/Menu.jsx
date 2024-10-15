@@ -25,6 +25,8 @@ import { useAtomValue } from "jotai";
 import { userAtom } from "@/lib/jotai";
 import { cn } from "@/lib/utils";
 
+const ADMIN_EMAIL = process.env.NEXT_PUBLIC_ADMIN_EMAIL;
+
 const Menu = ({ open, setOpen }) => {
   const user = useAtomValue(userAtom);
   const { data: session, status } = useSession();
@@ -96,9 +98,9 @@ const Menu = ({ open, setOpen }) => {
           <div className="text-right flex flex-col items-start">
             {links.map(({ Icon, href, Text, onClick }) => {
               const isActive = pathname === href;
-              const isAdmin = session?.email === process.env.NEXT_PUBLIC_ADMIN_EMAIL;
+              const isAdmin = session?.user?.email === ADMIN_EMAIL;
 
-              if(href === "/users-management" && !isAdmin) return null;
+              if (href === "/users-management" && !isAdmin) return null;
 
               return (
                 <Link
