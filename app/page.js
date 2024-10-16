@@ -1,6 +1,7 @@
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import CallToAction from "./components/CallToAction";
+import axios from "axios";
 
 const Span = ({ title, text, icon }) => {
   return (
