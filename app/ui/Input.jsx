@@ -52,7 +52,7 @@ const Input = ({
       >
         {field?.label}
       </label>
-      <div className="flex-center justify-start gap-2">
+      <div className="flex-center justify-end gap-2">
         {errors[field?.name] && (
           <span className="text-red-500 text-sm">
             {errors[field?.name]?.message}

@@ -6,12 +6,10 @@ import axios from "axios"; // ייבוא axios
 import Avatar from "@/app/ui/Avatar";
 import { Cancel02Icon, Tick04Icon } from "@/app/icons/icons";
 import LoadingButton from "@mui/lab/LoadingButton";
+import { useSession } from "next-auth/react";
 
-export default function AvatarUpload({
-  session,
-  avatarClasses,
-  getFile = () => {},
-}) {
+export default function AvatarUpload({ avatarClasses, getFile = () => {} }) {
+  const { data: session } = useSession();
   const [selectedImage, setSelectedImage] = useState(null);
   const [imageUrl, setImageUrl] = useState(session?.user?.image);
   const [isUploading, setIsUploading] = useState(false);
@@ -83,7 +81,7 @@ export default function AvatarUpload({
       {!selectedImage ? (
         <button
           type="button"
-          className="absolute inset-0 rounded-full"
+          className="z-10 absolute inset-0 rounded-full"
           onClick={handleFileSelect}
         />
       ) : isImageHovered ? (

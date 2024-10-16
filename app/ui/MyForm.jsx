@@ -16,6 +16,7 @@ const MyForm = forwardRef(
       fields = [],
       onSubmit,
       customSubmit,
+      submitName,
       success,
       error,
       form,
@@ -129,7 +130,7 @@ const MyForm = forwardRef(
               classNames?.submit
             )}
           >
-            שלח
+            {submitName ? submitName : "שלח"}
           </button>
         )}
       </form>

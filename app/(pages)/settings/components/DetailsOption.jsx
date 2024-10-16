@@ -15,20 +15,25 @@ import Loader from "@/app/ui/Loader";
 import { toast } from "sonner";
 import MyForm from "@/app/ui/MyForm";
 
-const fields = [
-  {
-    name: "currentPassword",
-    label: "סיסמה נוכחית",
-    type: "password",
-    required: true,
-  },
-  {
-    name: "newPassword",
-    label: "סיסמה חדשה",
-    type: "password",
-    required: true,
-  },
-];
+const fields = (watch) => {
+  const currentPassword = watch("currentPassword");
+  const newPassword = watch("newPassword");
+
+  return [
+    {
+      name: "currentPassword",
+      label: "סיסמה נוכחית",
+      type: "password",
+      required: newPassword ? true : false,
+    },
+    {
+      name: "newPassword",
+      label: "סיסמה חדשה",
+      type: "password",
+      required: currentPassword ? true : false,
+    },
+  ];
+};
 
 const DetailsOption = () => {
   const form = useForm();
@@ -93,7 +98,7 @@ const DetailsOption = () => {
         });
       } catch (error) {
         console.error("error: ", error);
-        toast.error("אירעה שגיאה בעדכון הפרטים", {
+        toast.error(`אירעה שגיאה: ${error?.response?.data?.message}`, {
           action: {
             label: "אישור",
           },
@@ -133,7 +138,6 @@ const DetailsOption = () => {
         <AvatarUpload
           getFile={(file) => setFileImage(file)}
           avatarClasses={{ wrapper: "size-20 rounded-full" }}
-          session={session}
         />
 
         <span className="flex-col-center items-start">
@@ -159,7 +163,8 @@ const DetailsOption = () => {
       <MyForm
         form={form}
         onSubmit={onSubmit}
-        fields={fields}
+        fields={fields(form.watch)}
+        submitName="שמור"
         classNames={{
           form: cn(
             "w-full text-slate-400",
