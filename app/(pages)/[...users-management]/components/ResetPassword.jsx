@@ -3,14 +3,13 @@
 import { Cancel02Icon, Tick04Icon } from "@/app/icons/icons";
 import InputPassword from "@/app/mui/InputPassword";
 import Loader, { PulseLoader } from "@/app/ui/Loader";
+import { successToast } from "@/app/ui/toasts";
 import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import { toast } from "sonner";
-import colors from "tailwindcss/colors";
 
 const ADMIN_PASSWORD = process.env.NEXT_PUBLIC_ADMIN_PASSWORD;
 
@@ -27,15 +26,7 @@ const ResetPassword = ({ email }) => {
           newPassword: newPassword,
           email,
         });
-        toast.success("הסיסמה שונתה בהצלחה", {
-          action: {
-            label: "סגור",
-          },
-          actionButtonStyle: {
-            color: "white",
-            backgroundColor: colors.green[700],
-          },
-        });
+        successToast({ text: "הסיסמה שונתה בהצלחה" });
         reset();
         setShowInput(false);
         console.log("res: ", res);

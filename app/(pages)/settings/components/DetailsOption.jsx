@@ -14,6 +14,7 @@ import colors from "tailwindcss/colors";
 import Loader from "@/app/ui/Loader";
 import { toast } from "sonner";
 import MyForm from "@/app/ui/MyForm";
+import { errorToast, successToast } from "@/app/ui/toasts";
 
 const fields = (watch) => {
   const currentPassword = watch("currentPassword");
@@ -87,26 +88,10 @@ const DetailsOption = () => {
         });
         console.log("results: ", results);
         form.reset();
-        toast.success("הפרטים עודכנו בהצלחה", {
-          action: {
-            label: "בסדר",
-          },
-          actionButtonStyle: {
-            backgroundColor: colors.green[700],
-            color: colors.white,
-          },
-        });
+        successToast({ text: "הפרטים עודכנו בהצלחה" });
       } catch (error) {
         console.error("error: ", error);
-        toast.error(`אירעה שגיאה: ${error?.response?.data?.message}`, {
-          action: {
-            label: "אישור",
-          },
-          actionButtonStyle: {
-            backgroundColor: colors.red[700],
-            color: colors.white,
-          },
-        });
+        errorToast({ text: `אירעה שגיאה: ${error?.response?.data?.message}` });
       }
     },
   });
@@ -121,17 +106,11 @@ const DetailsOption = () => {
   return (
     <div className="size-full flex-col-center justify-start items-start gap-2 flex-grow overflow-auto">
       {/* loader */}
-      {(uploadImageToCloudinary.isPending || updateUser.isPending) && (
-        <div className="z-50 fixed inset-0 flex-col-center gap-4 bg-indigo-950/50">
-          <Loader
-            color={colors.indigo[600]}
-            isLoading={
-              uploadImageToCloudinary.isPending || updateUser.isPending
-            }
-          />
-          <h2 className="font-bold text-4xl text-indigo-50">מעדכן נתונים...</h2>
-        </div>
-      )}
+      <Loader
+        text="מעדכן נתונים ..."
+        color={colors.indigo[600]}
+        isLoading={uploadImageToCloudinary.isPending || updateUser.isPending}
+      />
 
       {/* details */}
       <div className="flex-center gap-4">
@@ -140,6 +119,7 @@ const DetailsOption = () => {
           avatarClasses={{ wrapper: "size-20 rounded-full" }}
         />
 
+        {/* name */}
         <span className="flex-col-center items-start">
           <EditableText
             initialText={session?.user?.name}

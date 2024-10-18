@@ -1,5 +1,6 @@
 "use client";
 
+import { errorToast, successToast } from "@/app/ui/toasts";
 import { Button, TextField } from "@mui/material";
 import axios from "axios";
 import React, { useState } from "react";
@@ -12,10 +13,10 @@ const SendLinkButton = () => {
     try {
       const res = await axios.post("/api/auth/reset-password", { email });
       console.log("res: ", res);
-      toast.success("נשלח לך לינק לאיפוס סיסמה");
+      successToast({ text: "ברגעים אלה נשלח אליך קישור לאיפוס סיסמה למייל" });
     } catch (error) {
       console.log("error: ", error);
-      toast.error("אימייל לא נמצא במערכת");
+      errorToast({ text: "אימייל לא נמצא במערכת" });
     }
   };
 

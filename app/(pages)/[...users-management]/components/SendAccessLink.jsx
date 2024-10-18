@@ -1,5 +1,6 @@
 "use client";
 
+import { errorToast, successToast } from "@/app/ui/toasts";
 import { Button } from "@mui/material";
 import axios from "axios";
 import React from "react";
@@ -13,25 +14,9 @@ const Passowrd = () => {
       console.log("res: ", res);
 
       /* הודעת אישור שליחה */
-      toast.success("הקישור נשלח בהצלחה", {
-        action: {
-          label: "סגור",
-        },
-        actionButtonStyle: {
-          color: "white",
-          backgroundColor: colors.green[700],
-        },
-      });
+      successToast({ text: "הקישור נשלח בהצלחה" });
     } catch (error) {
-      toast.error(`הקישור לא נשלח בגלל: ${error}`, {
-        action: {
-          label: "סגור",
-        },
-        actionButtonStyle: {
-          color: "white",
-          backgroundColor: colors.red[700],
-        },
-      });
+      errorToast({ text: `הקישור לא נשלח בגלל: ${error}` });
       console.error("error: ", error);
     }
   };

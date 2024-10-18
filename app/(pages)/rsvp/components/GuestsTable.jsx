@@ -15,6 +15,7 @@ import TableHeader from "./TableHeader";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import { useSession } from "next-auth/react";
+import Loader from "@/app/ui/Loader";
 
 const initialData = [
   {
@@ -118,7 +119,7 @@ const initialData = [
 ];
 
 const GuestsTable = () => {
-  const { data: session } = useSession();
+  const { data: session, status: dataStatus } = useSession();
   const [data, setData] = useState([]);
   const [status, setStatus] = useState({
     מגיעים: 0,
@@ -211,33 +212,46 @@ const GuestsTable = () => {
   }, [session]);
 
   return (
-    <div className="size-full p-4 py-8 pb-0 overflow-hidden flex-col-center">
-      {/* total */}
-      <TotalGuests status={status} data={data} setStatus={setStatus} />
-
-      {/* table header */}
-      <TableHeader
-        table={table}
-        getAllGuests={getAllGuests}
-        removeGuests={removeGuests}
-        data={data}
-        setData={setData}
+    <>
+      <Loader
+        text="מעדכן נתונים..."
+        isLoading={dataStatus === "loading" || getAllGuests.isPending}
       />
 
-      {/* table */}
-      <Table
-        table={table}
-        classNames={() => ({
-          wrapper: "size-full border-t overflow-auto border-slate-200",
-          thead: "sticky top-0 z-10 ring-[.5px] ring-slate-200",
-          th: "text-center",
-          td: "text-center border-y border-gray-200",
-        })}
-      />
+      <div className="size-full p-4 py-8 pb-0 overflow-hidden flex-col-center">
+        {/* total */}
+        <TotalGuests
+          dataStatus={dataStatus}
+          getAllGuests={getAllGuests}
+          status={status}
+          data={data}
+          setStatus={setStatus}
+        />
 
-      {/* table pagination */}
-      <Pagination table={table} />
-    </div>
+        {/* table header */}
+        <TableHeader
+          table={table}
+          getAllGuests={getAllGuests}
+          removeGuests={removeGuests}
+          data={data}
+          setData={setData}
+        />
+
+        {/* table */}
+        <Table
+          table={table}
+          classNames={() => ({
+            wrapper: "size-full border-t overflow-auto border-slate-200",
+            thead: "sticky top-0 z-10 ring-[.5px] ring-slate-200",
+            th: "text-center",
+            td: "text-center border-y border-gray-200",
+          })}
+        />
+
+        {/* table pagination */}
+        <Pagination table={table} />
+      </div>
+    </>
   );
 };
 

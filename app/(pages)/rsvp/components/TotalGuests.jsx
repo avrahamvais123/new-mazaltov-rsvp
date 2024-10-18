@@ -6,10 +6,11 @@ import {
   HelpCircleIcon as QuestionmarkIcon,
   AlertCircleIcon as AlertIcon,
 } from "@/app/icons/icons";
+import Loader from "@/app/ui/Loader";
 import { cn } from "@/lib/utils";
 import { useEffect } from "react";
 
-const TotalGuests = ({ status, data, setStatus }) => {
+const TotalGuests = ({ status, data, setStatus, dataStatus, getAllGuests }) => {
   // יצירת מיפוי של אייקונים לכל סטטוס
   const iconsMap = {
     מגיעים: CheckmarkIcon,

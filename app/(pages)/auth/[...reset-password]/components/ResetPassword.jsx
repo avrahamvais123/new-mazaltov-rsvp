@@ -1,6 +1,7 @@
 "use client";
 
 import MyForm from "@/app/ui/MyForm";
+import { errorToast, successToast } from "@/app/ui/toasts";
 import { cn } from "@/lib/utils";
 import axios from "axios";
 import { useRouter } from "next/navigation";
@@ -33,7 +34,7 @@ const ResetPassword = ({ token }) => {
 
   const onSubmit = async ({ newPassword, confirmPassword }) => {
     if (newPassword !== confirmPassword) {
-      toast.error("הסיסמאות אינן תואמות");
+      errorToast({ text: "הסיסמאות אינן תואמות" });
       return;
     }
     try {
@@ -44,11 +45,11 @@ const ResetPassword = ({ token }) => {
       console.log("res: ", res);
 
       form.reset();
-      toast.success("הסיסמה עודכנה בהצלחה");
+      successToast({ text: "הסיסמה עודכנה בהצלחה" });
       router.push("/auth/signin");
     } catch (error) {
       console.error("error: ", error);
-      toast.error("שגיאה בעדכון הסיסמה");
+      errorToast({ text: "שגיאה בעדכון הסיסמה" });
     }
   };
 
