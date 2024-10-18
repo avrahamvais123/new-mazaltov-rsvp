@@ -45,9 +45,9 @@ const Header = () => {
 
       <header
         className={cn(
-          "z-50 w-full min-h-16 px-2",
+          "z-50 w-full min-h-16 px-2 absolute top-0",
           "flex items-center justify-between",
-          !isHomePage && "border-b"
+          !isHomePage && "border-b static"
         )}
       >
         {/* menu */}

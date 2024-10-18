@@ -1,9 +1,8 @@
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import CallToAction from "./components/CallToAction";
-import axios from "axios";
 
-const Span = ({ title, text, icon }) => {
+const GridItem = ({ title, text, icon }) => {
   return (
     <div className="p-4 rounded-sm bg-white/5 backdrop-blur-sm border border-white/10">
       <span className="flex-center justify-start gap-2">
@@ -17,7 +16,7 @@ const Span = ({ title, text, icon }) => {
 
 const Title = () => {
   return (
-    <div className="z-10 my-10 md:my-16 text-center flex-col-center gap-2 md:gap-4">
+    <div className="z-10 mt-20 mb-10 md:mt-24 text-center flex-col-center gap-2 md:gap-4">
       <p className="md:text-xl mb-4 text-white">ברוכים הבאים!!</p>
 
       <h1 className="font-bold text-4xl md:text-7xl text-white">
@@ -26,23 +25,39 @@ const Title = () => {
 
       <p className="md:text-xl text-white">המקום שלכם לאישורי הגעה</p>
 
-      <CallToAction
-        text="להדגמה"
-        navigateTo="/demo"
-        className={cn(
-          "px-3 py-1.5 mt-2",
-          "md:py-2 md:px-8 md:mt-4",
-          "bg-indigo-800 hover:bg-indigo-900",
-          "text-sm text-indigo-50 md:text-base"
-        )}
-      />
+      <div className="flex-center gap-2">
+        <CallToAction
+          text="להדגמה"
+          navigateTo="/demo"
+          className={cn(
+            "px-3 py-1.5 mt-2",
+            "md:py-2 md:px-8 md:mt-4",
+            "border border-indigo-800",
+            "hover:border-indigo-900",
+            "bg-indigo-800 hover:bg-indigo-900",
+            "text-sm text-indigo-50 md:text-base"
+          )}
+        />
+        <CallToAction
+          text="יצירת הזמנה"
+          navigateTo="/create-invitation"
+          className={cn(
+            "px-3 py-1.5 mt-2",
+            "md:py-2 md:px-5 md:mt-4",
+            "border border-indigo-50",
+            "bg-transparent hover:bg-indigo-50",
+            "text-indigo-50 hover:text-indigo-800",
+            "text-sm md:text-base"
+          )}
+        />
+      </div>
     </div>
   );
 };
 
 const Background = () => {
   return (
-    <div className="z-0 fixed size-full">
+    <div className="z-0 relative size-full">
       <div className="z-10 absolute inset-0 size-full bg-gradient-to-r from-indigo-950/60 to-indigo-900/90" />
       <Image
         src="/images/רקע-בית-1.jpg"
@@ -60,13 +75,14 @@ export default function Home() {
     <>
       <Background />
 
-      <div className="z-10 size-full flex-col-center justify-start bg-transparent overflow-auto">
+      <div className="z-10 fixed inset-0 size-full flex-col-center justify-start bg-transparent overflow-auto">
         <Title />
 
         <section className="z-10 size-full max-w-3xl flex-col-center max-md:justify-start p-4">
           <p className="text-white text-sm md:text-lg mb-4">
             הנה כמה סיבות טובות לעשות את אישורי ההגעה אצלנו
           </p>
+
           {/* grid */}
           <div
             className={cn(
@@ -75,25 +91,25 @@ export default function Home() {
               "grid-cols-1 grid-rows-1"
             )}
           >
-            <Span
+            <GridItem
               title="🎯 חוסכים זמן, שומרים על הסדר"
               text={`למה להתעסק עם רשימות ידניות ושיחות טלפון מיותרות? עם "מזל טוב", אישורי
         ההגעה הופכים למשחק ילדים. שלחו הזמנה דיגיטלית מהממת וקבלו אישורי הגעה
         בלחיצת כפתור!`}
             />
-            <Span
+            <GridItem
               title="🎨 עיצוב הזמנות בלתי נשכח"
               text={`מחפשים את ההזמנה שתעשה את ההבדל? אנחנו כאן
           עם עיצובים מרהיבים בהתאמה אישית שישתלבו באופן מושלם עם האירוע שלכם.
           רוצים להזמין ולנהל בסטייל? אתם במקום הנכון.
 `}
             />
-            <Span
+            <GridItem
               title="📲 עדכונים בזמן אמת"
               text={`מעקב שוטף וקל על כל המוזמנים שלכם – מי אישר הגעה,
           מי עדיין מתלבט, ומי צריך תזכורת קטנה 😉`}
             />
-            <Span
+            <GridItem
               title="✨ כל מה שצריך לאירוע מושלם במקום אחד"
               text={`אישורי הגעה, עיצוב הזמנות ומערכת
           ניהול קלה ונוחה – הכל כדי שאתם תתמקדו בשמחה.`}

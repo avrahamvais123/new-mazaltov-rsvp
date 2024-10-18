@@ -1,7 +1,7 @@
 "use client";
 
 import Table from "@/app/ui/Table";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   useReactTable,
   getCoreRowModel,
