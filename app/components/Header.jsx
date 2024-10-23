@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useSession, signIn, signOut } from "next-auth/react";
 import Hamburger from "hamburger-react";
 import {
@@ -16,8 +16,8 @@ import { usePathname, useRouter } from "next/navigation";
 import Avatar from "../ui/Avatar";
 import { Login03Icon, Settings04Icon } from "../icons/icons";
 import axios from "axios";
-import { sendGTMEvent } from "@next/third-parties/google";
 import { cn } from "@/lib/utils";
+import Link from "next/link";
 
 const Header = () => {
   /* מסתיר את ההידר בעמוד הבית */
@@ -45,13 +45,15 @@ const Header = () => {
 
       <header
         className={cn(
-          "z-50 w-full min-h-16 px-2 absolute top-0",
+          "z-50 absolute top-0",
+          "w-full min-h-16 px-2",
+          "backdrop-blur-md border-b border-white/10",
           "flex items-center justify-between",
-          !isHomePage && "border-b static"
+          !isHomePage && "static border-slate-200/75"
         )}
       >
         {/* menu */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 pointer-events-auto">
           <Hamburger
             rounded
             size={22}

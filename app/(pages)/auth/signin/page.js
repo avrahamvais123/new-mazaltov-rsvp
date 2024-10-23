@@ -1,5 +1,10 @@
 "use client";
 
+import {
+  LockPasswordIcon,
+  SecurityLockIcon,
+  UserLock01Icon,
+} from "@/app/icons/icons";
 import Loader from "@/app/ui/Loader";
 import MyForm from "@/app/ui/MyForm";
 import { errorToast, successToast } from "@/app/ui/toasts";
@@ -20,6 +25,7 @@ const fields = [
     type: "email",
     placeholder: "אימייל",
     required: true,
+    iconAfter: <SecurityLockIcon className="text-slate-300" />,
     span: 12,
   },
   {
@@ -29,6 +35,8 @@ const fields = [
     placeholder: "סיסמה",
     required: true,
     span: 12,
+    viewPasswordIcon: true,
+    iconBefore: <LockPasswordIcon />,
     helperText: (
       <Link
         className="text-sm mt-0.5 text-slate-400 hover:text-indigo-600 active:text-indigo-700 transition-all flex-grow text-end"

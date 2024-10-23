@@ -32,7 +32,7 @@ console.log("GA_TRACKING_ID: ", GA_TRACKING_ID);
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="he" dir="rtl" className="*:box-border h-dvh w-dvw">
+    <html lang="he" dir="rtl" className="*:box-border scroll-smooth h-dvh w-dvw">
       <body
         className={cn(
           notoSansHebrew.className,

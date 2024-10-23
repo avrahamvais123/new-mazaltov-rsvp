@@ -8,7 +8,7 @@ const Avatar = ({ src, classNames }) => {
   const { data: session, status } = useSession();
 
   return (
-    <div className={cn("relative size-10", classNames?.wrapper)}>
+    <div className={cn("relative size-10 pointer-events-auto", classNames?.wrapper)}>
       {session?.user?.image ? (
         <img
           src={src || session?.user?.image}

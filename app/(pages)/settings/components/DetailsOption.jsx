@@ -134,9 +134,9 @@ const DetailsOption = () => {
               input: cn("font-bold text-xl text-slate-400", "hover:text-clip"),
             }}
           />
-          <h2 className="-mt-1 font-medium text-slate-400 truncate max-w-full hover:text-clip">
+          <h4 className="-mt-1 font-medium text-slate-400 truncate max-w-full hover:text-clip">
             {session?.user?.email}
-          </h2>
+          </h4>
         </span>
       </div>
 

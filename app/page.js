@@ -1,13 +1,14 @@
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import CallToAction from "./components/CallToAction";
+import Prices from "./components/Prices";
 
 const GridItem = ({ title, text, icon }) => {
   return (
     <div className="p-4 rounded-sm bg-white/5 backdrop-blur-sm border border-white/10">
       <span className="flex-center justify-start gap-2">
         {icon}
-        <h3 className="font-bold mb-2 max-md:text-sm text-white">{title}</h3>
+        <h4 className="mb-2 max-md:text-sm text-white">{title}</h4>
       </span>
       <p className="text-white/50 max-md:text-xs">{text}</p>
     </div>
@@ -25,32 +26,18 @@ const Title = () => {
 
       <p className="md:text-xl text-white">המקום שלכם לאישורי הגעה</p>
 
-      <div className="flex-center gap-2">
-        <CallToAction
-          text="להדגמה"
-          navigateTo="/demo"
-          className={cn(
-            "px-3 py-1.5 mt-2",
-            "md:py-2 md:px-8 md:mt-4",
-            "border border-indigo-800",
-            "hover:border-indigo-900",
-            "bg-indigo-800 hover:bg-indigo-900",
-            "text-sm text-indigo-50 md:text-base"
-          )}
-        />
-        <CallToAction
-          text="יצירת הזמנה"
-          navigateTo="/create-invitation"
-          className={cn(
-            "px-3 py-1.5 mt-2",
-            "md:py-2 md:px-5 md:mt-4",
-            "border border-indigo-50",
-            "bg-transparent hover:bg-indigo-50",
-            "text-indigo-50 hover:text-indigo-800",
-            "text-sm md:text-base"
-          )}
-        />
-      </div>
+      <CallToAction
+        text="יצירת הזמנה"
+        navigateTo="/create-invitation"
+        className={cn(
+          "px-3 py-1.5 mt-2",
+          "md:py-2 md:px-5 md:mt-4",
+          "border border-indigo-50",
+          "bg-transparent hover:bg-indigo-50",
+          "text-indigo-50 hover:text-indigo-800",
+          "text-sm md:text-base"
+        )}
+      />
     </div>
   );
 };
@@ -116,6 +103,8 @@ export default function Home() {
             />
           </div>
         </section>
+
+        <Prices />
       </div>
     </>
   );

@@ -12,57 +12,67 @@ import {
 import Link from "next/link";
 import { useSession, signIn, signOut } from "next-auth/react";
 import {
+  CreditCardPosIcon,
   FileAddIcon,
   Home09Icon,
   Login02Icon,
   MailOpenIcon,
   Settings04Icon,
   UserCircleIcon,
-  UserGroup02Icon,
   UserLock01Icon,
 } from "../icons/icons";
-import { useAtomValue } from "jotai";
-import { userAtom } from "@/lib/jotai";
 import { cn } from "@/lib/utils";
 
 const ADMIN_EMAIL = process.env.NEXT_PUBLIC_ADMIN_EMAIL;
 
 const Menu = ({ open, setOpen }) => {
-  const user = useAtomValue(userAtom);
   const { data: session, status } = useSession();
   const pathname = usePathname();
 
   const links = [
+    // "/"
     {
       href: "/",
       Text: (props) => <span {...props}>בית</span>,
       Icon: (props) => <Home09Icon {...props} />,
       onClick: () => setOpen(false),
     },
+    // "/create-invitation"
     {
       href: "/create-invitation",
       Text: (props) => <span {...props}>יצירת הזמנה</span>,
       Icon: (props) => <FileAddIcon {...props} />,
       onClick: () => setOpen(false),
     },
+    // "/prices"
+    {
+      href: "/#prices",
+      Text: (props) => <span {...props}>מחירון</span>,
+      Icon: (props) => <CreditCardPosIcon {...props} />,
+      onClick: () => setOpen(false),
+    },
+    // "/rsvp"
     {
       href: "/rsvp",
       Text: (props) => <span {...props}>אישורי הגעה</span>,
       Icon: (props) => <MailOpenIcon {...props} />,
       onClick: () => setOpen(false),
     },
+    // "/settings"
     {
       href: "/settings",
       Text: (props) => <span {...props}>הגדרות</span>,
       Icon: (props) => <Settings04Icon {...props} />,
       onClick: () => setOpen(false),
     },
+    // "/users-management"
     {
       href: "/users-management",
       Text: (props) => <span {...props}>לוח ניהול משתמשים</span>,
       Icon: (props) => <UserLock01Icon {...props} />,
       onClick: () => setOpen(false),
     },
+    // "/auth/signin"
     {
       href: "/auth/signin",
       Text: (props) => <span {...props}>{session ? "יציאה" : "כניסה"}</span>,

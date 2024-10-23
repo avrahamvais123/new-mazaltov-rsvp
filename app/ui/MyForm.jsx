@@ -73,7 +73,7 @@ const MyForm = forwardRef(
                   gridColumn: `span ${field?.span || 12} / span 12`,
                   ...field?.styles,
                 }}
-                className="relative max-md:col-span-12"
+                className="max-md:col-span-12"
               >
                 {field?.type === "select" ? (
                   <MySelect
