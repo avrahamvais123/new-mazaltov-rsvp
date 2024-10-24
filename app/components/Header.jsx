@@ -22,7 +22,12 @@ import Link from "next/link";
 const Header = () => {
   /* מסתיר את ההידר בעמוד הבית */
   const pathname = usePathname();
-  const hiddenHeaderPaths = ["/not-found"];
+  const hiddenHeaderPaths = [
+    "/not-found",
+    "/invitation",
+    "/auth/signin",
+    "/auth/signup",
+  ];
   const [isOpen, setOpen] = useState(false);
   const { data: session, status } = useSession();
   const router = useRouter();

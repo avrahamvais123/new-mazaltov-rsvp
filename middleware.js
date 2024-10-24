@@ -30,6 +30,7 @@ export function middleware(req) {
     const existingPages = [
       "/",
       "/create-invitation",
+      "/invitation",
       "/test",
       "/log",
       "/rsvp",

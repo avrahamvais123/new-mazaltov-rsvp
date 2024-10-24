@@ -7,7 +7,7 @@ import { ViewIcon, ViewOffSlashIcon } from "../icons/icons";
 const Input = ({
   value,
   field,
-  className,
+  classNames = {},
   fieldsClassName,
   errors = {},
   register = () => {},
@@ -21,8 +21,6 @@ const Input = ({
       ? "זהו שדה חובה"
       : null;
 
-  console.log("value: ", value);
-
   const changeType = () => {
     return field?.type === "password"
       ? viewPassword
@@ -35,13 +33,14 @@ const Input = ({
     <>
       <div
         className={cn(
-          "relative flex-center mx-1",
+          "relative flex-center",
           "border border-slate-300",
-          "ring-2 ring-transparent",
           "rounded-md transition-all",
-          "focus-within:ring-2",
-          "focus-within:ring-indigo-800",
-          "focus-within:border-indigo-800"
+          "focus-within:border-indigo-800",
+          //"ring-2 ring-transparent",
+          //"focus-within:ring-2",
+          //"focus-within:ring-indigo-800",
+          classNames?.wrapper
         )}
       >
         {/* icon before */}
@@ -64,13 +63,13 @@ const Input = ({
             },
           })}
           className={cn(
-            "w-full px-4 py-2 peer",
+            "w-full px-4 py-2 peer rounded-md",
             "focus:ring-indigo-800 outline-0",
             !field?.iconBefore && "pr-3",
             !field?.iconAfter && "pl-3",
             errors[field?.name] && "border-red-500",
             fieldsClassName,
-            className
+            classNames?.input
           )}
         />
 
@@ -80,7 +79,9 @@ const Input = ({
             onClick={() => setViewPassword(!viewPassword)}
             className="flex-center cursor-pointer px-1"
           >
-            <span className="p-1 rounded-md transition-all *:text-slate-300 hover:bg-slate-50 flex-center">{viewPassword ? <ViewOffSlashIcon /> : <ViewIcon />}</span>
+            <span className="p-1 rounded-md transition-all *:text-slate-300 hover:bg-slate-50 flex-center">
+              {viewPassword ? <ViewOffSlashIcon /> : <ViewIcon />}
+            </span>
           </div>
         )}
 
@@ -103,8 +104,8 @@ const Input = ({
               ? "peer-focus:-translate-y-[135%] right-2 scale-75 px-2"
               : "peer-focus:-translate-y-[135%] peer-focus:right-2 peer-focus:scale-75 peer-focus:px-2",
             field?.iconBefore && "peer-placeholder-shown:right-12",
-
-            errors[field?.name] && "text-red-500"
+            errors[field?.name] && "text-red-500",
+            classNames?.label
           )}
         >
           {field?.label}

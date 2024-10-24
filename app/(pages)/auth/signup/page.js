@@ -83,14 +83,13 @@ export default function SignUp() {
           "bg-white rounded-sm p-4"
         )}
       >
-        <h2 className="text-2xl text-center text-slate-400 font-bold">הרשמה</h2>
         {/* <span className="text-xs text-center text-slate-400">
           משתמש שנרשם דרך גוגל יש להיכנס רק דרך גוגל ומי שנרשם ידנית עם מייל
           וסיסמה צריך להיכנס גם כן רק בדרך זו
         </span> */}
 
         <Form
-          title="כניסה"
+          title="הרשמה"
           form={form}
           fields={fields}
           onSubmit={onSubmit}

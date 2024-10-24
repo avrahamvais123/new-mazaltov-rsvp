@@ -7,6 +7,8 @@ const RESEND_API_KEY = process.env.RESEND_API_KEY;
 const BASE_URL = process.env.BASE_URL;
 const resend = new Resend(RESEND_API_KEY);
 
+const ADMIN_EMAIL = process.env.ADMIN_EMAIL;
+
 export const POST = async () => {
   try {
     // יצירת טוקן עם תוקף של שעה (3600 שניות)
@@ -19,7 +21,7 @@ export const POST = async () => {
 
     resend.emails.send({
       from: "מזל טוב אישורי הגעה <support@mazaltov-rsvp.co.il>",
-      to: "avrahamvais123@gmail.com",
+      to: ADMIN_EMAIL,
       subject: "קישור לניהול משתמשים",
       html: `
           <table dir="rtl" width="100%" height="100%" style="font-family: Arial, sans-serif; line-height: 1.5; padding: 20px; text-align: center;">
