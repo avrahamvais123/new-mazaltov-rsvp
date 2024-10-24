@@ -11,6 +11,9 @@ import { redirect } from "next/navigation";
 const JWT_SECRET = process.env.JWT_SECRET;
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL;
 
+/* 
+** אזור מנהל המשתמשים
+*/
 const Page = async ({ searchParams }) => {
   const session = await auth();
   console.log("session: ", session);

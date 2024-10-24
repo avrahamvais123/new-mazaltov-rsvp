@@ -39,7 +39,7 @@ export const POST = async (req) => {
 
     resend.emails.send({
       from: "מזל טוב אישורי הגעה <support@mazaltov-rsvp.co.il>",
-      to: "avrahamvais123@gmail.com",
+      to: email,
       subject: "קישור לאיפוס סיסמה",
       html: `
           <table dir="rtl" width="100%" height="100%" style="font-family: Arial, sans-serif; line-height: 1.5; padding: 20px; text-align: center;">

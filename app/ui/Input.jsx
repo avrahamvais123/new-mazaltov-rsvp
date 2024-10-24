@@ -46,7 +46,7 @@ const Input = ({
       >
         {/* icon before */}
         {field?.iconBefore && (
-          <span className="px-1.5 flex-center border-l">
+          <span className="px-1.5 flex-center border-l *:text-slate-300">
             {field?.iconBefore}
           </span>
         )}
@@ -66,8 +66,8 @@ const Input = ({
           className={cn(
             "w-full px-4 py-2 peer",
             "focus:ring-indigo-800 outline-0",
-            //!field?.iconBefore && "pr-4",
-            //!field?.iconAfter && "pl-4",
+            !field?.iconBefore && "pr-3",
+            !field?.iconAfter && "pl-3",
             errors[field?.name] && "border-red-500",
             fieldsClassName,
             className
@@ -86,7 +86,7 @@ const Input = ({
 
         {/* icon after */}
         {field?.iconAfter && (
-          <span className="flex-center px-1.5 border-r">
+          <span className="flex-center px-1.5 border-r *:text-slate-300">
             {field?.iconAfter}
           </span>
         )}
@@ -102,7 +102,7 @@ const Input = ({
             value
               ? "peer-focus:-translate-y-[135%] right-2 scale-75 px-2"
               : "peer-focus:-translate-y-[135%] peer-focus:right-2 peer-focus:scale-75 peer-focus:px-2",
-            field?.iconBefore && "peer-placeholder-shown:right-10",
+            field?.iconBefore && "peer-placeholder-shown:right-12",
 
             errors[field?.name] && "text-red-500"
           )}
