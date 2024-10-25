@@ -1,6 +1,8 @@
 "use client";
 
+import Loader from "@/app/ui/Loader";
 import NumberInput from "@/app/ui/NumberInput";
+import { errorToast, successToast } from "@/app/ui/toasts";
 import { cn } from "@/lib/utils";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
@@ -94,6 +96,14 @@ const InvitaionForm = ({ email, client }) => {
         throw Error("error: ", error);
       }
     },
+    onSuccess: () => {
+      successToast({ text: "הפרטים שנלחו בהצלחה" });
+      reset();
+    },
+    onError: (error) => {
+      console.error("error: ", error);
+      errorToast({ text: "אירעה שגיאה, הודעה לא נשלחה" });
+    },
   });
 
   const onSubmit = (data) => {
@@ -103,7 +113,6 @@ const InvitaionForm = ({ email, client }) => {
     data.client = client;
     console.log("data: ", data);
     sendRSVPMutation.mutateAsync(data);
-    reset();
   };
 
   return (
@@ -114,8 +123,13 @@ const InvitaionForm = ({ email, client }) => {
 
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="size-full flex-col-center gap-4"
+        className="relative size-full flex-col-center gap-4"
       >
+        <Loader
+          text="שולח את ההודעה..."
+          isLoading={sendRSVPMutation.isPending}
+        />
+
         {/* שם */}
         <label className="w-full flex-col-center items-start text-slate-400">
           שם
@@ -181,7 +195,7 @@ const InvitaionForm = ({ email, client }) => {
           ברכות ואיחולים
           <textarea
             rows="4"
-            {...register("congratulations", { required: true })}
+            {...register("congratulations")}
             className="resize-none py-1 px-3 border w-full rounded-md ring-1 ring-transparent transition-all focus:ring-indigo-800 outline-0"
           ></textarea>
         </label>
