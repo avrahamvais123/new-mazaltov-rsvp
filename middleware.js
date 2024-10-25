@@ -32,6 +32,7 @@ export function middleware(req) {
       "/create-invitation",
       "/invitation",
       "/test",
+      "/katzav",
       "/log",
       "/rsvp",
       "/verify",

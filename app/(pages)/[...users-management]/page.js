@@ -57,7 +57,7 @@ const Page = async ({ searchParams }) => {
     <div className="size-full flex-col-center justify-start items-start gap-4 p-4">
       <h1 className="text-2xl font-bold mb-8">לוח ניהול משתמשים</h1>
 
-      <div className="w-full flex-col-center items-start -space-y">
+      <div className="size-full test overflow-auto flex-col-center items-start justify-start -space-y">
         {users.map((user, idx) => {
           return (
             <>
@@ -73,7 +73,7 @@ const Page = async ({ searchParams }) => {
                   className="rounded-full bg-slate-50 ring-4 ring-slate-100"
                 />
                 <div className="flex-col-center justify-start items-start gap-0.5">
-                  <h1 className="font-bold mb-1 -mt-1">{user?.name}</h1>
+                  <h4 className="mb-1 -mt-1">{user?.name}</h4>
                   <span className="flex-center justify-start gap-2">
                     <PassportIcon className="size-5 text-slate-400" />
                     <p className="text-sm">{user?._id.toString()}</p>

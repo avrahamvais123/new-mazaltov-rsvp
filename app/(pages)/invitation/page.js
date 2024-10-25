@@ -18,6 +18,17 @@ const Page = ({ searchParams }) => {
   const waze = searchParams.waze;
   const gm = searchParams.gm;
 
+  const data = {
+    name,
+    email,
+    client,
+    title,
+    img_1,
+    img_2,
+    waze,
+    gm,
+  };
+
   return (
     <div className="size-full p-6 md:p-10 flex-col-center justify-start gap-4 md:gap-8 overflow-auto">
       <h1 className="text-center">
