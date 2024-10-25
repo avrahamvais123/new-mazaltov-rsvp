@@ -107,8 +107,6 @@ const InvitaionForm = ({ email, client }) => {
   });
 
   const onSubmit = (data) => {
-    //data.belongsTo = "jkatzav@gmail.com";
-    //data.text = `${data?.name} ${data?.status}`;
     data.belongsTo = email;
     data.client = client;
     console.log("data: ", data);
