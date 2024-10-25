@@ -38,12 +38,12 @@ const Menu = ({ open, setOpen }) => {
       onClick: () => setOpen(false),
     },
     // "/create-invitation"
-    {
+    /* {
       href: "/create-invitation",
       Text: (props) => <span {...props}>יצירת הזמנה</span>,
       Icon: (props) => <FileAddIcon {...props} />,
       onClick: () => setOpen(false),
-    },
+    }, */
     // "/prices"
     {
       href: "/#prices",

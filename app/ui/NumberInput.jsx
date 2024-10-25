@@ -7,6 +7,9 @@ const NumberInput = ({
   onIncrement = () => {},
   onDecrement = () => {},
   onInput = () => {},
+  register = () => {},
+  name = "number",
+  required = false,
   min = 1,
   max = 100,
   classNames = () => {},
@@ -51,6 +54,7 @@ const NumberInput = ({
       )}
     >
       <button
+        type="button"
         {...props?.buttonDecrement}
         onClick={decrement}
         disabled={value == min}
@@ -68,6 +72,9 @@ const NumberInput = ({
       </button>
       <input
         {...props?.input}
+        {...register(name, {
+          required: required,
+        })}
         type="text"
         value={value}
         onChange={onChange}
@@ -78,6 +85,7 @@ const NumberInput = ({
         )}
       />
       <button
+        type="button"
         {...props?.increment}
         onClick={increment}
         disabled={value == max}

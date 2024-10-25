@@ -1,9 +1,9 @@
 "use client";
 
-import Input from "@/app/ui/Input";
-import MyForm from "@/app/ui/MyForm";
+import NumberInput from "@/app/ui/NumberInput";
 import { cn } from "@/lib/utils";
-import React, { useState } from "react";
+import { useMutation } from "@tanstack/react-query";
+import axios from "axios";
 import { useForm } from "react-hook-form";
 
 const fields = [
@@ -15,7 +15,7 @@ const fields = [
   },
   {
     type: "radioGroup",
-    name: "attending",
+    name: "status",
     options: [
       {
         text: "מגיעים",
@@ -42,47 +42,10 @@ const fields = [
   },
 ];
 
-const AttendingButtons = [
-  {
-    value: "מגיעים",
-    className: "",
-  },
-  {
-    value: "אולי מגיעים",
-    className: "",
-  },
-  {
-    value: "לא מגיעים",
-    className: "",
-  },
-];
-
-const FloatingInput = ({ className, ...props }) => {
-  return (
-    <div className={cn("relative", className)}>
-      <input
-        {...props}
-        className={cn(
-          "w-full px-4 py-2 border rounded-md focus:ring-indigo-800 outline-0"
-        )}
-      />
-      <label
-        htmlFor={props.id}
-        className={cn(
-          "absolute top-0 left-0 text-slate-400 text-xs",
-          props.error && "text-red-600"
-        )}
-      >
-        {props.label}
-      </label>
-    </div>
-  );
-};
-
-const InvitaionForm = () => {
-  const { getValues, reset, register, handleSubmit, watch } = useForm({
+const InvitaionForm = ({ email, client }) => {
+  const { reset, register, handleSubmit, watch } = useForm({
     defaultValues: {
-      attending: "מגיעים",
+      status: "מגיעים",
     },
   });
 
@@ -119,8 +82,27 @@ const InvitaionForm = () => {
     },
   ];
 
+  const sendRSVPMutation = useMutation({
+    mutationFn: async (data) => {
+      try {
+        const res = await axios.post("/api/invitation", {
+          ...data,
+        });
+        console.log("res: ", res);
+      } catch (error) {
+        console.error("error: ", error);
+        throw Error("error: ", error);
+      }
+    },
+  });
+
   const onSubmit = (data) => {
+    //data.belongsTo = "jkatzav@gmail.com";
+    //data.text = `${data?.name} ${data?.status}`;
+    data.belongsTo = email;
+    data.client = client;
     console.log("data: ", data);
+    sendRSVPMutation.mutateAsync(data);
     reset();
   };
 
@@ -134,6 +116,7 @@ const InvitaionForm = () => {
         onSubmit={handleSubmit(onSubmit)}
         className="size-full flex-col-center gap-4"
       >
+        {/* שם */}
         <label className="w-full flex-col-center items-start text-slate-400">
           שם
           <input
@@ -142,17 +125,18 @@ const InvitaionForm = () => {
           />
         </label>
 
+        {/* אישור הגעה */}
         <label className="w-full flex-col-center items-start text-slate-400">
-          אישורי הגעה
+          אישור הגעה
           <div className="w-full flex-col-center md:flex-row gap-2">
             {options.map((option) => {
-              const isActive = watch("attending") == option.value;
+              const isActive = watch("status") == option.value;
               return (
                 <label key={option.value} className="w-full cursor-pointer">
                   <input
                     type="radio"
                     value={option.value}
-                    {...register("attending", { required: true })}
+                    {...register("status", { required: true })}
                     className="hidden"
                   />
                   <div
@@ -172,12 +156,33 @@ const InvitaionForm = () => {
           </div>
         </label>
 
+        {/* כמות מגיעים */}
+        {watch("status") !== "לא מגיעים" && (
+          <div className="w-full flex-col-center text-slate-400">
+            כמות מגיעים
+            <NumberInput
+              name="quantity"
+              required
+              register={register}
+              classNames={(value) => ({
+                buttonDecrement:
+                  value != 1 &&
+                  "hover:bg-indigo-600 hover:text-white hover:border-indigo-600",
+                buttonIncrement:
+                  value != 1 &&
+                  "hover:bg-indigo-600 hover:text-white hover:border-indigo-600",
+              })}
+            />
+          </div>
+        )}
+
+        {/* ברכות ואיחולים */}
         <label className="w-full flex-col-center items-start text-slate-400">
           ברכות ואיחולים
           <textarea
             rows="4"
             {...register("congratulations", { required: true })}
-            className="resize-none border w-full rounded-md ring-1 ring-transparent transition-all focus:ring-indigo-800 outline-0"
+            className="resize-none py-1 px-3 border w-full rounded-md ring-1 ring-transparent transition-all focus:ring-indigo-800 outline-0"
           ></textarea>
         </label>
 

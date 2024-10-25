@@ -4,7 +4,6 @@ import { errorToast, successToast } from "@/app/ui/toasts";
 import { Button, TextField } from "@mui/material";
 import axios from "axios";
 import React, { useState } from "react";
-import { toast } from "sonner";
 
 const SendLinkButton = () => {
   const [email, setEmail] = useState();
