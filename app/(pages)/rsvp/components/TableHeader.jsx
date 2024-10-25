@@ -33,7 +33,7 @@ const TableHeader = ({ table, setData, data, removeGuests }) => {
       {/* buttons */}
       <div className="flex-center gap-2">
         {/* send sms */}
-        <SendSMS table={table} data={data} />
+        {/* <SendSMS table={table} data={data} /> */}
 
         {/* add */}
         <AddGuest setData={setData} />
