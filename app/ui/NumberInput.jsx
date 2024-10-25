@@ -7,7 +7,8 @@ const NumberInput = ({
   onIncrement = () => {},
   onDecrement = () => {},
   onInput = () => {},
-  register = () => {},
+  getValue = () => {},
+  //register = () => {},
   name = "number",
   required = false,
   min = 1,
@@ -21,6 +22,7 @@ const NumberInput = ({
     if (value < max) {
       setValue((prevValue) => prevValue + 1);
       onIncrement();
+      getValue(value + 1);
     }
   };
 
@@ -28,6 +30,7 @@ const NumberInput = ({
     if (value > min) {
       setValue((prevValue) => prevValue - 1);
       onDecrement();
+      getValue(value - 1);
     }
   };
 
@@ -42,6 +45,7 @@ const NumberInput = ({
       console.log("cleanedValue: ", cleanedValue);
       setValue(Number(cleanedValue));
       onInput(e);
+      getValue(Number(cleanedValue));
     }
   };
 
@@ -72,9 +76,9 @@ const NumberInput = ({
       </button>
       <input
         {...props?.input}
-        {...register(name, {
+        /* {...register(name, {
           required: required,
-        })}
+        })} */
         type="text"
         value={value}
         onChange={onChange}

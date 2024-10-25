@@ -6,6 +6,7 @@ import { errorToast, successToast } from "@/app/ui/toasts";
 import { cn } from "@/lib/utils";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 
 const fields = [
@@ -45,6 +46,8 @@ const fields = [
 ];
 
 const InvitaionForm = ({ email, client }) => {
+  const [quantity, setQuantity] = useState("");
+  console.log('quantity: ', quantity);
   const { reset, register, handleSubmit, watch } = useForm({
     defaultValues: {
       status: "מגיעים",
@@ -109,6 +112,7 @@ const InvitaionForm = ({ email, client }) => {
   const onSubmit = (data) => {
     data.belongsTo = email;
     data.client = client;
+    data.quantity = quantity.toString();
     console.log("data: ", data);
     sendRSVPMutation.mutateAsync(data);
   };
@@ -175,7 +179,8 @@ const InvitaionForm = ({ email, client }) => {
             <NumberInput
               name="quantity"
               required
-              register={register}
+              getValue={setQuantity}
+              //register={register}
               classNames={(value) => ({
                 buttonDecrement:
                   value != 1 &&
