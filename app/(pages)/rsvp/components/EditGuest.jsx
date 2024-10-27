@@ -19,7 +19,7 @@ const fields = (watch) => [
     name: "contact",
     label: "פרטי התקשרות",
     type: "text",
-    required: true,
+    //required: true,
     span: 6,
   },
   {
@@ -38,7 +38,7 @@ const fields = (watch) => [
     name: "quantity",
     label: "כמות",
     type: "number",
-    required: true,
+    //required: true,
     span: 6,
     appear: watch("status") === "לא מגיעים" ? false : true,
   },
