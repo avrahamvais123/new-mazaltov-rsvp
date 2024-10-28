@@ -17,10 +17,13 @@ import {
   AlignTopIcon,
   AlignVerticalCenterIcon,
   AlignBottomIcon,
+  TextBoldIcon,
+  TextUnderlineIcon,
+  TextItalicIcon,
 } from "@/app/icons/icons";
 
 const ButtonClassName =
-  "cursor-pointer bg-slate-100 transition-all p-1.5 h-full w-10 rounded-sm hover:bg-slate-200 active:bg-slate-300";
+  "cursor-pointer bg-slate-100 text-slate-400 transition-all p-1.5 h-full w-10 rounded-sm hover:bg-slate-200 active:bg-slate-300";
 
 const Editor = () => {
   const { editor, onReady, selectedObjects } = useFabricJSEditor();
@@ -125,13 +128,39 @@ const Editor = () => {
     }
   };
 
+  const toggleTextStyle = (style) => {
+    const activeObject = editor?.canvas?.getActiveObject();
+    if (activeObject && activeObject.type === "text") {
+      switch (style) {
+        case "bold":
+          activeObject.set(
+            "fontWeight",
+            activeObject.fontWeight === "bold" ? "normal" : "bold"
+          );
+          break;
+        case "underline":
+          activeObject.set("underline", !activeObject.underline);
+          break;
+        case "italic":
+          activeObject.set(
+            "fontStyle",
+            activeObject.fontStyle === "italic" ? "normal" : "italic"
+          );
+          break;
+        default:
+          break;
+      }
+      editor.canvas.renderAll(); // רענון הקנבס לאחר שינוי
+    }
+  };
+
   return (
     <div className="size-full flex-center">
       <div className="size-full p-6 max-w-52 flex-col-center gap-2 ">
         <TextIcon
           className={cn(
             ButtonClassName,
-            "w-full aspect-square text-indigo-100",
+            "w-full h-fit p-3 text-indigo-100",
             "bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800"
           )}
           onClick={addText}
@@ -139,7 +168,7 @@ const Editor = () => {
 
         {/* יישור */}
         <fieldset className="border border-slate-200 rounded-sm">
-          <legend className="px-2 mr-2 text-sm text-slate-400">יישור</legend>
+          <legend className="px-2 mr-2 text-xs text-slate-400">יישור</legend>
           <div className="size-fit p-2 grid grid-cols-3 grid-rows-2 gap-2">
             <AlignRightIcon
               className={ButtonClassName}
@@ -170,7 +199,7 @@ const Editor = () => {
 
         {/* יישור טקסט */}
         <fieldset className="p-2 border border-slate-200 rounded-sm flex-center gap-2">
-          <legend className="px-2 text-sm text-slate-400">יישור טקסט</legend>
+          <legend className="px-2 text-xs text-slate-400">יישור טקסט</legend>
           <TextAlignRightIcon
             className={ButtonClassName}
             onClick={() => textAlign("right")}
@@ -182,6 +211,23 @@ const Editor = () => {
           <TextAlignLeftIcon
             className={ButtonClassName}
             onClick={() => textAlign("left")}
+          />
+        </fieldset>
+
+        {/* עיצוב טקסט */}
+        <fieldset className="p-2 border border-slate-200 rounded-sm flex-center gap-2">
+          <legend className="px-2 text-xs text-slate-400">עיצוב טקסט</legend>
+          <TextBoldIcon
+            className={ButtonClassName}
+            onClick={() => toggleTextStyle("bold")}
+          />
+          <TextUnderlineIcon
+            className={ButtonClassName}
+            onClick={() => toggleTextStyle("underline")}
+          />
+          <TextItalicIcon
+            className={ButtonClassName}
+            onClick={() => toggleTextStyle("italic")}
           />
         </fieldset>
 
