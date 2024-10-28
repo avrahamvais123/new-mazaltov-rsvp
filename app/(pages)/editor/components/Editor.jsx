@@ -42,6 +42,10 @@ const Editor = () => {
     editor?.addText("טקסט");
   };
 
+  const addRectangle = () => {
+    editor?.addRectangle();
+  };
+
   const updateText = () => {
     editor?.updateText(editedText);
   };
@@ -55,34 +59,69 @@ const Editor = () => {
     }
   };
 
-  const alignTextBox = (position) => {
+  const alignToHorizontally = (position) => {
     const activeObject = editor?.canvas?.getActiveObject();
     if (activeObject) {
       const canvasWidth = editor.canvas.width;
+      const objectWidth = activeObject.getScaledWidth();
 
       switch (position) {
         case "left":
           activeObject.set({
-            originX: "left",
             left: 0,
+            originX: "left",
           });
           break;
         case "center":
           activeObject.set({
-            originX: "center",
-            left: canvasWidth / 2,
+            left: canvasWidth / 2 - objectWidth / 2,
+            originX: "left",
           });
           break;
         case "right":
           activeObject.set({
-            originX: "right",
-            left: canvasWidth,
+            left: canvasWidth - objectWidth,
+            originX: "left",
           });
           break;
         default:
           break;
       }
-      editor.canvas.renderAll(); // רענון הקנבס לאחר שינוי
+      activeObject.setCoords(); // עדכון הקואורדינטות לאחר שינוי
+      editor.canvas.renderAll(); // רענון הקנבס
+    }
+  };
+
+  const alignToVertically = (position) => {
+    const activeObject = editor?.canvas?.getActiveObject();
+    if (activeObject) {
+      const canvasHeight = editor.canvas.height;
+      const objectHeight = activeObject.getScaledHeight();
+
+      switch (position) {
+        case "top":
+          activeObject.set({
+            top: 0,
+            originY: "top",
+          });
+          break;
+        case "center":
+          activeObject.set({
+            top: canvasHeight / 2 - objectHeight / 2,
+            originY: "top",
+          });
+          break;
+        case "bottom":
+          activeObject.set({
+            top: canvasHeight - objectHeight,
+            originY: "top",
+          });
+          break;
+        default:
+          break;
+      }
+      activeObject.setCoords(); // עדכון הקואורדינטות לאחר שינוי
+      editor.canvas.renderAll(); // רענון הקנבס
     }
   };
 
@@ -104,27 +143,27 @@ const Editor = () => {
           <div className="size-fit p-2 grid grid-cols-3 grid-rows-2 gap-2">
             <AlignRightIcon
               className={ButtonClassName}
-              onClick={() => alignTextBox("right")}
+              onClick={() => alignToHorizontally("right")}
             />
             <AlignHorizontalCenterIcon
               className={ButtonClassName}
-              onClick={() => alignTextBox("center")}
+              onClick={() => alignToHorizontally("center")}
             />
             <AlignLeftIcon
               className={ButtonClassName}
-              onClick={() => alignTextBox("left")}
+              onClick={() => alignToHorizontally("left")}
             />
             <AlignTopIcon
               className={ButtonClassName}
-              onClick={() => alignTextBox("left")}
+              onClick={() => alignToVertically("top")}
             />
             <AlignVerticalCenterIcon
               className={ButtonClassName}
-              onClick={() => alignTextBox("left")}
+              onClick={() => alignToVertically("center")}
             />
             <AlignBottomIcon
               className={ButtonClassName}
-              onClick={() => alignTextBox("left")}
+              onClick={() => alignToVertically("bottom")}
             />
           </div>
         </fieldset>
@@ -161,7 +200,7 @@ const Editor = () => {
           </button>
         </div>
       </div>
-      <FabricJSCanvas className="size-full border" onReady={onReady} />
+      <FabricJSCanvas className="size-full test" onReady={onReady} />
     </div>
   );
 };
