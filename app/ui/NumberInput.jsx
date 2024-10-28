@@ -15,7 +15,7 @@ const NumberInput = ({
   value,
   min = 1,
   max = 100,
-  classNames = () => {},
+  classNames = {},
   props = {},
 }) => {
   //const [value, setValue] = useState(min);
@@ -56,7 +56,7 @@ const NumberInput = ({
       {...props?.wrapper}
       className={cn(
         "flex-center border border-slate-200 px-1 gap-1 rounded-full",
-        classNames(value)?.wrapper
+        classNames?.wrapper
       )}
     >
       <button
@@ -71,7 +71,7 @@ const NumberInput = ({
           value == min
             ? "cursor-not-allowed border-slate-200 text-slate-300"
             : "border-slate-400 text-slate-400 hover:bg-slate-400 hover:text-white",
-          classNames(value)?.buttonDecrement
+          classNames?.buttonDecrement
         )}
       >
         -
@@ -87,7 +87,7 @@ const NumberInput = ({
         inputMode="numeric"
         className={cn(
           "w-14 h-10 text-center text-lg text-slate-600 outline-none",
-          classNames(value)?.input
+          classNames?.input
         )}
       />
       <button
@@ -102,7 +102,7 @@ const NumberInput = ({
           value == max
             ? "cursor-not-allowed border-slate-200 text-slate-300"
             : "border-slate-400 text-slate-400 hover:bg-slate-400 hover:text-white",
-          classNames(value)?.buttonIncrement
+          classNames?.buttonIncrement
         )}
       >
         +

@@ -1,7 +1,7 @@
 "use client";
 
 import Table from "@/app/ui/Table";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useState } from "react";
 import {
   useReactTable,
   getCoreRowModel,
@@ -17,24 +17,10 @@ import axios from "axios";
 import { useSession } from "next-auth/react";
 import Loader from "@/app/ui/Loader";
 
-const calaulateTotalStatus = ({ data, setStatus }) => {
-  // חישוב סטטוס אחרי קבלת הנתונים מהשאילתה
-  const initialStatus = { מגיעים: 0, "לא מגיעים": 0, "אולי מגיעים": 0 };
-
-  const result = data.reduce((acc, curr) => {
-    acc[curr.status] = acc[curr.status] || 0;
-    acc[curr.status] += curr.status === "לא מגיעים" ? 1 : Number(curr.quantity);
-    return acc;
-  }, initialStatus);
-  setStatus(result);
-};
-
-const fetchGuests = async ({ queryKey, setStatus }) => {
+const fetchGuests = async ({ queryKey }) => {
   const [, email] = queryKey;
   try {
     const res = await axios.get(`/api/guests?belongsTo=${email}`);
-
-    calaulateTotalStatus({ data: res?.data?.data, setStatus });
     return res?.data?.data;
   } catch (error) {
     console.error(
@@ -59,7 +45,27 @@ const GuestsTable = () => {
       queryFn: ({ queryKey }) => fetchGuests({ queryKey, setStatus }),
       enabled: !!session?.user?.email,
       staleTime: 300000, // Cache data for 5 minutes
+      select: (data) => {
+        calaulateTotalStatus({ data });
+        return data;
+      },
     }
+  );
+
+  const calaulateTotalStatus = useCallback(
+    ({ data }) => {
+      // חישוב סטטוס אחרי קבלת הנתונים מהשאילתה
+      const initialStatus = { מגיעים: 0, "לא מגיעים": 0, "אולי מגיעים": 0 };
+
+      const result = data.reduce((acc, curr) => {
+        acc[curr.status] = acc[curr.status] || 0;
+        acc[curr.status] +=
+          curr.status === "לא מגיעים" ? 1 : Number(curr.quantity);
+        return acc;
+      }, initialStatus);
+      setStatus(result);
+    },
+    [data]
   );
 
   const removeGuests = useMutation({

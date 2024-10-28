@@ -183,15 +183,14 @@ const InvitaionForm = ({ email, client }) => {
               required
               value={quantity}
               setValue={setQuantity}
-              //register={register}
-              classNames={(value) => ({
+              classNames={{
                 buttonDecrement:
-                  value != 1 &&
+                  quantity != 1 &&
                   "hover:bg-indigo-600 hover:text-white hover:border-indigo-600",
                 buttonIncrement:
-                  value != 1 &&
+                  quantity != 1 &&
                   "hover:bg-indigo-600 hover:text-white hover:border-indigo-600",
-              })}
+              }}
             />
           </div>
         )}
