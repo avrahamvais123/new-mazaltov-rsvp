@@ -34,6 +34,7 @@ export function middleware(req) {
       "/test",
       "/katzav",
       "/log",
+      "/editor",
       "/rsvp",
       "/verify",
       "/users-management",
