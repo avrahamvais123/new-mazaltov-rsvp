@@ -21,7 +21,6 @@ const fields = (watch) => [
     name: "contact",
     label: "פרטי התקשרות",
     type: "text",
-    required: true,
     span: 6,
   },
   {
@@ -46,7 +45,7 @@ const fields = (watch) => [
   },
 ];
 
-const AddGuest = ({ setData }) => {
+const AddGuest = ({ refetch }) => {
   const form = useForm();
   const { data: session } = useSession();
 
@@ -64,7 +63,7 @@ const AddGuest = ({ setData }) => {
         ...data,
       });
       console.log("res: ", res);
-      setData((prev) => [...prev, res?.data?.data]);
+      refetch();
     } catch (error) {
       console.error(
         "Error creating guest: ",

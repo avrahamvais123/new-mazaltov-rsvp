@@ -1,14 +1,18 @@
 "use client";
 
 import NumberInput from "@/app/ui/NumberInput";
-import { useCallback } from "react";
+import { useState } from "react";
 
 const Pagination = ({ table }) => {
+  const [value, setValue] = useState(table.getState().pagination.pageIndex + 1);
+
   return (
     <div className="h-14 w-full py-8 px-4 border-t border-slate-200 flex-center justify-between gap-2">
       {/* מעבר לעמוד */}
 
       <NumberInput
+        value={value}
+        setValue={setValue}
         min={1}
         max={table.getPageCount()}
         onInput={(e) => {

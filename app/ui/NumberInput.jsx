@@ -7,22 +7,24 @@ const NumberInput = ({
   onIncrement = () => {},
   onDecrement = () => {},
   onInput = () => {},
-  getValue = () => {},
+  //getValue = () => {},
   //register = () => {},
   name = "number",
   required = false,
+  setValue,
+  value,
   min = 1,
   max = 100,
   classNames = () => {},
   props = {},
 }) => {
-  const [value, setValue] = useState(min);
+  //const [value, setValue] = useState(min);
 
   const increment = () => {
     if (value < max) {
       setValue((prevValue) => prevValue + 1);
       onIncrement();
-      getValue(value + 1);
+      //getValue(value + 1);
     }
   };
 
@@ -30,7 +32,7 @@ const NumberInput = ({
     if (value > min) {
       setValue((prevValue) => prevValue - 1);
       onDecrement();
-      getValue(value - 1);
+      //getValue(value - 1);
     }
   };
 
@@ -45,7 +47,7 @@ const NumberInput = ({
       console.log("cleanedValue: ", cleanedValue);
       setValue(Number(cleanedValue));
       onInput(e);
-      getValue(Number(cleanedValue));
+      //getValue(Number(cleanedValue));
     }
   };
 

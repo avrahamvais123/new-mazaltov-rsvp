@@ -47,7 +47,7 @@ const fields = [
 
 const InvitaionForm = ({ email, client }) => {
   const [quantity, setQuantity] = useState(1);
-  console.log('quantity: ', quantity);
+  console.log("quantity: ", quantity);
   const { reset, register, handleSubmit, watch } = useForm({
     defaultValues: {
       status: "מגיעים",
@@ -112,7 +112,9 @@ const InvitaionForm = ({ email, client }) => {
   const onSubmit = (data) => {
     data.belongsTo = email;
     data.client = client;
-    data.quantity = quantity.toString();
+    if (watch("status") !== "לא מגיעים") {
+      data.quantity = quantity.toString();
+    }
     console.log("data: ", data);
     sendRSVPMutation.mutateAsync(data);
   };
@@ -179,7 +181,8 @@ const InvitaionForm = ({ email, client }) => {
             <NumberInput
               name="quantity"
               required
-              getValue={setQuantity}
+              value={quantity}
+              setValue={setQuantity}
               //register={register}
               classNames={(value) => ({
                 buttonDecrement:

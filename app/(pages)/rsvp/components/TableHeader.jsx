@@ -10,7 +10,7 @@ import axios from "axios";
 import SendSMS from "./SendSMS";
 import { useSession } from "next-auth/react";
 
-const TableHeader = ({ table, setData, data, removeGuests }) => {
+const TableHeader = ({ table, setData, refetch, removeGuests }) => {
   const { data: session } = useSession();
 
   /* send whatsapp */
@@ -36,7 +36,7 @@ const TableHeader = ({ table, setData, data, removeGuests }) => {
         {/* <SendSMS table={table} data={data} /> */}
 
         {/* add */}
-        <AddGuest setData={setData} />
+        <AddGuest refetch={refetch} />
 
         {/* remove */}
         <RemoveGuests

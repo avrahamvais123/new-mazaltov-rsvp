@@ -1,7 +1,7 @@
 "use client";
 
 import Table from "@/app/ui/Table";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   useReactTable,
   getCoreRowModel,
@@ -12,142 +12,55 @@ import TotalGuests from "./TotalGuests";
 import Pagination from "./Pagination";
 import { columns } from "./columns";
 import TableHeader from "./TableHeader";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useSession } from "next-auth/react";
 import Loader from "@/app/ui/Loader";
 
-const initialData = [
-  {
-    name: "שלמה כהן",
-    contact: "0548165639",
-    sendingDate: "24-12-24",
-    status: "אולי מגיעים",
-    quantity: 2,
-  },
-  {
-    name: "ראובן לוי",
-    contact: "0548165639",
-    sendingDate: "24-12-24",
-    status: "לא מגיעים",
-    quantity: 2,
-  },
-  {
-    name: "שמעון ישראל",
-    contact: "0548165639",
-    sendingDate: "24-12-24",
-    status: "מגיעים",
-    quantity: 2,
-  },
-  {
-    name: "יהודה דוד",
-    contact: "0548165639",
-    sendingDate: "24-12-24",
-    status: "אולי מגיעים",
-    quantity: 2,
-  },
-  {
-    name: "אפרים משה",
-    contact: "0548165639",
-    sendingDate: "24-12-24",
-    status: "מגיעים",
-    quantity: 2,
-  },
-  {
-    name: "אפרים משה",
-    contact: "0548165639",
-    sendingDate: "24-12-24",
-    status: "מגיעים",
-    quantity: 2,
-  },
-  {
-    name: "אפרים משה",
-    contact: "0548165639",
-    sendingDate: "24-12-24",
-    status: "מגיעים",
-    quantity: 2,
-  },
-  {
-    name: "אפרים משה",
-    contact: "0548165639",
-    sendingDate: "24-12-24",
-    status: "מגיעים",
-    quantity: 2,
-  },
-  {
-    name: "אפרים משה",
-    contact: "0548165639",
-    sendingDate: "24-12-24",
-    status: "מגיעים",
-    quantity: 2,
-  },
-  {
-    name: "אפרים משה",
-    contact: "0548165639",
-    sendingDate: "24-12-24",
-    status: "מגיעים",
-    quantity: 2,
-  },
-  {
-    name: "אפרים משה",
-    contact: "0548165639",
-    sendingDate: "24-12-24",
-    status: "מגיעים",
-    quantity: 2,
-  },
-  {
-    name: "אפרים משה",
-    contact: "0548165639",
-    sendingDate: "24-12-24",
-    status: "מגיעים",
-    quantity: 2,
-  },
-  {
-    name: "אפרים משה",
-    contact: "0548165639",
-    sendingDate: "24-12-24",
-    status: "מגיעים",
-    quantity: 2,
-  },
-  {
-    name: "חיים סבן",
-    contact: "0548165639",
-    sendingDate: "24-12-24",
-    status: "מגיעים",
-    quantity: 5,
-  },
-];
+const calaulateTotalStatus = ({ data, setStatus }) => {
+  // חישוב סטטוס אחרי קבלת הנתונים מהשאילתה
+  const initialStatus = { מגיעים: 0, "לא מגיעים": 0, "אולי מגיעים": 0 };
+
+  const result = data.reduce((acc, curr) => {
+    acc[curr.status] = acc[curr.status] || 0;
+    acc[curr.status] += curr.status === "לא מגיעים" ? 1 : Number(curr.quantity);
+    return acc;
+  }, initialStatus);
+  setStatus(result);
+};
+
+const fetchGuests = async ({ queryKey, setStatus }) => {
+  const [, email] = queryKey;
+  try {
+    const res = await axios.get(`/api/guests?belongsTo=${email}`);
+
+    calaulateTotalStatus({ data: res?.data?.data, setStatus });
+    return res?.data?.data;
+  } catch (error) {
+    console.error(
+      "Error fetching guests: ",
+      error.response?.data || error.message
+    );
+  }
+};
 
 const GuestsTable = () => {
   const { data: session, status: dataStatus } = useSession();
-  const [data, setData] = useState([]);
   const [status, setStatus] = useState({
     מגיעים: 0,
     "לא מגיעים": 0,
     "אולי מגיעים": 0,
   });
 
-  const getAllGuests = useMutation({
-    mutationFn: async () => {
-      const email = session?.user?.email;
-
-      try {
-        const res = await axios.get(`/api/guests?belongsTo=${email}`);
-        console.log("res: ", res);
-
-        return res?.data?.data;
-      } catch (error) {
-        console.error(
-          "Error getting all guests: ",
-          error.response?.data || error.message
-        );
-      }
-    },
-    onSuccess: async (data) => {
-      //console.log("data: ", data);
-      setData(data);
-    },
-  });
+  // Using useQuery with an object structure to fetch guests data and handle caching
+  const { data = [], isLoading, refetch, status: statusFetchGuests } = useQuery(
+    {
+      queryKey: ["guests", session?.user?.email],
+      queryFn: ({ queryKey }) => fetchGuests({ queryKey, setStatus }),
+      enabled: !!session?.user?.email,
+      staleTime: 300000, // Cache data for 5 minutes
+    }
+  );
 
   const removeGuests = useMutation({
     mutationFn: async (ids) => {
@@ -164,7 +77,7 @@ const GuestsTable = () => {
       }
     },
     onSuccess: async () => {
-      getAllGuests.mutate();
+      refetch();
     },
   });
 
@@ -186,7 +99,7 @@ const GuestsTable = () => {
       }
     },
     onSuccess: async () => {
-      getAllGuests.mutate();
+      refetch();
     },
   });
 
@@ -200,41 +113,30 @@ const GuestsTable = () => {
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
+    autoResetPageIndex: false,
     //initialState: { pagination: { pageSize: 50 } }, // למשל 50 שורות בעמוד
     enableRowSelection: true,
     getRowId: (row, index) => row?._id,
   });
 
-  useEffect(() => {
-    if (session) {
-      getAllGuests.mutate();
-    }
-  }, [session]);
-
   return (
     <>
       <Loader
         text="מעדכן נתונים..."
-        isLoading={dataStatus === "loading" || getAllGuests.isPending}
+        isLoading={dataStatus === "loading" || isLoading}
       />
 
       <div className="size-full p-4 py-8 pb-0 overflow-hidden flex-col-center">
         {/* total */}
-        <TotalGuests
-          dataStatus={dataStatus}
-          getAllGuests={getAllGuests}
-          status={status}
-          data={data}
-          setStatus={setStatus}
-        />
+        <TotalGuests status={status} data={data} setStatus={setStatus} />
 
         {/* table header */}
         <TableHeader
           table={table}
-          getAllGuests={getAllGuests}
+          getAllGuests={fetchGuests}
           removeGuests={removeGuests}
           data={data}
-          setData={setData}
+          refetch={refetch}
         />
 
         {/* table */}
@@ -276,3 +178,31 @@ export default GuestsTable;
       );
     }
   }; */
+
+/* const getAllGuests = useMutation({
+    mutationFn: async () => {
+      const email = session?.user?.email;
+
+      try {
+        const res = await axios.get(`/api/guests?belongsTo=${email}`);
+        console.log("res: ", res);
+
+        return res?.data?.data;
+      } catch (error) {
+        console.error(
+          "Error getting all guests: ",
+          error.response?.data || error.message
+        );
+      }
+    },
+    onSuccess: async (data) => {
+      //console.log("data: ", data);
+      setData(data);
+    },
+  }); */
+
+/* useEffect(() => {
+    if (session) {
+      getAllGuests.mutate();
+    }
+  }, [session]); */

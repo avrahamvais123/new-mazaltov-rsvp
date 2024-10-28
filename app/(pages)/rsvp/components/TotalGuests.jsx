@@ -4,54 +4,20 @@ import {
   CancelCircleFillIcon as CancelIcon,
   CheckmarkCircle02Icon as CheckmarkIcon,
   HelpCircleIcon as QuestionmarkIcon,
-  AlertCircleIcon as AlertIcon,
 } from "@/app/icons/icons";
-import Loader from "@/app/ui/Loader";
 import { cn } from "@/lib/utils";
-import { useEffect } from "react";
 
-const TotalGuests = ({ status, data, setStatus, dataStatus, getAllGuests }) => {
-  // יצירת מיפוי של אייקונים לכל סטטוס
+const TotalGuests = ({ status }) => {
   const iconsMap = {
     מגיעים: CheckmarkIcon,
     "לא מגיעים": CancelIcon,
     "אולי מגיעים": QuestionmarkIcon,
   };
 
-  useEffect(() => {
-    // אתחול הסטטוסים ל-0
-    const initialStatus = {
-      מגיעים: 0,
-      "לא מגיעים": 0,
-      "אולי מגיעים": 0,
-    };
-
-    const result = data?.reduce((acc, curr) => {
-      // אם הסטטוס לא קיים במצבר, נתחיל אותו ב-0
-      if (!acc[curr.status]) {
-        acc[curr.status] = 0;
-      }
-
-      // אם הסטטוס הוא "לא מגיעים", נוסיף 1, אחרת נוסיף את הכמות
-      if (curr.status === "לא מגיעים") {
-        acc[curr.status] += 1;
-      } else {
-        acc[curr.status] += Number(curr.quantity);
-      }
-
-      return acc;
-    }, initialStatus);
-
-    // עדכון הסטטוסים
-    if (result && Object.keys(result).length > 0) {
-      setStatus(result);
-    }
-  }, [data]);
-
   return (
     <div className="w-full flex-center gap-2">
       {Object.entries(status).map(([key, value], idx) => {
-        const Icon = iconsMap[key]; // קבלת האייקון המתאים מהאובייקט
+        const Icon = iconsMap[key];
         return (
           <div
             key={idx}
