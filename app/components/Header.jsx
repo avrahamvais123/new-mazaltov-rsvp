@@ -23,6 +23,7 @@ const Header = () => {
   /* מסתיר את ההידר בעמוד הבית */
   const pathname = usePathname();
   const hiddenHeaderPaths = [
+    "/editor",
     "/not-found",
     "/invitation",
     "/auth/signin",
