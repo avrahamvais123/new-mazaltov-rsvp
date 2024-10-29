@@ -1,33 +1,20 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
-import { FabricJSCanvas, useFabricJSEditor } from "fabricjs-react";
-import { fabric } from "fabric"; // this also installed on your project
+import { useFabricJSEditor } from "fabricjs-react";
 import { cn } from "@/lib/utils";
-import {
-  TextAlignCenterIcon,
-  TextAlignLeftIcon,
-  TextAlignRightIcon,
-  TextIcon,
-  AlignRightIcon,
-  AlignHorizontalCenterIcon,
-  AlignLeftIcon,
-  AlignTopIcon,
-  AlignVerticalCenterIcon,
-  AlignBottomIcon,
-  TextBoldIcon,
-  TextUnderlineIcon,
-  TextItalicIcon,
-  PaintBucketIcon,
-  TextSmallcapsIcon,
-} from "@/app/icons/icons";
-import ColorPicker from "./ColorPicker";
 import TextEditor from "./TextEditor";
 import Image from "next/image";
 import { indigo, slate } from "tailwindcss/colors";
+import AlignObjects from "./AlignObjects";
+import AlignText from "./AlignText";
+import TextDesign from "./TextDesign";
+import Templates from "./Templates";
+import FlipCanvas from "./FlipCanvas";
+import Canvas from "./Canvas";
 
-const ButtonClassName = cn(
+const buttonClassName = cn(
   "cursor-pointer h-full w-10 p-1.5",
   "bg-slate-700 text-slate-400",
   "transition-all rounded-sm",
@@ -35,14 +22,15 @@ const ButtonClassName = cn(
 );
 
 const Editor = () => {
-  const { editor, onReady, selectedObjects } = useFabricJSEditor();
-  const [editedText, setEditedText] = useState("");
-  const [showColorPicker, setShowColorPicker] = useState(false);
+  const [isCanvas1, setIsCanvas1] = useState(true);
+  const { editor: editor1, onReady: onReady1 } = useFabricJSEditor();
+  const { editor: editor2, onReady: onReady2 } = useFabricJSEditor();
+  const editor = isCanvas1 ? editor1 : editor2;
 
-  const predicate = (event) => {
+  /* const predicate = (event) => {
     console.log("event.key: ", event.key);
     event.key === "Backspace" && editor?.deleteSelected();
-  };
+  }; */
 
   //useKey(predicate);
 
@@ -56,121 +44,60 @@ const Editor = () => {
     editor?.addRectangle();
   };
 
-  const textAlign = (align) => {
-    const activeObject = editor?.canvas?.getActiveObject();
-    if (activeObject && activeObject.type === "text") {
-      console.log("activeObject: ", activeObject);
-      activeObject.set("textAlign", align); // שינוי יישור הטקסט
-      editor?.canvas?.renderAll(); // רענון הקנבס לאחר שינוי
-    }
+  const downloadCanvasAsImage = () => {
+    const format = "png";
+
+    if (!editor || !editor.canvas) return;
+
+    // הגדרת פורמט התמונה: PNG או JPEG
+    const dataURL = editor.canvas.toDataURL({
+      format: format,
+      quality: 1.0, // איכות גבוהה (ל-JPEG)
+      multiplier: 2,
+    });
+
+    // יצירת קישור להורדה
+    const link = document.createElement("a");
+    link.href = dataURL;
+    link.download = `canvas-image.${format}`;
+
+    // הוספה וקליק אוטומטי להורדה
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+  const flipCanvas = () => {
+    setIsCanvas1(!isCanvas1);
   };
 
-  const alignToHorizontally = (position) => {
-    const activeObject = editor?.canvas?.getActiveObject();
-    if (activeObject) {
-      const canvasWidth = editor.canvas.width;
-      const objectWidth = activeObject.getScaledWidth();
+  const imageUrl_1 =
+    "https://res.cloudinary.com/djo57yh6l/image/upload/v1730184465/%D7%94%D7%96%D7%9E%D7%A0%D7%95%D7%AA/%D7%91%D7%A8%20%D7%9E%D7%A6%D7%95%D7%95%D7%94/2/%D7%A6%D7%93%20%D7%90%20-%20%D7%A8%D7%A7%D7%A2.jpg";
 
-      switch (position) {
-        case "left":
-          activeObject.set({
-            left: 0,
-            originX: "left",
-          });
-          break;
-        case "center":
-          activeObject.set({
-            left: canvasWidth / 2 - objectWidth / 2,
-            originX: "left",
-          });
-          break;
-        case "right":
-          activeObject.set({
-            left: canvasWidth - objectWidth,
-            originX: "left",
-          });
-          break;
-        default:
-          break;
-      }
-      activeObject.setCoords(); // עדכון הקואורדינטות לאחר שינוי
-      editor.canvas.renderAll(); // רענון הקנבס
-    }
-  };
-
-  const alignToVertically = (position) => {
-    const activeObject = editor?.canvas?.getActiveObject();
-    if (activeObject) {
-      const canvasHeight = editor.canvas.height;
-      const objectHeight = activeObject.getScaledHeight();
-
-      switch (position) {
-        case "top":
-          activeObject.set({
-            top: 0,
-            originY: "top",
-          });
-          break;
-        case "center":
-          activeObject.set({
-            top: canvasHeight / 2 - objectHeight / 2,
-            originY: "top",
-          });
-          break;
-        case "bottom":
-          activeObject.set({
-            top: canvasHeight - objectHeight,
-            originY: "top",
-          });
-          break;
-        default:
-          break;
-      }
-      activeObject.setCoords(); // עדכון הקואורדינטות לאחר שינוי
-      editor.canvas.renderAll(); // רענון הקנבס
-    }
-  };
-
-  const toggleTextStyle = (style) => {
-    const activeObject = editor?.canvas?.getActiveObject();
-    if (activeObject && activeObject.type === "text") {
-      switch (style) {
-        case "bold":
-          activeObject.set(
-            "fontWeight",
-            activeObject.fontWeight === "bold" ? "normal" : "bold"
-          );
-          break;
-        case "underline":
-          activeObject.set("underline", !activeObject.underline);
-          break;
-        case "italic":
-          activeObject.set(
-            "fontStyle",
-            activeObject.fontStyle === "italic" ? "normal" : "italic"
-          );
-          break;
-        default:
-          break;
-      }
-      editor.canvas.renderAll(); // רענון הקנבס לאחר שינוי
-    }
-  };
+  const imageUrl_2 =
+    "https://res.cloudinary.com/djo57yh6l/image/upload/v1730184466/%D7%94%D7%96%D7%9E%D7%A0%D7%95%D7%AA/%D7%91%D7%A8%20%D7%9E%D7%A6%D7%95%D7%95%D7%94/2/%D7%A6%D7%93%20%D7%91%20-%20%D7%A8%D7%A7%D7%A2.jpg";
 
   return (
     <div className="size-full flex-center overflow-hidden">
+      {/* menu right */}
       <div className="size-full bg-slate-800 overflow-auto p-6 max-w-60 flex-col-center justify-start gap-2">
+        <button onClick={downloadCanvasAsImage}>הורד תמונה</button>
+
         <Image
           src="/images/לוגו.png"
           alt="לוגו מזל טוב אישורי הגעה"
           height={100}
           width={100}
+          priority
           className="mb-5"
         />
+
+        {/* תבניות עיצוב */}
+        <Templates />
+
         {/* הוספת טקסט */}
         <button
           className={cn(
-            ButtonClassName,
+            buttonClassName,
             "w-full h-fit p-3 text-indigo-100",
             "bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800"
           )}
@@ -179,106 +106,42 @@ const Editor = () => {
           הוספת טקסט
         </button>
 
-        {/* שינוי טקסט */}
+        {/* עורך טקסט */}
         <TextEditor editor={editor} />
-
-        {/* יישור */}
-        <fieldset className="p-2 pt-1 border border-slate-700 rounded-sm">
-          <legend className="px-2 mr-2 text-xs text-slate-400">יישור</legend>
-          <div className="size-fit grid grid-cols-3 grid-rows-2 gap-2">
-            <AlignRightIcon
-              className={ButtonClassName}
-              onClick={() => alignToHorizontally("right")}
-            />
-            <AlignHorizontalCenterIcon
-              className={ButtonClassName}
-              onClick={() => alignToHorizontally("center")}
-            />
-            <AlignLeftIcon
-              className={ButtonClassName}
-              onClick={() => alignToHorizontally("left")}
-            />
-            <AlignTopIcon
-              className={ButtonClassName}
-              onClick={() => alignToVertically("top")}
-            />
-            <AlignVerticalCenterIcon
-              className={ButtonClassName}
-              onClick={() => alignToVertically("center")}
-            />
-            <AlignBottomIcon
-              className={ButtonClassName}
-              onClick={() => alignToVertically("bottom")}
-            />
-          </div>
-        </fieldset>
-
-        {/* יישור טקסט */}
-        <fieldset className="p-2 pt-1 border border-slate-700 rounded-sm flex-center gap-2">
-          <legend className="px-2 text-xs text-slate-400">יישור טקסט</legend>
-          <TextAlignRightIcon
-            className={ButtonClassName}
-            onClick={() => textAlign("right")}
-          />
-          <TextAlignCenterIcon
-            className={ButtonClassName}
-            onClick={() => textAlign("center")}
-          />
-          <TextAlignLeftIcon
-            className={ButtonClassName}
-            onClick={() => textAlign("left")}
-          />
-        </fieldset>
-
-        {/* עיצוב טקסט */}
-        <fieldset className="p-2 pt-1 border border-slate-700 rounded-sm flex-center gap-2">
-          <legend className="px-2 text-xs text-slate-400">עיצוב טקסט</legend>
-          <TextBoldIcon
-            className={ButtonClassName}
-            onClick={() => toggleTextStyle("bold")}
-          />
-          <TextUnderlineIcon
-            className={ButtonClassName}
-            onClick={() => toggleTextStyle("underline")}
-          />
-          <TextItalicIcon
-            className={ButtonClassName}
-            onClick={() => toggleTextStyle("italic")}
-          />
-        </fieldset>
-
-        {/* צבע טקסט */}
-        <fieldset className="p-2 border border-slate-700 rounded-sm flex-center gap-2">
-          <legend className="px-2 text-xs text-slate-400">צבע טקסט</legend>
-          <div className="relative group">
-            {showColorPicker && (
-              <div className="absolute inset-0 cursor-pointer" />
-            )}
-            <PaintBucketIcon
-              className={cn(
-                ButtonClassName,
-                "group-hover:bg-slate-600 group-active:bg-slate-500"
-              )}
-              onClick={() => {
-                setShowColorPicker(!showColorPicker);
-              }}
-            />
-          </div>
-          <TextSmallcapsIcon className={ButtonClassName} onClick={() => {}} />
-          <TextSmallcapsIcon
-            className={ButtonClassName}
-            onClick={() => toggleTextStyle("italic")}
-          />
-        </fieldset>
-
-        {/* color picker */}
-        <ColorPicker
-          editor={editor}
-          showColorPicker={showColorPicker}
-          setShowColorPicker={setShowColorPicker}
-        />
       </div>
-      <FabricJSCanvas className="size-full" onReady={onReady} />
+
+      {/* editor */}
+      <div className="size-full flex-col-center gap-4 p-9">
+        <FlipCanvas
+          isFlipped={!isCanvas1}
+          frontContent={
+            <Canvas editor={editor1} onReady={onReady1} imageUrl={imageUrl_1} />
+          }
+          backContent={
+            <Canvas editor={editor2} onReady={onReady2} imageUrl={imageUrl_2} />
+          }
+        />
+        {/* החלפת צד */}
+        <button
+          className={cn(
+            "flex-center gap-1 py-2 px-4 rounded-sm",
+            isCanvas1
+              ? "bg-indigo-600 text-indigo-50 hover:bg-indigo-700 active:bg-indigo-800"
+              : "bg-lime-600 text-lime-50 hover:bg-lime-700 active:bg-lime-800"
+          )}
+          onClick={flipCanvas}
+        >
+          {/* <Exchange01Icon className="text-indigo-50" /> */}
+          <p className="">{isCanvas1 ? "החלפה לצד א" : "החלפה לצד ב"}</p>
+        </button>
+      </div>
+
+      {/* menu left */}
+      <div className="size-full bg-slate-800 overflow-auto p-6 max-w-60 flex-col-center justify-start gap-2">
+        <AlignObjects buttonClassName={buttonClassName} editor={editor} />
+        <AlignText buttonClassName={buttonClassName} editor={editor} />
+        <TextDesign buttonClassName={buttonClassName} editor={editor} />
+      </div>
     </div>
   );
 };
@@ -292,3 +155,11 @@ export default Editor;
       editor?.canvas.add(oImg);
     });
   }, [fabric, editor]); */
+
+/* const downloadCanvasAsPDF = () => {
+    const dataURL = editor.canvas.toDataURL({ format: "jpeg", quality: 1.0 });
+    const pdf = new jsPDF();
+
+    pdf.addImage(dataURL, "JPEG", 0, 0, 150, 150); // גודל A4 ב-mm
+    pdf.save("canvas-image.pdf");
+  }; */

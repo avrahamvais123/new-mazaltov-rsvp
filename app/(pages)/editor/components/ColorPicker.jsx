@@ -5,8 +5,13 @@ import { useRef, useState } from "react";
 import { ChromePicker } from "react-color";
 import { useClickAway } from "react-use";
 
-const ColorPicker = ({ editor, showColorPicker, setShowColorPicker }) => {
-  const [selectedColor, setSelectedColor] = useState("#333");
+const ColorPicker = ({
+  editor,
+  showColorPicker,
+  setShowColorPicker,
+  selectedColor,
+  setSelectedColor,
+}) => {
   const ref = useRef();
 
   // Close ColorPicker when clicking outside of it
