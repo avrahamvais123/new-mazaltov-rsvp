@@ -71,6 +71,7 @@ const NumberInput = ({
           value == min
             ? "cursor-not-allowed border-slate-200 text-slate-300"
             : "border-slate-400 text-slate-400 hover:bg-slate-400 hover:text-white",
+          classNames?.buttons,
           classNames?.buttonDecrement
         )}
       >
@@ -102,6 +103,7 @@ const NumberInput = ({
           value == max
             ? "cursor-not-allowed border-slate-200 text-slate-300"
             : "border-slate-400 text-slate-400 hover:bg-slate-400 hover:text-white",
+          classNames?.buttons,
           classNames?.buttonIncrement
         )}
       >

@@ -10,14 +10,15 @@ import {
 import React, { useState } from "react";
 import ColorPicker from "./ColorPicker";
 import { cn } from "@/lib/utils";
+import FontSize from "./FontSize";
 
 const TextDesign = ({ editor, buttonClassName }) => {
   const [showColorPicker, setShowColorPicker] = useState(false);
   const [selectedColor, setSelectedColor] = useState("#333");
+  const [fontSize, setFontSize] = useState(16);
   const currentColor = `hsla(${selectedColor.h}, ${selectedColor.s * 100}%, ${
     selectedColor.l * 100
   }%, ${selectedColor.a})`;
-  console.log("selectedColor: ", selectedColor);
 
   const toggleTextStyle = (style) => {
     const activeObject = editor?.canvas?.getActiveObject();
@@ -47,15 +48,6 @@ const TextDesign = ({ editor, buttonClassName }) => {
 
   return (
     <>
-      {/* color picker */}
-      <ColorPicker
-        editor={editor}
-        showColorPicker={showColorPicker}
-        setShowColorPicker={setShowColorPicker}
-        selectedColor={selectedColor}
-        setSelectedColor={setSelectedColor}
-      />
-
       <fieldset className="p-2 pt-1 border border-slate-700 rounded-sm flex-center gap-2">
         <legend className="px-2 text-xs text-slate-400">עיצוב טקסט</legend>
         <div className="grid grid-cols-3 grid-rows-2 gap-2">
@@ -90,13 +82,24 @@ const TextDesign = ({ editor, buttonClassName }) => {
                   backgroundColor: currentColor,
                 }}
                 className="size-full bg-white rounded-sm"
-              ></span>
+              />
             </button>
           </div>
-          <TextSmallcapsIcon className={buttonClassName} onClick={() => {}} />
-          <TextSmallcapsIcon className={buttonClassName} onClick={() => {}} />
+
+          {/* <TextSmallcapsIcon className={buttonClassName} onClick={() => {}} /> */}
         </div>
       </fieldset>
+
+      <FontSize editor={editor} size={fontSize} setSize={setFontSize} />
+
+      {/* color picker */}
+      <ColorPicker
+        editor={editor}
+        showColorPicker={showColorPicker}
+        setShowColorPicker={setShowColorPicker}
+        selectedColor={selectedColor}
+        setSelectedColor={setSelectedColor}
+      />
     </>
   );
 };
