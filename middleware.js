@@ -25,27 +25,41 @@ export function middleware(req) {
     return NextResponse.next();
   }
 
-  // פונקציה שבודקת אם העמוד קיים (פונקציה דמה לצורך הדוגמה)
+  // מערך של נתיבים קיימים
+  const existingPages = [
+    "/",
+    "/create-invitation",
+    "/invitation",
+    "/test",
+    "/katzav",
+    "/log",
+    "/rsvp",
+    "/verify",
+    "/users-management",
+    "/settings",
+    "/auth/signin",
+    "/auth/signout",
+    "/auth/signup",
+    "/auth/forgot-password",
+    "/auth/reset-password",
+  ];
+
+  // מערך של נתיבים שיש להם תתי-נתיבים
+  const parentRoutes = [
+    "/editor",
+    "/catalog", // יכול להכיל תתי נתיבים
+    "/product", // נתיב דוגמה נוסף
+  ];
+
+  // פונקציה שבודקת אם הנתיב קיים
   function isPageExists(pathname) {
-    const existingPages = [
-      "/",
-      "/create-invitation",
-      "/invitation",
-      "/test",
-      "/katzav",
-      "/log",
-      "/editor",
-      "/rsvp",
-      "/verify",
-      "/users-management",
-      "/settings",
-      "/auth/signin",
-      "/auth/signout",
-      "/auth/signup",
-      "/auth/forgot-password",
-      "/auth/reset-password",
-    ]; // נתיבים קיימים
-    return existingPages.includes(pathname);
+    // בדיקה אם הנתיב הוא אחד מהעמודים הקיימים
+    if (existingPages.includes(pathname)) {
+      return true;
+    }
+
+    // בדיקה אם הנתיב הוא תת-נתיב של אחד הנתיבים שיש להם תתי-נתיבים
+    return parentRoutes.some((parentRoute) => pathname.startsWith(parentRoute));
   }
 
   // בדיקה אם הנתיב לא נמצא

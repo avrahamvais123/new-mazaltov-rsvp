@@ -6,13 +6,14 @@ import { useFabricJSEditor } from "fabricjs-react";
 import { cn } from "@/lib/utils";
 import TextEditor from "./TextEditor";
 import Image from "next/image";
-import { indigo, slate } from "tailwindcss/colors";
 import AlignObjects from "./AlignObjects";
 import AlignText from "./AlignText";
 import TextDesign from "./TextDesign";
 import Templates from "./Templates";
 import FlipCanvas from "./FlipCanvas";
 import Canvas from "./Canvas";
+import { useParams } from "next/navigation";
+import axios from "axios";
 
 const buttonClassName = cn(
   "cursor-pointer h-full w-10 p-1.5",
@@ -21,19 +22,13 @@ const buttonClassName = cn(
   "hover:bg-slate-600 active:bg-slate-500"
 );
 
-const Editor = () => {
+const Editor = ({ imageUrl_1, imageUrl_2 }) => {
+  console.log("imageUrl_1: ", imageUrl_1);
+  console.log("imageUrl_2: ", imageUrl_2);
   const [isCanvas1, setIsCanvas1] = useState(true);
   const { editor: editor1, onReady: onReady1 } = useFabricJSEditor();
   const { editor: editor2, onReady: onReady2 } = useFabricJSEditor();
   const editor = isCanvas1 ? editor1 : editor2;
-
-  /* const predicate = (event) => {
-    console.log("event.key: ", event.key);
-    event.key === "Backspace" && editor?.deleteSelected();
-  }; */
-
-  //useKey(predicate);
-
   console.log("editor: ", editor);
 
   const addText = () => {
@@ -66,15 +61,10 @@ const Editor = () => {
     link.click();
     document.body.removeChild(link);
   };
+
   const flipCanvas = () => {
     setIsCanvas1(!isCanvas1);
   };
-
-  const imageUrl_1 =
-    "https://res.cloudinary.com/djo57yh6l/image/upload/v1730184465/%D7%94%D7%96%D7%9E%D7%A0%D7%95%D7%AA/%D7%91%D7%A8%20%D7%9E%D7%A6%D7%95%D7%95%D7%94/2/%D7%A6%D7%93%20%D7%90%20-%20%D7%A8%D7%A7%D7%A2.jpg";
-
-  const imageUrl_2 =
-    "https://res.cloudinary.com/djo57yh6l/image/upload/v1730184466/%D7%94%D7%96%D7%9E%D7%A0%D7%95%D7%AA/%D7%91%D7%A8%20%D7%9E%D7%A6%D7%95%D7%95%D7%94/2/%D7%A6%D7%93%20%D7%91%20-%20%D7%A8%D7%A7%D7%A2.jpg";
 
   return (
     <div className="size-full flex-center overflow-hidden">
@@ -163,3 +153,10 @@ export default Editor;
     pdf.addImage(dataURL, "JPEG", 0, 0, 150, 150); // גודל A4 ב-mm
     pdf.save("canvas-image.pdf");
   }; */
+
+/* const predicate = (event) => {
+    console.log("event.key: ", event.key);
+    event.key === "Backspace" && editor?.deleteSelected();
+  }; */
+
+//useKey(predicate);
