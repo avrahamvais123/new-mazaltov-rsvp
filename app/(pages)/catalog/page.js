@@ -1,3 +1,4 @@
+import Breadcrumbs from "@/app/ui/Breadcrumbs";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
@@ -11,21 +12,50 @@ const ng_url_2 =
 const categories = [
   {
     id: 1,
+    name: "הזמנות לחתונה",
+    imageUrl: ng_url_1,
+    link: "/catalog/חתונה",
+    description: "",
+  },
+  {
+    id: 2,
     name: "הזמנות לבר מצווה",
     imageUrl: ng_url_1,
     link: "/catalog/בר מצווה",
+    description: "",
+  },
+  {
+    id: 3,
+    name: "הזמנות לבת מצווה",
+    imageUrl: ng_url_1,
+    link: "/catalog/בת מצווה",
+    description: "",
+  },
+  {
+    id: 4,
+    name: "הזמנות לברית",
+    imageUrl: ng_url_1,
+    link: "/catalog/ברית",
+    description: "",
+  },
+  {
+    id: 5,
+    name: "הזמנות לבריתה",
+    imageUrl: ng_url_1,
+    link: "/catalog/בריתה",
     description: "",
   },
 ];
 
 const Page = async () => {
   return (
-    <div className="relative size-full bg-indigo-50 flex-col-center justify-start overflow-auto">
-      <div className="flex-center p-8 bg-indigo-700 w-full h-72 absolute top-0">
+    <div className="relative size-full bg-indigo-50 flex-center justify-start overflow-auto">
+      <div className="absolute top-0 w-full h-72 p-8 flex-col-center gap-2 bg-indigo-700">
+        <Breadcrumbs />
         <h1 className="text-white text-center">קטגוריות</h1>
         <img
           src={ng_url_2}
-          className="absolute inset-0 object-cover size-full opacity-15"
+          className="pointer-events-none absolute inset-0 object-cover size-full opacity-15"
         />
       </div>
 

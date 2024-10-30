@@ -26,6 +26,7 @@ const getImages = async (category, setProducts) => {
 const Products = ({ category, images }) => {
   console.log("images: ", images);
   const [products, setProducts] = useState([]);
+  
   useEffect(() => {
     setProducts(images);
   }, [images]);

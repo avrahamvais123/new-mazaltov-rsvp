@@ -34,16 +34,10 @@ const Header = () => {
   const router = useRouter();
   const isHomePage = pathname === "/";
 
-  const deleteTracks = async () => {
-    try {
-      const res = await axios.delete("/api/track/visit");
-      console.log("res: ", res);
-    } catch (error) {
-      console.log("error: ", error);
-    }
-  };
-
-  if (hiddenHeaderPaths.includes(pathname)) return null;
+  // if (hiddenHeaderPaths.includes(pathname)) return null;
+  
+  // בדיקה אם הנתיב הנוכחי מתחיל באחד מהנתיבים ברשימה
+  if (hiddenHeaderPaths.some((path) => pathname.startsWith(path))) return null;
 
   return (
     <>
@@ -176,3 +170,12 @@ document.cookie ="next-auth.session-token=; expires=Thu, 01 Jan 1970 00:00:00 UT
           Send Event
         </button> */
 }
+
+/* const deleteTracks = async () => {
+  try {
+    const res = await axios.delete("/api/track/visit");
+    console.log("res: ", res);
+  } catch (error) {
+    console.log("error: ", error);
+  }
+}; */

@@ -12,8 +12,6 @@ import TextDesign from "./TextDesign";
 import Templates from "./Templates";
 import FlipCanvas from "./FlipCanvas";
 import Canvas from "./Canvas";
-import { useParams } from "next/navigation";
-import axios from "axios";
 
 const buttonClassName = cn(
   "cursor-pointer h-full w-10 p-1.5",
@@ -23,8 +21,6 @@ const buttonClassName = cn(
 );
 
 const Editor = ({ imageUrl_1, imageUrl_2 }) => {
-  console.log("imageUrl_1: ", imageUrl_1);
-  console.log("imageUrl_2: ", imageUrl_2);
   const [isCanvas1, setIsCanvas1] = useState(true);
   const { editor: editor1, onReady: onReady1 } = useFabricJSEditor();
   const { editor: editor2, onReady: onReady2 } = useFabricJSEditor();
@@ -67,7 +63,7 @@ const Editor = ({ imageUrl_1, imageUrl_2 }) => {
   };
 
   return (
-    <div className="size-full flex-center overflow-hidden">
+    <div className="size-full bg-slate-100 flex-center overflow-hidden">
       {/* menu right */}
       <div className="size-full bg-slate-800 overflow-auto p-6 max-w-60 flex-col-center justify-start gap-2">
         <button onClick={downloadCanvasAsImage}>הורד תמונה</button>
@@ -115,9 +111,10 @@ const Editor = ({ imageUrl_1, imageUrl_2 }) => {
         <button
           className={cn(
             "flex-center gap-1 py-2 px-4 rounded-sm",
+            "border border-transparent",
             isCanvas1
               ? "bg-indigo-600 text-indigo-50 hover:bg-indigo-700 active:bg-indigo-800"
-              : "bg-lime-600 text-lime-50 hover:bg-lime-700 active:bg-lime-800"
+              : "bg-transparent text-indigo-600 border-indigo-600 hover:bg-indigo-50 active:bg-indigo-100"
           )}
           onClick={flipCanvas}
         >
