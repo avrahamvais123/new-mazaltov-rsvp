@@ -38,7 +38,7 @@ const Page = async ({ params }) => {
           {/* ניווט עמודים */}
           <div className="z-10 flex-col-center gap-1">
             <Breadcrumbs items={items} />
-            <h1 className="text-white text-center">קטגוריות</h1>
+            <h1 className="text-white text-center">{`הזמנות ל${decodedCategory}`}</h1>
           </div>
           <img
             src={ng_url_2}
