@@ -13,6 +13,7 @@ import Templates from "./Templates";
 import FlipCanvas from "./FlipCanvas";
 import Canvas from "./Canvas";
 import { fontSize } from "@mui/system";
+import Link from "next/link";
 
 const buttonClassName = cn(
   "cursor-pointer h-full w-10 p-1.5",
@@ -100,6 +101,8 @@ const Editor = ({ imageUrl_1, imageUrl_2 }) => {
           priority
           className="mb-5"
         />
+
+        <Link href="/catalog">לקטלוג</Link>
 
         {/* תבניות עיצוב */}
         <Templates />

@@ -1,6 +1,8 @@
 import React from "react";
 import Products from "./components/Products";
 import cloudinary from "@/lib/cloudinary";
+import Breadcrumbs from "@/app/ui/Breadcrumbs";
+import Link from "next/link";
 
 const ng_url_1 =
   "https://img.freepik.com/premium-photo/photograph-ritual-jewish-objects-including-prayer-vestments-with-hebrew-inscription-reading-1-object-symbols-read-tefillin-hand-on2-they-read-tefillin-head_329479-1805.jpg?w=1480";
@@ -8,20 +10,10 @@ const ng_url_1 =
 const ng_url_2 =
   "https://img.freepik.com/premium-photo/tallit-tefillin-white-background_329479-1027.jpg?w=1480";
 
-const translateCategory = (category) => {
-  switch (category) {
-    case "weddinng":
-      return "חתונה";
-    case "bar-mitzva":
-      return "בר מצווה";
-    case "bar-mitzva":
-      return "בת מצווה";
-    case "brit":
-      return "ברית";
-    case "brita":
-      return "בריתה";
-  }
-};
+const items = [
+  { title: "קטלוג", href: "/catalog", withSeparator: true },
+  { title: "בית", href: "/" },
+];
 
 const Page = async ({ params }) => {
   const { category } = params;
@@ -42,8 +34,12 @@ const Page = async ({ params }) => {
 
     return (
       <div className="relative size-full bg-indigo-50 flex-col-center justify-start overflow-auto">
-        <div className="flex-center p-8 bg-indigo-700 w-full h-72 absolute top-0">
-          <h1 className="text-white text-center">{decodedCategory}</h1>
+        <div className="absolute top-0 w-full h-72 p-8 flex-col-center gap-2 bg-indigo-700">
+          {/* ניווט עמודים */}
+          <div className="z-10 flex-col-center gap-1">
+            <Breadcrumbs items={items} />
+            <h1 className="text-white text-center">קטגוריות</h1>
+          </div>
           <img
             src={ng_url_2}
             className="absolute inset-0 object-cover size-full opacity-15"
@@ -55,7 +51,17 @@ const Page = async ({ params }) => {
     );
   } catch (error) {
     console.log("error: ", error);
-    return null;
+    return (
+      <div className="size-full flex-col-center gap-4">
+        <h1>בקרוב!</h1>
+        <Link
+          href="/catalog"
+          className="bg-indigo-600 text-indigo-50 px-4 py-2 rounded-sm hover:bg-indigo-700 active:bg-indigo-800"
+        >
+          חזרה לקטגוריות
+        </Link>
+      </div>
+    );
   }
 };
 

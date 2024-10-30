@@ -9,38 +9,23 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import { Fragment } from "react";
 
-export default function Breadcrumbs() {
+export default function Breadcrumbs({ items = [] }) {
+  console.log("items: ", items);
   return (
     <Breadcrumb>
-      <BreadcrumbList>
-        <BreadcrumbItem>
-          <BreadcrumbLink href="/">Home</BreadcrumbLink>
-        </BreadcrumbItem>
-        <BreadcrumbSeparator />
-        <BreadcrumbItem>
-          <DropdownMenu>
-            <DropdownMenuTrigger className="flex items-center gap-1">
-              <BreadcrumbEllipsis className="h-4 w-4" />
-              <span className="sr-only">Toggle menu</span>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="start">
-              <DropdownMenuItem>Documentation</DropdownMenuItem>
-              <DropdownMenuItem>Themes</DropdownMenuItem>
-              <DropdownMenuItem>GitHub</DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </BreadcrumbItem>
-        <BreadcrumbSeparator />
-        <BreadcrumbItem>
-          <BreadcrumbLink href="/docs/components">Components</BreadcrumbLink>
-        </BreadcrumbItem>
+      <BreadcrumbList className="text-white">
+        {items.map(({ title, href, withSeparator = false }, index) => {
+          return (
+            <Fragment key={index}>
+              <BreadcrumbItem>
+                <BreadcrumbLink href={href}>{title}</BreadcrumbLink>
+              </BreadcrumbItem>
+              {withSeparator && <BreadcrumbSeparator />}
+            </Fragment>
+          );
+        })}
       </BreadcrumbList>
     </Breadcrumb>
   );

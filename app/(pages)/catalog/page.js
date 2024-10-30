@@ -10,7 +10,7 @@ const ng_url_1 =
 const ng_url_2 =
   "https://img.freepik.com/premium-photo/tallit-tefillin-white-background_329479-1027.jpg?w=1480";
 
-const categories = () => [
+const categories = [
   {
     id: 1,
     name: "הזמנות לחתונה",
@@ -48,6 +48,8 @@ const categories = () => [
   },
 ];
 
+const items = [{ title: "בית", href: "/" }];
+
 const Page = async () => {
   const { resources } = await cloudinary.api.resources_by_ids(
     [
@@ -65,16 +67,19 @@ const Page = async () => {
   return (
     <div className="relative size-full p-8 flex-center bg-indigo-50 overflow-auto">
       <div className="absolute top-0 w-full h-72 p-8 flex-col-center gap-2 bg-indigo-700">
-        <Breadcrumbs />
-        <h1 className="text-white text-center">קטגוריות</h1>
+        {/* ניווט עמודים */}
+        <div className="z-10 flex-col-center gap-1">
+          <Breadcrumbs items={items} />
+          <h1 className="text-white text-center">קטגוריות</h1>
+        </div>
         <img
           src={ng_url_2}
-          className="pointer-events-none absolute inset-0 object-cover size-full opacity-15"
+          className="absolute inset-0 object-cover size-full opacity-15"
         />
       </div>
 
       <div className="size-full max-w-5xl mt-96 grid grid-cols-3 grid-rows-2 gap-4">
-        {categories().map(({ link, name, id, imageKey }, i) => {
+        {categories.map(({ link, name, id, imageKey }, i) => {
           const { secure_url } = resources.find(
             ({ display_name }) => display_name === imageKey
           );
