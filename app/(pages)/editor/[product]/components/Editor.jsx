@@ -12,6 +12,7 @@ import TextDesign from "./TextDesign";
 import Templates from "./Templates";
 import FlipCanvas from "./FlipCanvas";
 import Canvas from "./Canvas";
+import { fontSize } from "@mui/system";
 
 const buttonClassName = cn(
   "cursor-pointer h-full w-10 p-1.5",
@@ -25,7 +26,6 @@ const Editor = ({ imageUrl_1, imageUrl_2 }) => {
   const { editor: editor1, onReady: onReady1 } = useFabricJSEditor();
   const { editor: editor2, onReady: onReady2 } = useFabricJSEditor();
   const editor = isCanvas1 ? editor1 : editor2;
-  console.log("editor: ", editor);
 
   const addText = () => {
     editor?.addText("טקסט");
@@ -35,7 +35,7 @@ const Editor = ({ imageUrl_1, imageUrl_2 }) => {
     editor?.addRectangle();
   };
 
-  const downloadCanvasAsImage = () => {
+  /* const downloadCanvasAsImage = () => {
     const format = "png";
 
     if (!editor || !editor.canvas) return;
@@ -56,17 +56,41 @@ const Editor = ({ imageUrl_1, imageUrl_2 }) => {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-  };
+  }; */
 
   const flipCanvas = () => {
     setIsCanvas1(!isCanvas1);
   };
 
+  useEffect(() => {
+    if (!editor1) return;
+
+    const { canvas } = editor1;
+
+    // מאזינים לאירוע בחירה
+    canvas.on("selection:created", () => {
+      const activeObject = canvas.getActiveObject();
+      if (activeObject) {
+        console.log("אובייקט פעיל:", activeObject);
+      }
+    });
+
+    // מאזינים להסרת הבחירה
+    canvas.on("selection:cleared", () => {
+      console.log("selection:cleared: ");
+    });
+
+    // ניקוי הקנבס בעת השמדת הקומפוננטה
+    return () => {
+      canvas.dispose();
+    };
+  }, [editor1]);
+
   return (
     <div className="size-full bg-slate-100 flex-center overflow-hidden">
       {/* menu right */}
       <div className="size-full bg-slate-800 overflow-auto p-6 max-w-60 flex-col-center justify-start gap-2">
-        <button onClick={downloadCanvasAsImage}>הורד תמונה</button>
+        {/* <button onClick={downloadCanvasAsImage}>הורד תמונה</button> */}
 
         <Image
           src="/images/לוגו.png"

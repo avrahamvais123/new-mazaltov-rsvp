@@ -1,43 +1,52 @@
-"use client";
-
-import { FabricJSCanvas } from "fabricjs-react";
 import React, { useEffect } from "react";
+import { FabricJSCanvas } from "fabricjs-react";
 
 const Canvas = ({ editor, onReady, imageUrl }) => {
   useEffect(() => {
-    if (!editor || !editor.canvas || !imageUrl) return;
+    const loadImageToCanvas = async () => {
+      const fabricModule = await import("fabric");
+      const fabric = fabricModule.fabric;
 
-    const fabric = window.fabric;
+      if (!editor || !editor.canvas || !imageUrl) return;
 
-    fabric.Image.fromURL(
-      imageUrl,
-      (img) => {
-        console.log("Image loaded successfully:", img);
+      fabric.Image.fromURL(
+        imageUrl,
+        (img) => {
+          console.log("Image loaded successfully:", img);
 
-        // מרכז את התמונה בקנבס
-        img.scaleToWidth(editor.canvas.width);
-        img.scaleToHeight(editor.canvas.height);
-        img.set({
-          originX: "center",
-          originY: "center",
-          left: editor.canvas.width / 2,
-          top: editor.canvas.height / 2,
-        });
+          img.scaleToWidth(editor.canvas.width);
+          img.scaleToHeight(editor.canvas.height);
+          img.set({
+            originX: "center",
+            originY: "center",
+            left: editor.canvas.width / 2,
+            top: editor.canvas.height / 2,
+          });
 
-        // הגדרת התמונה כרקע
-        editor.canvas.setBackgroundImage(
-          img,
-          editor.canvas.renderAll.bind(editor.canvas),
-          { centeredScaling: true }
-        );
-      },
-      { crossOrigin: "anonymous" }
-    );
+          editor.canvas.setBackgroundImage(
+            img,
+            editor.canvas.renderAll.bind(editor.canvas),
+            { centeredScaling: true }
+          );
+        },
+        { crossOrigin: "anonymous" }
+      );
+    };
+
+    loadImageToCanvas();
 
     return () => {
-      editor.canvas.clear();
+      if (editor?.canvas) {
+        try {
+          editor.canvas.clear();
+          editor.canvas.dispose();
+        } catch (error) {
+          console.warn("Failed to clear or dispose canvas:", error);
+        }
+      }
     };
-  }, [editor]);
+  }, [editor, imageUrl]);
+
   return <FabricJSCanvas className="size-full" onReady={onReady} />;
 };
 
