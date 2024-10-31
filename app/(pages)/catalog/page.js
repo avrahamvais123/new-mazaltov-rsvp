@@ -87,7 +87,7 @@ const Page = async () => {
 
       <div className="size-full max-w-5xl mt-96 grid grid-cols-3 grid-rows-2 gap-4">
         {categories.map(({ link, name, id, imageKey }, i) => {
-          const { imageUrl } = findImageUrl(imageKey);
+          const imageUrl = findImageUrl(imageKey);
 
           return (
             <Link key={id} href={link} className="z-10 size-full rounded-xl">
