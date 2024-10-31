@@ -14,6 +14,8 @@ import Canvas from "./Canvas";
 import { useRouter } from "next/navigation";
 import FontSize from "./FontSize";
 import ColorPicker from "./ColorPicker";
+import { indigo, slate } from "tailwindcss/colors";
+import LineHeight from "./LineHeight";
 
 const buttonClassName = cn(
   "cursor-pointer h-full w-10 p-1.5",
@@ -61,6 +63,20 @@ const Editor = ({ imageUrl_1, imageUrl_2 }) => {
   const addRectangle = () => {
     editor?.addRectangle();
   };
+
+  /* initial fabric */
+  useEffect(() => {
+    fabric.Object.prototype.set({
+      borderColor: indigo[700], // צבע מסגרת ברירת המחדל
+      borderDashArray: [5, 5], // סגנון קווי המסגרת
+      borderScaleFactor: 2, // רוחב המסגרת
+      cornerStyle: "circle", // סגנון הידיות
+      cornerStrokeColor: indigo[700], // צבע קו הידיות
+      cornerColor: indigo[300], // צבע הידיות
+      cornerScaleFactor: 2, // גודל הידיות
+      transparentCorners: false,
+    });
+  }, []);
 
   // Editor component
   useEffect(() => {
@@ -169,6 +185,7 @@ const Editor = ({ imageUrl_1, imageUrl_2 }) => {
           activeObject={activeObject}
         />
         <FontSize editor={editor} />
+        <LineHeight editor={editor} />
         <TextDesign
           activeObject={activeObject}
           buttonClassName={buttonClassName}
