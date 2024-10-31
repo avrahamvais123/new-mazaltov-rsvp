@@ -1,38 +1,23 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 
-import { useState, useEffect } from "react";
-
-const TextEditor = ({ editor }) => {
+const TextEditor = ({ editor, activeObject }) => {
   const [textValue, setTextValue] = useState("");
 
-  // Update textarea when selecting a text object on the canvas
   useEffect(() => {
-    const updateTextValue = () => {
-      const activeObject = editor?.canvas?.getActiveObject();
-      if (activeObject && activeObject.type === "text") {
-        setTextValue(activeObject.text || "");
-      }
-    };
+    if (activeObject && activeObject.type === "textbox") {
+      setTextValue(activeObject.text || "");
+    } else {
+      setTextValue("");
+    }
+  }, [activeObject]);
 
-    // Listen for selection changes on the canvas
-    editor?.canvas?.on("selection:created", updateTextValue);
-    editor?.canvas?.on("selection:updated", updateTextValue);
-
-    return () => {
-      editor?.canvas?.off("selection:created", updateTextValue);
-      editor?.canvas?.off("selection:updated", updateTextValue);
-    };
-  }, [editor]);
-
-  // Update the active object's text on canvas when editing the textarea
   const handleTextChange = (e) => {
     const newText = e.target.value;
     setTextValue(newText);
 
-    const activeObject = editor?.canvas?.getActiveObject();
-    if (activeObject && activeObject.type === "text") {
+    if (activeObject && activeObject.type === "textbox") {
       activeObject.set("text", newText);
       editor.canvas.renderAll();
     }
@@ -53,3 +38,23 @@ const TextEditor = ({ editor }) => {
 };
 
 export default TextEditor;
+
+// Update textarea when selecting a text object on the canvas
+/* useEffect(() => {
+    const updateTextValue = () => {
+      const activeObject = editor?.canvas?.getActiveObject();
+      if (activeObject && activeObject.type === "text") {
+        console.log('activeObject from TextEditor: ', activeObject);
+        setTextValue(activeObject.text || "");
+      }
+    };
+
+    // Listen for selection changes on the canvas
+    editor?.canvas?.on("selection:created", updateTextValue);
+    editor?.canvas?.on("selection:updated", updateTextValue);
+
+    return () => {
+      editor?.canvas?.off("selection:created", updateTextValue);
+      editor?.canvas?.off("selection:updated", updateTextValue);
+    };
+  }, [editor]); */

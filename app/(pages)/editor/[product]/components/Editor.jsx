@@ -24,12 +24,29 @@ const buttonClassName = cn(
 
 const Editor = ({ imageUrl_1, imageUrl_2 }) => {
   const [isCanvas1, setIsCanvas1] = useState(true);
+  const [activeObject, setActiveObject] = useState(null);
   const { editor: editor1, onReady: onReady1 } = useFabricJSEditor();
   const { editor: editor2, onReady: onReady2 } = useFabricJSEditor();
   const editor = isCanvas1 ? editor1 : editor2;
 
   const addText = () => {
-    editor?.addText("טקסט");
+    if (editor && editor.canvas) {
+      const text = new window.fabric.Textbox("טקסט", {
+        left: editor.canvas.width / 2, // מרכז התיבה
+        top: editor.canvas.height / 2, // מרכז התיבה
+        fontSize: 40, // גודל פונט ראשוני
+        fill: "#000000", // צבע הפונט
+        textAlign: "center", // יישור טקסט למרכז
+        originX: "center",
+        originY: "center",
+        centeredScaling: true,
+      });
+
+      // מוסיף את תיבת הטקסט ומרענן את הקנבס
+      editor.canvas.add(text);
+      editor.canvas.setActiveObject(text);
+      editor.canvas.renderAll();
+    }
   };
 
   const addRectangle = () => {
@@ -40,31 +57,25 @@ const Editor = ({ imageUrl_1, imageUrl_2 }) => {
     setIsCanvas1(!isCanvas1);
   };
 
+  // Editor component
   useEffect(() => {
     if (!editor) return;
 
     const { canvas } = editor;
 
-    // מאזינים לאירוע בחירה
-    canvas.on("selection:created", () => {
-      const activeObject = canvas.getActiveObject();
-      if (activeObject) {
-        console.log("אובייקט פעיל:", activeObject);
-      }
-    });
+    const updateActiveObject = () => {
+      const activeObj = canvas.getActiveObject();
+      setActiveObject(activeObj || null);
+    };
 
-    // ניקוי הקנבס בעת השמדת הקומפוננטה
+    canvas.on("selection:created", updateActiveObject);
+    canvas.on("selection:updated", updateActiveObject);
+    canvas.on("selection:cleared", () => setActiveObject(null));
+
     return () => {
-      //if (canvas) canvas.dispose();
-      if (editor?.canvas) {
-        // ביטול כל המאזינים לאירועים
-        editor.canvas.off();
-
-        // ניקוי הקנבס
-        editor.canvas.clear();
-
-        console.log("Canvas cleared successfully");
-      }
+      canvas.off("selection:created", updateActiveObject);
+      canvas.off("selection:updated", updateActiveObject);
+      canvas.off("selection:cleared");
     };
   }, [editor]);
 
@@ -101,7 +112,7 @@ const Editor = ({ imageUrl_1, imageUrl_2 }) => {
         </button>
 
         {/* עורך טקסט */}
-        <TextEditor editor={editor} />
+        <TextEditor activeObject={activeObject} editor={editor} />
       </div>
 
       {/* editor */}
@@ -135,7 +146,11 @@ const Editor = ({ imageUrl_1, imageUrl_2 }) => {
       <div className="size-full bg-slate-800 overflow-auto p-6 max-w-60 flex-col-center justify-start gap-2">
         <AlignObjects buttonClassName={buttonClassName} editor={editor} />
         <AlignText buttonClassName={buttonClassName} editor={editor} />
-        <TextDesign buttonClassName={buttonClassName} editor={editor} />
+        <TextDesign
+          activeObject={activeObject}
+          buttonClassName={buttonClassName}
+          editor={editor}
+        />
       </div>
     </div>
   );

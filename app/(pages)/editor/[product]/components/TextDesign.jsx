@@ -1,28 +1,36 @@
 "use client";
 
 import {
-  PaintBucketIcon,
   TextBoldIcon,
   TextItalicIcon,
-  TextSmallcapsIcon,
   TextUnderlineIcon,
 } from "@/app/icons/icons";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ColorPicker from "./ColorPicker";
 import { cn } from "@/lib/utils";
 import FontSize from "./FontSize";
 
-const TextDesign = ({ editor, buttonClassName }) => {
+const TextDesign = ({
+  editor,
+  buttonClassName,
+  activeObject,
+  fontSize,
+  setFontSize,
+}) => {
   const [showColorPicker, setShowColorPicker] = useState(false);
-  const [selectedColor, setSelectedColor] = useState("#333");
-  const [fontSize, setFontSize] = useState(16);
-  const currentColor = `hsla(${selectedColor.h}, ${selectedColor.s * 100}%, ${
-    selectedColor.l * 100
-  }%, ${selectedColor.a})`;
+  const [selectedColor, setSelectedColor] = useState("#000000");
+
+  // Update selectedColor when activeObject changes
+  useEffect(() => {
+    console.log("activeObject: ", activeObject);
+    if (activeObject && activeObject.type === "textbox") {
+      const fillColor = activeObject.get("fill");
+      setSelectedColor(fillColor);
+    }
+  }, [activeObject]);
 
   const toggleTextStyle = (style) => {
-    const activeObject = editor?.canvas?.getActiveObject();
-    if (activeObject && activeObject.type === "text") {
+    if (activeObject && activeObject.type === "textbox") {
       switch (style) {
         case "bold":
           activeObject.set(
@@ -42,7 +50,7 @@ const TextDesign = ({ editor, buttonClassName }) => {
         default:
           break;
       }
-      editor.canvas.renderAll(); // רענון הקנבס לאחר שינוי
+      editor.canvas.renderAll();
     }
   };
 
@@ -63,11 +71,9 @@ const TextDesign = ({ editor, buttonClassName }) => {
             className={buttonClassName}
             onClick={() => toggleTextStyle("italic")}
           />
-          {/* color picker */}
+
+          {/* color picker button */}
           <div className="relative flex group">
-            {showColorPicker && (
-              <div className="absolute inset-0 cursor-pointer" />
-            )}
             <button
               className={cn(
                 buttonClassName,
@@ -79,14 +85,12 @@ const TextDesign = ({ editor, buttonClassName }) => {
             >
               <span
                 style={{
-                  backgroundColor: currentColor,
+                  backgroundColor: selectedColor,
                 }}
                 className="size-full bg-white rounded-sm"
               />
             </button>
           </div>
-
-          {/* <TextSmallcapsIcon className={buttonClassName} onClick={() => {}} /> */}
         </div>
       </fieldset>
 
@@ -99,6 +103,7 @@ const TextDesign = ({ editor, buttonClassName }) => {
         setShowColorPicker={setShowColorPicker}
         selectedColor={selectedColor}
         setSelectedColor={setSelectedColor}
+        activeObject={activeObject}
       />
     </>
   );

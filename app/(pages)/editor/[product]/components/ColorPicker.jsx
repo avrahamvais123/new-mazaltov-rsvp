@@ -1,9 +1,19 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { useRef, useState } from "react";
-import { ChromePicker } from "react-color";
+import { useEffect, useRef, useState } from "react";
 import { useClickAway } from "react-use";
+import {
+  ColorPicker as ColorPalette,
+  useColor,
+  Saturation,
+  Hue,
+  Alpha,
+  ColorService,
+} from "react-color-palette";
+import Color from "color";
+import "react-color-palette/css";
+import { cn } from "@/lib/utils";
 
 const ColorPicker = ({
   editor,
@@ -11,49 +21,50 @@ const ColorPicker = ({
   setShowColorPicker,
   selectedColor,
   setSelectedColor,
+  activeObject,
 }) => {
   const ref = useRef();
+  const [color, setColor] = useColor("#000000");
 
-  // Close ColorPicker when clicking outside of it
   useClickAway(ref, () => {
     setShowColorPicker(false);
   });
 
-  const handleColorChange = (color) => {
-    setSelectedColor({
-      h: color.hsl.h,
-      s: color.hsl.s,
-      l: color.hsl.l,
-      a: color.hsl.a,
-    });
-
-    const activeObject = editor?.canvas?.getActiveObject();
-    if (activeObject && activeObject.type === "text") {
-      activeObject.set(
-        "fill",
-        `hsla(${color.hsl.h}, ${color.hsl.s * 100}%, ${color.hsl.l * 100}%, ${
-          color.hsl.a
-        })`
-      );
+  const handleColorChange = (newColor) => {
+    setSelectedColor(newColor.hex);
+    setColor(newColor);
+    if (activeObject) {
+      activeObject.set("fill", newColor.hex);
       editor.canvas.renderAll();
     }
   };
 
-  const handleSaturationChange = (e) => {
-    const newSaturation = parseFloat(e.target.value);
-    setSelectedColor((prevColor) => ({ ...prevColor, s: newSaturation }));
+  const hexToFullColorObject = (hex) => {
+    const color = Color(hex);
 
-    const activeObject = editor?.canvas?.getActiveObject();
-    if (activeObject && activeObject.type === "text") {
-      activeObject.set(
-        "fill",
-        `hsla(${selectedColor.h}, ${newSaturation * 100}%, ${
-          selectedColor.l * 100
-        }%, ${selectedColor.a})`
-      );
-      editor.canvas.renderAll();
-    }
+    return {
+      hex: hex,
+      rgb: {
+        r: color.red(),
+        g: color.green(),
+        b: color.blue(),
+        a: color.alpha(),
+      },
+      hsv: {
+        h: color.hue(),
+        s: color.saturationv(),
+        v: color.value(),
+        a: color.alpha(),
+      },
+    };
   };
+
+  useEffect(() => {
+    if (selectedColor) {
+      const fullColor = hexToFullColorObject(selectedColor);
+      setColor(fullColor);
+    }
+  }, [selectedColor]);
 
   return (
     <AnimatePresence>
@@ -64,25 +75,25 @@ const ColorPicker = ({
           animate={{ scaleY: 1, opacity: 1 }}
           exit={{ scaleY: 0, opacity: 0 }}
           transition={{ duration: 0.3 }}
-          className="overflow-hidden min-h-fit origin-top max-w-52 border-2 rounded-sm border-slate-600 flex-center bg-white"
+          className={cn(
+            "overflow-hidden min-h-fit w-40",
+            "flex-col-center origin-top bg-slate-800",
+            "border rounded-md border-slate-600"
+          )}
         >
-          <ChromePicker
-            color={selectedColor}
-            onChange={handleColorChange}
-            className="w-full"
-          />
-          <input
-            type="range"
-            min="0"
-            max="1"
-            step="0.01"
-            value={selectedColor.s}
-            onChange={handleSaturationChange}
-            className="hidden"
-          />
+          <Saturation height={120} color={color} onChange={handleColorChange} />
+          <div className="size-full flex-col-center gap-4 p-4 px-4">
+            <Hue color={color} onChange={handleColorChange} />
+            <Alpha color={color} onChange={handleColorChange} />
+          </div>
         </motion.div>
       )}
     </AnimatePresence>
   );
 };
+
 export default ColorPicker;
+
+{
+  /* <RgbaColorPicker color={color1} onChange={setColor1} /> */
+}
