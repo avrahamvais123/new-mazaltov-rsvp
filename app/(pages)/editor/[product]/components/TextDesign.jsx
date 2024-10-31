@@ -23,7 +23,7 @@ const TextDesign = ({
   // Update selectedColor when activeObject changes
   useEffect(() => {
     console.log("activeObject: ", activeObject);
-    if (activeObject && activeObject.type === "textbox") {
+    if (activeObject) {
       const fillColor = activeObject.get("fill");
       setSelectedColor(fillColor);
     }
@@ -74,14 +74,13 @@ const TextDesign = ({
 
           {/* color picker button */}
           <div className="relative flex group">
+            {showColorPicker && <div className="absolute inset-0 size-full cursor-pointer" />}
             <button
               className={cn(
                 buttonClassName,
                 "size-full p-1.5 flex group-hover:bg-slate-600 group-active:bg-slate-500"
               )}
-              onClick={() => {
-                setShowColorPicker(!showColorPicker);
-              }}
+              onClick={() => setShowColorPicker(!showColorPicker)}
             >
               <span
                 style={{
