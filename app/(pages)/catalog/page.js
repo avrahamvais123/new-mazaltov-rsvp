@@ -50,6 +50,13 @@ const categories = [
 
 const items = [{ title: "בית", href: "/" }];
 
+const findImageUrl = () => {
+  const { secure_url: imageUrl } = resources.find(
+    ({ display_name }) => display_name === imageKey
+  );
+  return imageUrl;
+};
+
 const Page = async () => {
   const { resources } = await cloudinary.api.resources_by_ids(
     [
@@ -80,9 +87,7 @@ const Page = async () => {
 
       <div className="size-full max-w-5xl mt-96 grid grid-cols-3 grid-rows-2 gap-4">
         {categories.map(({ link, name, id, imageKey }, i) => {
-          const { secure_url } = resources.find(
-            ({ display_name }) => display_name === imageKey
-          );
+          const { imageUrl } = findImageUrl(imageKey);
 
           return (
             <Link key={id} href={link} className="z-10 size-full rounded-xl">
@@ -91,7 +96,7 @@ const Page = async () => {
 
                 <div className="relative size-full rounded-lg">
                   <Image
-                    src={secure_url}
+                    src={imageUrl}
                     alt="product image"
                     fill
                     priority
