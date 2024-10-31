@@ -36,37 +36,14 @@ const Editor = ({ imageUrl_1, imageUrl_2 }) => {
     editor?.addRectangle();
   };
 
-  /* const downloadCanvasAsImage = () => {
-    const format = "png";
-
-    if (!editor || !editor.canvas) return;
-
-    // הגדרת פורמט התמונה: PNG או JPEG
-    const dataURL = editor.canvas.toDataURL({
-      format: format,
-      quality: 1.0, // איכות גבוהה (ל-JPEG)
-      multiplier: 2,
-    });
-
-    // יצירת קישור להורדה
-    const link = document.createElement("a");
-    link.href = dataURL;
-    link.download = `canvas-image.${format}`;
-
-    // הוספה וקליק אוטומטי להורדה
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  }; */
-
   const flipCanvas = () => {
     setIsCanvas1(!isCanvas1);
   };
 
   useEffect(() => {
-    if (!editor1) return;
+    if (!editor) return;
 
-    const { canvas } = editor1;
+    const { canvas } = editor;
 
     // מאזינים לאירוע בחירה
     canvas.on("selection:created", () => {
@@ -76,16 +53,20 @@ const Editor = ({ imageUrl_1, imageUrl_2 }) => {
       }
     });
 
-    // מאזינים להסרת הבחירה
-    canvas.on("selection:cleared", () => {
-      console.log("selection:cleared: ");
-    });
-
     // ניקוי הקנבס בעת השמדת הקומפוננטה
     return () => {
-      canvas.dispose();
+      //if (canvas) canvas.dispose();
+      if (editor?.canvas) {
+        // ביטול כל המאזינים לאירועים
+        editor.canvas.off();
+
+        // ניקוי הקנבס
+        editor.canvas.clear();
+
+        console.log("Canvas cleared successfully");
+      }
     };
-  }, [editor1]);
+  }, [editor]);
 
   return (
     <div className="size-full bg-slate-100 flex-center overflow-hidden">
@@ -170,17 +151,33 @@ export default Editor;
     });
   }, [fabric, editor]); */
 
-/* const downloadCanvasAsPDF = () => {
-    const dataURL = editor.canvas.toDataURL({ format: "jpeg", quality: 1.0 });
-    const pdf = new jsPDF();
-
-    pdf.addImage(dataURL, "JPEG", 0, 0, 150, 150); // גודל A4 ב-mm
-    pdf.save("canvas-image.pdf");
-  }; */
-
 /* const predicate = (event) => {
     console.log("event.key: ", event.key);
     event.key === "Backspace" && editor?.deleteSelected();
   }; */
 
 //useKey(predicate);
+
+//! לא למחוק
+/* const downloadCanvasAsImage = () => {
+    const format = "png";
+
+    if (!editor || !editor.canvas) return;
+
+    // הגדרת פורמט התמונה: PNG או JPEG
+    const dataURL = editor.canvas.toDataURL({
+      format: format,
+      quality: 1.0, // איכות גבוהה (ל-JPEG)
+      multiplier: 2,
+    });
+
+    // יצירת קישור להורדה
+    const link = document.createElement("a");
+    link.href = dataURL;
+    link.download = `canvas-image.${format}`;
+
+    // הוספה וקליק אוטומטי להורדה
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }; */

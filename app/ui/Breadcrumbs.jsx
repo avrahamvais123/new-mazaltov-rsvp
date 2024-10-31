@@ -12,7 +12,6 @@ import {
 import { Fragment } from "react";
 
 export default function Breadcrumbs({ items = [] }) {
-  console.log("items: ", items);
   return (
     <Breadcrumb>
       <BreadcrumbList className="text-white">
