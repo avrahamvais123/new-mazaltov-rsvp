@@ -10,7 +10,7 @@ import React from "react";
 const AlignText = ({ editor, buttonClassName }) => {
   const textAlign = (align) => {
     const activeObject = editor?.canvas?.getActiveObject();
-    if (activeObject && activeObject.type === "text") {
+    if (activeObject) {
       console.log("activeObject: ", activeObject);
       activeObject.set("textAlign", align); // שינוי יישור הטקסט
       editor?.canvas?.renderAll(); // רענון הקנבס לאחר שינוי

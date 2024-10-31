@@ -74,6 +74,7 @@ const FontSize = ({ editor }) => {
       <legend className="px-2 text-xs text-slate-400">גודל הגופן</legend>
 
       <NumberInput
+        max={Infinity}
         value={size}
         setValue={(newSize) => {
           setSize(newSize);

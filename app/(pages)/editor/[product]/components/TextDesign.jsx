@@ -9,7 +9,7 @@ import React from "react";
 
 const TextDesign = ({ editor, buttonClassName, activeObject }) => {
   const toggleTextStyle = (style) => {
-    if (activeObject && activeObject.type === "textbox") {
+    if (activeObject) {
       switch (style) {
         case "bold":
           activeObject.set(
