@@ -18,7 +18,7 @@ const TextDesign = ({
   setFontSize,
 }) => {
   const [showColorPicker, setShowColorPicker] = useState(false);
-  const [selectedColor, setSelectedColor] = useState("#000000");
+  const [selectedColor, setSelectedColor] = useState("#4f46e5");
 
   // Update selectedColor when activeObject changes
   useEffect(() => {
@@ -74,7 +74,9 @@ const TextDesign = ({
 
           {/* color picker button */}
           <div className="relative flex group">
-            {showColorPicker && <div className="absolute inset-0 size-full cursor-pointer" />}
+            {showColorPicker && (
+              <div className="absolute inset-0 size-full cursor-pointer" />
+            )}
             <button
               className={cn(
                 buttonClassName,

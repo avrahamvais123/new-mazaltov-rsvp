@@ -24,7 +24,7 @@ const ColorPicker = ({
   activeObject,
 }) => {
   const ref = useRef();
-  const [color, setColor] = useColor("#000000");
+  const [color, setColor] = useColor("#4f46e5");
 
   useClickAway(ref, () => {
     setShowColorPicker(false);
@@ -67,28 +67,34 @@ const ColorPicker = ({
   }, [selectedColor]);
 
   return (
-    <AnimatePresence>
-      {showColorPicker && (
-        <motion.div
-          ref={ref}
-          initial={{ scaleY: 0, opacity: 0 }}
-          animate={{ scaleY: 1, opacity: 1 }}
-          exit={{ scaleY: 0, opacity: 0 }}
-          transition={{ duration: 0.3 }}
-          className={cn(
-            "overflow-hidden min-h-fit w-40",
-            "flex-col-center origin-top bg-slate-800",
-            "border rounded-md border-slate-600"
-          )}
-        >
-          <Saturation height={120} color={color} onChange={handleColorChange} />
-          <div className="size-full flex-col-center gap-4 p-4 px-4">
-            <Hue color={color} onChange={handleColorChange} />
-            <Alpha color={color} onChange={handleColorChange} />
-          </div>
-        </motion.div>
-      )}
-    </AnimatePresence>
+    <div className="overflow-hidden">
+      <AnimatePresence>
+        {showColorPicker && (
+          <motion.div
+            ref={ref}
+            initial={{ translateY: "-100%", opacity: 0 }}
+            animate={{ translateY: 0, opacity: 1 }}
+            exit={{ translateY: "-100%", opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className={cn(
+              "overflow-hidden min-h-fit w-40",
+              "flex-col-center origin-top bg-slate-800",
+              "border rounded-md border-slate-600"
+            )}
+          >
+            <Saturation
+              height={120}
+              color={color}
+              onChange={handleColorChange}
+            />
+            <div className="size-full flex-col-center gap-4 p-4 px-4">
+              <Hue color={color} onChange={handleColorChange} />
+              <Alpha color={color} onChange={handleColorChange} />
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
   );
 };
 
