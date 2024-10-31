@@ -6,7 +6,7 @@ const TextEditor = ({ editor, activeObject }) => {
   const [textValue, setTextValue] = useState("");
 
   useEffect(() => {
-    if (activeObject && activeObject.type === "textbox") {
+    if (activeObject) {
       setTextValue(activeObject.text || "");
     } else {
       setTextValue("");
@@ -17,7 +17,7 @@ const TextEditor = ({ editor, activeObject }) => {
     const newText = e.target.value;
     setTextValue(newText);
 
-    if (activeObject && activeObject.type === "textbox") {
+    if (activeObject) {
       activeObject.set("text", newText);
       editor.canvas.renderAll();
     }

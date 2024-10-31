@@ -79,7 +79,7 @@ const AlignObjects = ({ editor, buttonClassName }) => {
 
   return (
     <fieldset className="p-2 pt-1 border border-slate-700 rounded-sm">
-      <legend className="px-2 mr-2 text-xs text-slate-400">יישור</legend>
+      <legend className="px-2 mr-2 text-xs text-slate-400">יישור אובייקט</legend>
       <div className="size-fit grid grid-cols-3 grid-rows-2 gap-2">
         <AlignRightIcon
           className={buttonClassName}

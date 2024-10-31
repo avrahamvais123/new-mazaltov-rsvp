@@ -1,67 +1,62 @@
 "use client";
 
 import NumberInput from "@/app/ui/NumberInput";
-import { AnimatePresence, motion } from "framer-motion";
-import React, { useEffect, useRef, useState } from "react";
-import { useClickAway } from "react-use";
+import React, { useState, useEffect } from "react";
 
-const FontSize = ({
-  editor,
-  size,
-  setSize,
-  showChangeFontSize,
-  setShowChangeFontSize,
-}) => {
-  const ref = useRef();
+const FontSize = ({ editor }) => {
+  const [size, setSize] = useState(60);
 
-  // Close FontSize when clicking outside of it
-  useClickAway(ref, () => {
-    setShowChangeFontSize(false);
-  });
+  useEffect(() => {
+    if (!editor) return;
+    const { canvas } = editor;
 
-  const changeFontSize = (newSize) => {
-    const activeObject = editor?.canvas?.getActiveObject();
-    if (activeObject && activeObject.type === "text") {
+    const updateFontSize = () => {
+      const activeObject = canvas.getActiveObject();
+      if (!activeObject) return;
+
+      const originalFontSize = activeObject.fontSize;
+      const newFontSize = Math.round(originalFontSize * activeObject.scaleX);
+
       activeObject.set({
-        fontSize: newSize,
+        fontSize: newFontSize,
         scaleX: 1,
         scaleY: 1,
       });
-      editor?.canvas?.renderAll();
-    }
-  };
 
-  useEffect(() => {
-    const handleObjectScaling = () => {
-      const activeObject = editor?.canvas?.getActiveObject();
-      if (activeObject && activeObject.type === "text") {
-        const newFontSize = (
-          activeObject.fontSize * activeObject.scaleX
-        ).toFixed(1);
-        setSize(parseFloat(newFontSize));
+      setSize(newFontSize);
+
+      activeObject.setCoords();
+      canvas.renderAll();
+    };
+
+    const updateInputNumber = () => {
+      const activeObject = canvas.getActiveObject();
+      if (activeObject) {
+        const fontSize = Math.round(activeObject.fontSize);
+        setSize(fontSize);
       }
     };
 
-    const handleObjectSelected = () => {
-      const activeObject = editor?.canvas?.getActiveObject();
-      if (activeObject && activeObject.type === "text") {
-        // עדכון הגודל האמיתי של תיבת הטקסט שנבחרה
-        const currentFontSize = activeObject.fontSize;
-        setSize(parseFloat(currentFontSize.toFixed(1))); // הגדרת הגודל הנוכחי באינפוט לפי תיבת הטקסט
+    // מאזין ליצירת אובייקט חדש ובחירה אוטומטית שלו
+    canvas.on("object:added", (e) => {
+      const newObject = e.target;
+      if (newObject) {
+        canvas.setActiveObject(newObject);
+        updateInputNumber();
       }
-    };
+    });
 
-    // מאזינים לבחירה ושינוי גודל של תיבת טקסט
-    editor?.canvas?.on("object:scaling", handleObjectScaling);
-    editor?.canvas?.on("selection:created", handleObjectSelected);
-    editor?.canvas?.on("selection:updated", handleObjectSelected);
+    canvas.on("mouse:down", updateInputNumber);
+    canvas.on("selection:created", updateInputNumber);
+    canvas.on("object:scaling", updateFontSize);
 
     return () => {
-      editor?.canvas?.off("object:scaling", handleObjectScaling);
-      editor?.canvas?.off("selection:created", handleObjectSelected);
-      editor?.canvas?.off("selection:updated", handleObjectSelected);
+      canvas.off("mouse:down", updateInputNumber);
+      canvas.off("selection:created", updateInputNumber);
+      canvas.off("object:added");
+      canvas.off("object:scaling", updateFontSize);
     };
-  }, [editor, setSize]);
+  }, [editor]);
 
   return (
     <fieldset className="w-[9.9rem] p-2 pt-1 border border-slate-700 rounded-sm flex-center gap-2">
@@ -69,26 +64,15 @@ const FontSize = ({
 
       <NumberInput
         value={size}
-        setValue={(newSize) => {
-          setSize(newSize);
-          changeFontSize(newSize);
-        }}
+        setValue={setSize}
         onDecrement={() => {
-          const newSize = Math.max(size - 1, 1);
           setSize(newSize);
-          changeFontSize(newSize);
         }}
         onIncrement={() => {
-          const newSize = size + 1;
           setSize(newSize);
-          changeFontSize(newSize);
         }}
         onInput={(e) => {
-          const newSize = parseFloat(e.target.value);
-          if (!isNaN(newSize)) {
-            setSize(newSize);
-            changeFontSize(newSize);
-          }
+          setSize(parseFloat(e.target.value));
         }}
         classNames={{
           wrapper: "rounded-sm p-0 w-full bg-slate-800 border-none",

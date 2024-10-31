@@ -1,10 +1,7 @@
 "use client";
 
-import { AnimatePresence, motion } from "framer-motion";
-import { useEffect, useRef, useState } from "react";
-import { useClickAway } from "react-use";
+import { useEffect } from "react";
 import {
-  ColorPicker as ColorPalette,
   useColor,
   Saturation,
   Hue,
@@ -17,18 +14,11 @@ import { cn } from "@/lib/utils";
 
 const ColorPicker = ({
   editor,
-  showColorPicker,
-  setShowColorPicker,
   selectedColor,
   setSelectedColor,
   activeObject,
 }) => {
-  const ref = useRef();
   const [color, setColor] = useColor("#4f46e5");
-
-  useClickAway(ref, () => {
-    setShowColorPicker(false);
-  });
 
   const handleColorChange = (newColor) => {
     setSelectedColor(newColor.hex);
@@ -67,33 +57,19 @@ const ColorPicker = ({
   }, [selectedColor]);
 
   return (
-    <div className="overflow-hidden">
-      <AnimatePresence>
-        {showColorPicker && (
-          <motion.div
-            ref={ref}
-            initial={{ translateY: "-100%", opacity: 0 }}
-            animate={{ translateY: 0, opacity: 1 }}
-            exit={{ translateY: "-100%", opacity: 0 }}
-            transition={{ duration: 0.3 }}
-            className={cn(
-              "overflow-hidden min-h-fit w-40",
-              "flex-col-center origin-top bg-slate-800",
-              "border rounded-md border-slate-600"
-            )}
-          >
-            <Saturation
-              height={120}
-              color={color}
-              onChange={handleColorChange}
-            />
-            <div className="size-full flex-col-center gap-4 p-4 px-4">
-              <Hue color={color} onChange={handleColorChange} />
-              <Alpha color={color} onChange={handleColorChange} />
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+    <div
+      className={cn(
+        "overflow-hidden min-h-fit w-40",
+        "flex-col-center origin-top bg-slate-800",
+        "border rounded-md border-slate-600"
+      )}
+    >
+      <Saturation height={120} color={color} onChange={handleColorChange} />
+      <div className="size-full flex-col-center gap-4 p-4 px-4">
+        <Hue color={color} onChange={handleColorChange} />
+        <Alpha color={color} onChange={handleColorChange} />
+      </div>
+      <div className="w-full h-full p-2 bg-slate-600 rounded-sm">sdfsdf</div>
     </div>
   );
 };

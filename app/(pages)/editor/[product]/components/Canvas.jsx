@@ -3,7 +3,7 @@ import { FabricJSCanvas } from "fabricjs-react";
 
 const Canvas = ({ editor, onReady, imageUrl }) => {
   useEffect(() => {
-    const fabric = window.fabric;
+    //const fabric = window.fabric;
     console.log("fabric: ", fabric);
 
     if (!editor || !editor.canvas || !imageUrl) return;
