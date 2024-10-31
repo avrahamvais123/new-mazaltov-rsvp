@@ -58,21 +58,38 @@ const FontSize = ({ editor }) => {
     };
   }, [editor]);
 
+  // פונקציה לעדכון גודל הפונט בקנבס
+  const handleFontSizeChange = (newSize) => {
+    const { canvas } = editor;
+    const activeObject = canvas.getActiveObject();
+    if (activeObject) {
+      activeObject.set("fontSize", newSize);
+      setSize(newSize);
+      canvas.renderAll();
+    }
+  };
+
   return (
     <fieldset className="w-[9.9rem] p-2 pt-1 border border-slate-700 rounded-sm flex-center gap-2">
       <legend className="px-2 text-xs text-slate-400">גודל הגופן</legend>
 
       <NumberInput
         value={size}
-        setValue={setSize}
-        onDecrement={() => {
+        setValue={(newSize) => {
           setSize(newSize);
+          handleFontSizeChange(newSize);
+        }}
+        onDecrement={() => {
+          const newSize = size - 1;
+          handleFontSizeChange(newSize);
         }}
         onIncrement={() => {
-          setSize(newSize);
+          const newSize = size + 1;
+          handleFontSizeChange(newSize);
         }}
         onInput={(e) => {
-          setSize(parseFloat(e.target.value));
+          const newSize = parseFloat(e.target.value);
+          handleFontSizeChange(newSize);
         }}
         classNames={{
           wrapper: "rounded-sm p-0 w-full bg-slate-800 border-none",
