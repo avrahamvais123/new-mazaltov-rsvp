@@ -1,68 +1,56 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useFabricJSEditor } from "fabricjs-react";
 import { cn } from "@/lib/utils";
-import TextEditor from "./TextEditor";
-import Image from "next/image";
-import AlignObjects from "./AlignObjects";
-import AlignText from "./AlignText";
-import TextDesign from "./TextDesign";
-import Templates from "./Templates";
 import FlipCanvas from "./FlipCanvas";
 import Canvas from "./Canvas";
-import { useRouter } from "next/navigation";
-import FontSize from "./FontSize";
-import ColorPicker from "./ColorPicker";
-import { indigo, slate } from "tailwindcss/colors";
-import LineHeight from "./LineHeight";
+import { indigo, red, slate } from "tailwindcss/colors";
+import LeftMenu from "./LeftMenu";
+import RightMenu from "./RightMenu";
+import ContextMenu from "./ContextMenu";
+import { Cancel02Icon, Copy02Icon } from "@/app/icons/icons";
+import ReactDOMServer from "react-dom/server"; // ייבוא ReactDOMServer
+import { duplicateObject, removeObject } from "./actions";
 
 const buttonClassName = cn(
   "cursor-pointer h-full w-10 p-1.5",
   "bg-slate-700 text-slate-400",
   "transition-all rounded-sm",
-  "hover:bg-slate-600 active:bg-slate-500"
+  "hover:brightness-90 active:brightness-75"
+  //"hover:bg-slate-600 active:bg-slate-500"
+);
+
+// פונקציה שממירה את ה-SVG למחרוזת Base64
+const getSVGAsImage = (SVGComponent) => {
+  const svgString = ReactDOMServer.renderToString(SVGComponent);
+  return `data:image/svg+xml;base64,${btoa(svgString)}`;
+};
+
+const deleteIconSrc = getSVGAsImage(
+  <Cancel02Icon
+    style={{
+      color: red[600],
+    }}
+  />
+);
+
+const duplicateIconSrc = getSVGAsImage(
+  <Copy02Icon
+    style={{
+      color: slate[300],
+    }}
+  />
 );
 
 const Editor = ({ imageUrl_1, imageUrl_2 }) => {
-  const router = useRouter();
   const [isCanvas1, setIsCanvas1] = useState(true);
   const [activeObject, setActiveObject] = useState(null);
-  const [selectedColor, setSelectedColor] = useState("#4f46e5");
+  const [showMenu, setShowMenu] = useState(false);
+  const [clickEvent, setClickEvent] = useState({});
   const { editor: editor1, onReady: onReady1 } = useFabricJSEditor();
   const { editor: editor2, onReady: onReady2 } = useFabricJSEditor();
   const editor = isCanvas1 ? editor1 : editor2;
-
-  const addText = () => {
-    if (editor && editor.canvas) {
-      console.log("fabric: ", fabric);
-      const textBox = new window.fabric.IText("טקסט", {
-        left: editor.canvas.width / 2, // מרכז התיבה
-        top: editor.canvas.height / 2, // מרכז התיבה
-        fontSize: 60, // גודל פונט ראשוני
-        fill: "#000000", // צבע הפונט
-        textAlign: "center", // יישור טקסט למרכז
-        originX: "center",
-        originY: "center",
-        centeredScaling: true,
-        editable: false,
-      });
-
-      textBox.setControlVisible("ml", false); // ידית שמאל
-      textBox.setControlVisible("mr", false); // ידית ימין
-      textBox.setControlVisible("mt", false); // ידית עליונה
-      textBox.setControlVisible("mb", false); // ידית תחתונה
-
-      // מוסיף את תיבת הטקסט ומרענן את הקנבס
-      editor.canvas.add(textBox);
-      editor.canvas.setActiveObject(textBox);
-      editor.canvas.renderAll();
-    }
-  };
-
-  const addRectangle = () => {
-    editor?.addRectangle();
-  };
 
   /* initial fabric */
   useEffect(() => {
@@ -78,6 +66,46 @@ const Editor = ({ imageUrl_1, imageUrl_2 }) => {
     });
   }, []);
 
+  /* עיצוב הידיות */
+  useEffect(() => {
+    if (!editor) return;
+
+    // הגדרת הידית העליונה-ימנית (מחיקה) עם האייקון
+    fabric.Object.prototype.controls.tr = new fabric.Control({
+      x: 0.5,
+      y: -0.5,
+      cursorStyle: "pointer",
+      mouseUpHandler: () => removeObject({ editor }), // שימוש בפונקציה למחיקת האובייקט
+      render: (ctx, left, top, styleOverride, fabricObject) => {
+        const size = 30;
+        const img = new Image();
+        img.src = deleteIconSrc;
+        img.onload = () => {
+          ctx.drawImage(img, left - size / 2, top - size / 2, size, size);
+        };
+      },
+    });
+
+    // הגדרת הידית העליונה-שמאלית (שכפול) עם האייקון
+    fabric.Object.prototype.controls.tl = new fabric.Control({
+      x: -0.5,
+      y: -0.5,
+      cursorStyle: "pointer",
+      mouseUpHandler: () =>
+        duplicateObject({ editor, setShowMenu, setClickEvent }), // שימוש בפונקציה לשכפול האובייקט
+      render: (ctx, left, top, styleOverride, fabricObject) => {
+        const size = 30;
+        const img = new Image();
+        img.src = duplicateIconSrc;
+        img.onload = () => {
+          ctx.drawImage(img, left - size / 2, top - size / 2, size, size);
+        };
+      },
+    });
+
+    editor.canvas.renderAll();
+  }, [editor, deleteIconSrc, duplicateIconSrc]);
+
   // Editor component
   useEffect(() => {
     if (!editor) return;
@@ -85,7 +113,6 @@ const Editor = ({ imageUrl_1, imageUrl_2 }) => {
 
     const updateActiveObject = () => {
       const activeObj = canvas.getActiveObject();
-      console.log("activeObj: ", activeObj);
       setActiveObject(activeObj || null);
     };
 
@@ -104,53 +131,31 @@ const Editor = ({ imageUrl_1, imageUrl_2 }) => {
   useEffect(() => {
     if (activeObject) {
       const fillColor = activeObject.get("fill");
-      setSelectedColor(fillColor);
+      fillColor;
     }
   }, [activeObject]);
 
   return (
-    <div className="relative size-full bg-slate-100 flex-center overflow-hidden">
-      {/* menu right */}
-      <div className="size-full bg-slate-800 overflow-auto p-6 max-w-60 flex-col-center justify-start gap-2">
-        {/* <button onClick={downloadCanvasAsImage}>הורד תמונה</button> */}
+    <div className="size-full bg-slate-100 flex-center overflow-hidden">
+      <RightMenu
+        editor={editor}
+        activeObject={activeObject}
+        buttonClassName={buttonClassName}
+        setShowMenu={setShowMenu}
+        setClickEvent={setClickEvent}
+      />
 
-        <button
-          className="absolute top-4 right-4"
-          onClick={() => router.back()}
-        >
-          יציאה
-        </button>
-
-        <Image
-          src="/images/לוגו.png"
-          alt="לוגו מזל טוב אישורי הגעה"
-          height={100}
-          width={100}
-          priority
-          className="mb-5"
-        />
-
-        {/* תבניות עיצוב */}
-        <Templates />
-
-        {/* הוספת טקסט */}
-        <button
-          className={cn(
-            buttonClassName,
-            "w-full h-fit p-3 text-indigo-100",
-            "bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800"
-          )}
-          onClick={addText}
-        >
-          הוספת טקסט
-        </button>
-
-        {/* עורך טקסט */}
-        <TextEditor activeObject={activeObject} editor={editor} />
-      </div>
+      {/* <ContextMenu editor={editor} /> */}
 
       {/* flip canvases */}
-      <div className="size-full flex-col-center gap-4 p-9">
+      <div className="relative size-full flex-col-center gap-4 p-9">
+        <ContextMenu
+          editor={editor}
+          showMenu={showMenu}
+          setShowMenu={setShowMenu}
+          clickEvent={clickEvent}
+        />
+
         <FlipCanvas
           isFlipped={!isCanvas1}
           frontContent={
@@ -177,23 +182,11 @@ const Editor = ({ imageUrl_1, imageUrl_2 }) => {
       </div>
 
       {/* menu left */}
-      <div className="size-full bg-slate-800 overflow-auto p-6 max-w-60 flex-col-center justify-start gap-2">
-        <ColorPicker
-          editor={editor}
-          selectedColor={selectedColor}
-          setSelectedColor={setSelectedColor}
-          activeObject={activeObject}
-        />
-        <FontSize editor={editor} />
-        <LineHeight editor={editor} />
-        <TextDesign
-          activeObject={activeObject}
-          buttonClassName={buttonClassName}
-          editor={editor}
-        />
-        <AlignText buttonClassName={buttonClassName} editor={editor} />
-        <AlignObjects buttonClassName={buttonClassName} editor={editor} />
-      </div>
+      <LeftMenu
+        editor={editor}
+        activeObject={activeObject}
+        buttonClassName={buttonClassName}
+      />
     </div>
   );
 };
@@ -259,3 +252,28 @@ export default Editor;
     />
   </button>
 </div> */
+
+//! למחוק
+/* fabric.Object.prototype.controls.deleteControl = new fabric.Control({
+      x: 0.5,
+      y: -0.5,
+      offsetY: -16,
+      cursorStyle: "pointer",
+      mouseUpHandler: (eventData, transform) => {
+        const target = transform.target;
+        const canvas = target.canvas;
+        if (canvas) {
+          canvas.remove(target); // מחיקת האובייקט מהקנבס
+          canvas.requestRenderAll();
+        }
+      },
+      render: (ctx, left, top, styleOverride, fabricObject) => {
+        const img = new Image();
+        img.src = svgImageSrc; // שימוש ב-B64 של ה-SVG
+        img.onload = () => {
+          ctx.drawImage(img, left - img.width / 2, top - img.height / 2);
+        };
+      },
+    });
+
+    editor.canvas.renderAll(); */
