@@ -58,7 +58,6 @@ const actions = ({
       //addText({ editor, setClickEvent, setShowMenu }),
       setShowExtendedMenu((prev) => (prev !== "text" ? "text" : ""));
       canvas.renderAll();
-      console.log('canvas: ', canvas);
     },
   },
   {
@@ -134,7 +133,7 @@ const RightMenu = ({
   console.log("showExtendedMenu: ", showExtendedMenu);
 
   return (
-    <div className="relative overflow-visible bg-slate-800 brightness-90 size-full max-w-20 flex-col-center justify-start">
+    <div className="z-10 relative overflow-visible bg-slate-800 brightness-90 size-full max-w-20 flex-col-center justify-start">
       <ExtendedMenu
         editor={editor}
         showExtendedMenu={showExtendedMenu}

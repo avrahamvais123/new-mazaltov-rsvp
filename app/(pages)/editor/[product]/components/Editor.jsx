@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useFabricJSEditor } from "fabricjs-react";
 import { cn } from "@/lib/utils";
 import FlipCanvas from "./FlipCanvas";
@@ -55,7 +55,6 @@ const Editor = ({ imageUrl_1, imageUrl_2 }) => {
   const { editor: editor1, onReady: onReady1 } = useFabricJSEditor();
   const { editor: editor2, onReady: onReady2 } = useFabricJSEditor();
   const editor = isCanvas1 ? editor1 : editor2;
-
   /* initial fabric */
   useEffect(() => {
     fabric.Object.prototype.set({
@@ -79,8 +78,6 @@ const Editor = ({ imageUrl_1, imageUrl_2 }) => {
       canvas.off();
     };
   }, []);
-
- 
 
   // guide lines
   useEffect(() => {

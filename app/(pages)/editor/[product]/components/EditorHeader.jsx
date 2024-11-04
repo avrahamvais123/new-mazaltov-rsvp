@@ -14,10 +14,9 @@ const EditorHeader = ({ editor }) => {
         priority
         className="p-2 my-2 aspect-square"
       />
-      <div className="">
-        <button className=""></button>
-        <button className=""></button>
-      </div>
+      <button className="ml-6 px-4 py-1.5 bg-indigo-600 hover:brightness-90 active:brightness-75 transition-all text-white rounded-sm">
+        שמירה
+      </button>
     </div>
   );
 };
