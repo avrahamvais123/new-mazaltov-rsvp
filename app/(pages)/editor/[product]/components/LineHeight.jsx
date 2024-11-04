@@ -2,14 +2,16 @@
 
 import React, { useState } from "react";
 import { Slider } from "@/components/ui/slider";
+import { useAtomValue } from "jotai";
+import { editor_Atom } from "@/lib/jotai";
 
-const LineHeight = ({ editor }) => {
+const LineHeight = () => {
   const [value, setValue] = useState(1.2);
+  const editor = useAtomValue(editor_Atom);
 
   const updateLineHeight = (newLineHeight) => {
     setValue(newLineHeight);
     if (!editor) return;
-    console.log("newLineHeight: ", newLineHeight);
     const { canvas } = editor;
     const activeObject = canvas.getActiveObject();
     if (activeObject) {
@@ -19,9 +21,9 @@ const LineHeight = ({ editor }) => {
   };
 
   return (
-    <fieldset className="w-[9.9rem] p-2 pt-1 border border-slate-700 rounded-sm flex-col-center gap-2">
+    <fieldset className="w-full p-2 px-4 pt-1 border border-slate-700 rounded-sm flex-center gap-4">
       <legend className="px-2 text-xs text-slate-400">רווח בין השורות</legend>
-      <p className="text-lg text-slate-400">{value}</p>
+      <p className="text-lg w-3/12 text-slate-400">{value}</p>
       <Slider
         defaultValue={[1.2]}
         onValueChange={(value) => updateLineHeight(value[0])} // מחלק ב-50 כדי לקבל ערך מתאים

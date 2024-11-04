@@ -11,19 +11,12 @@ import RightMenu from "./RightMenu";
 import ContextMenu from "./ContextMenu";
 import { Cancel02Icon, Copy02Icon } from "@/app/icons/icons";
 import ReactDOMServer from "react-dom/server"; // ייבוא ReactDOMServer
-import { duplicateObject, removeObject } from "./actions";
 import "fabric-history";
 import * as fabricModules from "fabric";
 import EditorHeader from "./EditorHeader";
-import ExtendedMenu from "./ExtendedMenu";
-
-const buttonClassName = cn(
-  "cursor-pointer h-full w-10 p-1.5",
-  "bg-slate-700 text-slate-400",
-  "transition-all rounded-sm",
-  "hover:brightness-90 active:brightness-75"
-  //"hover:bg-slate-600 active:bg-slate-500"
-);
+import ToolBar from "./ToolBar";
+import { useSetAtom } from "jotai";
+import { canvas_Atom, editor_Atom } from "@/lib/jotai";
 
 // פונקציה שממירה את ה-SVG למחרוזת Base64
 const getSVGAsImage = (SVGComponent) => {
@@ -47,11 +40,129 @@ const duplicateIconSrc = getSVGAsImage(
   />
 );
 
+// guide lines
+const createGuidelines = ({ canvas }) => {
+  // חשב את מרכז הקנבס
+  const canvasCenterX = canvas.getWidth() / 2;
+  const canvasCenterY = canvas.getHeight() / 2;
+
+  let horizontalLine = null;
+  let verticalLine = null;
+
+  const moveObjectEvent = (e) => {
+    const obj = e.target;
+
+    // חשב את מיקום מרכז האובייקט בעזרת getCenterPoint
+    const objCenter = obj.getCenterPoint();
+    const objCenterX = objCenter.x;
+    const objCenterY = objCenter.y;
+
+    // בדוק אם מרכז האובייקט נמצא במרכז הקנבס
+    //const isCenterX = Math.abs(objCenterX - canvasCenterX) < 5;
+    const isCenterX = Math.abs(objCenterX - canvasCenterX) < 1;
+    const isCenterY = Math.abs(objCenterY - canvasCenterY) < 1;
+
+    // אם מרכז האובייקט קרוב למרכז הקנבס ואין קווים, צור אותם
+    if (isCenterX && !verticalLine) {
+      verticalLine = new fabric.Line(
+        [canvasCenterX, 0, canvasCenterX, canvas.getHeight()],
+        {
+          stroke: "red",
+          selectable: false,
+          evented: false,
+          hasBorders: false,
+          hasControls: false,
+          hoverCursor: "default",
+          excludeFromExport: true,
+        }
+      );
+      canvas.add(verticalLine);
+      canvas.discardActiveObject(); // הסר כל אובייקט נבחר בקנבס
+    }
+
+    if (isCenterY && !horizontalLine) {
+      horizontalLine = new fabric.Line(
+        [0, canvasCenterY, canvas.getWidth(), canvasCenterY],
+        {
+          stroke: "red",
+          selectable: false,
+          evented: false,
+          hasBorders: false,
+          hasControls: false,
+          hoverCursor: "default",
+          excludeFromExport: true,
+        }
+      );
+      canvas.add(horizontalLine);
+      canvas.discardActiveObject(); // הסר כל אובייקט נבחר בקנבס
+    }
+
+    // הסר את הקווים אם האובייקט כבר לא במרכז הקנבס
+    if (!isCenterX && verticalLine) {
+      canvas.remove(verticalLine);
+      verticalLine = null;
+    }
+
+    if (!isCenterY && horizontalLine) {
+      canvas.remove(horizontalLine);
+      horizontalLine = null;
+    }
+
+    // החזר את הפוקוס לאובייקט המוזז
+    canvas.setActiveObject(obj);
+    canvas.renderAll();
+  };
+
+  // הסר את הקווים כאשר המשתמש משחרר את העכבר
+  const removeLines = () => {
+    if (horizontalLine) {
+      canvas.remove(horizontalLine);
+      horizontalLine = null;
+    }
+    if (verticalLine) {
+      canvas.remove(verticalLine);
+      verticalLine = null;
+    }
+    canvas.renderAll();
+  };
+
+  return { moveObjectEvent, removeLines };
+};
+
+// zoom in and out
+const zoomInOut = ({ canvas }) => {
+  // Function to update zoom level centered on canvas center
+  const zoomCanvas = (zoomIn) => {
+    const currentZoom = canvas.getZoom();
+    const newZoom = zoomIn ? currentZoom + 0.1 : currentZoom - 0.1;
+    const canvasCenter = new fabric.Point(canvas.width / 2, canvas.height / 2);
+    canvas.zoomToPoint(canvasCenter, newZoom);
+    canvas.requestRenderAll();
+  };
+
+  // Keyboard event handler for zoom
+  const handleKeyPress = (event) => {
+    if (event.key === "=") {
+      zoomCanvas(true);
+    } else if (event.key === "-") {
+      zoomCanvas(false);
+    }
+  };
+  return { zoomCanvas, handleKeyPress };
+};
+
 const Editor = ({ imageUrl_1, imageUrl_2 }) => {
+  const setEditor = useSetAtom(editor_Atom);
+  const setCanvas = useSetAtom(canvas_Atom);
+
   const [isCanvas1, setIsCanvas1] = useState(true);
   const [activeObject, setActiveObject] = useState(null);
   const [showMenu, setShowMenu] = useState(false);
+  const [showToolbar, setShowToolbar] = useState(false);
   const [clickEvent, setClickEvent] = useState({});
+  const [isDragging, setIsDragging] = useState(false);
+  const [lastPosX, setLastPosX] = useState(0);
+  const [lastPosY, setLastPosY] = useState(0);
   const { editor: editor1, onReady: onReady1 } = useFabricJSEditor();
   const { editor: editor2, onReady: onReady2 } = useFabricJSEditor();
   const editor = isCanvas1 ? editor1 : editor2;
@@ -85,93 +196,39 @@ const Editor = ({ imageUrl_1, imageUrl_2 }) => {
     const { canvas } = editor;
     const { fabric } = fabricModules;
 
+    setEditor(editor);
+    setCanvas(canvas);
+
+    const { moveObjectEvent, removeLines } = createGuidelines({ canvas });
+    const { handleKeyPress } = zoomInOut({ canvas });
+
+    // Mouse events for panning (moving) the canvas
+    canvas.on("mouse:down", (event) => {
+      setIsDragging(true);
+      setLastPosX(event.e.clientX);
+      setLastPosY(event.e.clientY);
+    });
+
+    canvas.on("mouse:move", (event) => {
+      if (isDragging) {
+        const deltaX = event.e.clientX - lastPosX;
+        const deltaY = event.e.clientY - lastPosY;
+        canvas.relativePan(new fabric.Point(deltaX, deltaY));
+        setLastPosX(event.e.clientX);
+        setLastPosY(event.e.clientY);
+      }
+    });
+
+    canvas.on("mouse:up", () => {
+      setIsDragging(false);
+    });
+
+    // Add event listener for keyboard input
+    window.addEventListener("keydown", handleKeyPress);
+
     const updateActiveObject = () => {
       const activeObj = canvas.getActiveObject();
       setActiveObject(activeObj || null);
-    };
-
-    // חשב את מרכז הקנבס
-    const canvasCenterX = canvas.getWidth() / 2;
-    const canvasCenterY = canvas.getHeight() / 2;
-
-    let horizontalLine = null;
-    let verticalLine = null;
-
-    const moveObjectEvent = (e) => {
-      const obj = e.target;
-
-      // חשב את מיקום מרכז האובייקט בעזרת getCenterPoint
-      const objCenter = obj.getCenterPoint();
-      const objCenterX = objCenter.x;
-      const objCenterY = objCenter.y;
-
-      // בדוק אם מרכז האובייקט נמצא במרכז הקנבס
-      //const isCenterX = Math.abs(objCenterX - canvasCenterX) < 5;
-      const isCenterX = Math.abs(objCenterX - canvasCenterX) < 1;
-      const isCenterY = Math.abs(objCenterY - canvasCenterY) < 1;
-
-      // אם מרכז האובייקט קרוב למרכז הקנבס ואין קווים, צור אותם
-      if (isCenterX && !verticalLine) {
-        verticalLine = new fabric.Line(
-          [canvasCenterX, 0, canvasCenterX, canvas.getHeight()],
-          {
-            stroke: "red",
-            selectable: false,
-            evented: false,
-            hasBorders: false,
-            hasControls: false,
-            hoverCursor: "default",
-            excludeFromExport: true,
-          }
-        );
-        canvas.add(verticalLine);
-        canvas.discardActiveObject(); // הסר כל אובייקט נבחר בקנבס
-      }
-
-      if (isCenterY && !horizontalLine) {
-        horizontalLine = new fabric.Line(
-          [0, canvasCenterY, canvas.getWidth(), canvasCenterY],
-          {
-            stroke: "red",
-            selectable: false,
-            evented: false,
-            hasBorders: false,
-            hasControls: false,
-            hoverCursor: "default",
-            excludeFromExport: true,
-          }
-        );
-        canvas.add(horizontalLine);
-        canvas.discardActiveObject(); // הסר כל אובייקט נבחר בקנבס
-      }
-
-      // הסר את הקווים אם האובייקט כבר לא במרכז הקנבס
-      if (!isCenterX && verticalLine) {
-        canvas.remove(verticalLine);
-        verticalLine = null;
-      }
-
-      if (!isCenterY && horizontalLine) {
-        canvas.remove(horizontalLine);
-        horizontalLine = null;
-      }
-
-      // החזר את הפוקוס לאובייקט המוזז
-      canvas.setActiveObject(obj);
-      canvas.renderAll();
-    };
-
-    // הסר את הקווים כאשר המשתמש משחרר את העכבר
-    const removeLines = () => {
-      if (horizontalLine) {
-        canvas.remove(horizontalLine);
-        horizontalLine = null;
-      }
-      if (verticalLine) {
-        canvas.remove(verticalLine);
-        verticalLine = null;
-      }
-      canvas.renderAll();
     };
 
     // האזן לאירוע של הזזת אובייקט
@@ -189,6 +246,7 @@ const Editor = ({ imageUrl_1, imageUrl_2 }) => {
       canvas.off("selection:created", updateActiveObject);
       canvas.off("selection:updated", updateActiveObject);
       canvas.off("selection:cleared");
+      window.removeEventListener("keydown", handleKeyPress);
     };
   }, [editor]);
 
@@ -209,20 +267,19 @@ const Editor = ({ imageUrl_1, imageUrl_2 }) => {
     <div className="size-full bg-slate-100 flex-col-center overflow-hidden">
       <EditorHeader editor={editor} />
 
-      <div className="size-full bg-slate-100 flex-center overflow-hidden">
+      <div className="relative size-full bg-slate-100 flex-center overflow-hidden">
         <RightMenu
           editor={editor}
           activeObject={activeObject}
-          buttonClassName={buttonClassName}
           setShowMenu={setShowMenu}
           setClickEvent={setClickEvent}
         />
 
         {/* flip canvases */}
         <div className="relative size-full flex-col-center">
+          <ToolBar showToolbar={showToolbar} setShowToolbar={setShowToolbar} />
           <div className="size-full flex-col-center gap-4 p-9">
             <ContextMenu
-              editor={editor}
               showMenu={showMenu}
               setShowMenu={setShowMenu}
               clickEvent={clickEvent}
@@ -263,11 +320,7 @@ const Editor = ({ imageUrl_1, imageUrl_2 }) => {
         </div>
 
         {/* menu left */}
-        <LeftMenu
-          editor={editor}
-          activeObject={activeObject}
-          buttonClassName={buttonClassName}
-        />
+        <LeftMenu />
       </div>
     </div>
   );

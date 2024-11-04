@@ -11,21 +11,21 @@ import {
 import Color from "color";
 import "react-color-palette/css";
 import { cn } from "@/lib/utils";
+import { useAtomValue } from "jotai";
+import { editor_Atom } from "@/lib/jotai";
 
-const ColorPicker = ({
-  editor,
-  selectedColor,
-  setSelectedColor,
-  activeObject,
-}) => {
+const ColorPicker = ({ selectedColor, setSelectedColor }) => {
   const [color, setColor] = useColor("#4f46e5");
+  const editor = useAtomValue(editor_Atom);
 
   const handleColorChange = (newColor) => {
     setSelectedColor(newColor.hex);
     setColor(newColor);
+
+    const activeObject = editor?.canvas?.activeObject;
     if (activeObject) {
       activeObject.set("fill", newColor.hex);
-      editor.canvas.renderAll();
+      editor?.canvas?.renderAll();
     }
   };
 
@@ -59,7 +59,7 @@ const ColorPicker = ({
   return (
     <div
       className={cn(
-        "overflow-hidden min-h-fit w-40",
+        "overflow-hidden min-h-fit w-full",
         "flex-col-center origin-top bg-slate-800",
         "border rounded-md border-slate-600"
       )}

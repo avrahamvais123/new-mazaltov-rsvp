@@ -6,6 +6,22 @@ import {
   TextAlignRightIcon,
 } from "@/app/icons/icons";
 import React from "react";
+import EditorButton from "./EditorButton";
+
+const icons = [
+  {
+    Icon: TextAlignRightIcon,
+    align: "right",
+  },
+  {
+    Icon: TextAlignCenterIcon,
+    align: "center",
+  },
+  {
+    Icon: TextAlignLeftIcon,
+    align: "left",
+  },
+];
 
 const AlignText = ({ editor, buttonClassName }) => {
   const textAlign = (align) => {
@@ -17,20 +33,15 @@ const AlignText = ({ editor, buttonClassName }) => {
     }
   };
   return (
-    <fieldset className="p-2 pt-1 border border-slate-700 rounded-sm flex-center gap-2">
+    <fieldset className="w-full p-2 pt-1 border border-slate-700 rounded-sm flex-center gap-2">
       <legend className="px-2 text-xs text-slate-400">יישור טקסט</legend>
-      <TextAlignRightIcon
-        className={buttonClassName}
-        onClick={() => textAlign("right")}
-      />
-      <TextAlignCenterIcon
-        className={buttonClassName}
-        onClick={() => textAlign("center")}
-      />
-      <TextAlignLeftIcon
-        className={buttonClassName}
-        onClick={() => textAlign("left")}
-      />
+      {icons.map(({ Icon, align }, i) => {
+        return (
+          <EditorButton key={i}>
+            <Icon onClick={() => textAlign(align)} />
+          </EditorButton>
+        );
+      })}
     </fieldset>
   );
 };

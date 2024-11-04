@@ -1,11 +1,13 @@
 "use client";
 
 import { CancelCircleIcon } from "@/app/icons/icons";
+import { editor_Atom } from "@/lib/jotai";
+import { useAtomValue } from "jotai";
 import React, { useEffect, useState, useRef } from "react";
 import { useClickAway } from "react-use";
 
-const ContextMenu = ({ editor, showMenu, setShowMenu, clickEvent }) => {
-  console.log("clickEvent: ", clickEvent);
+const ContextMenu = ({ showMenu, setShowMenu, clickEvent }) => {
+  const editor = useAtomValue(editor_Atom);
   const contextRef = useRef(null);
   /* useClickAway(contextRef, () => {
     setShowMenu(false);

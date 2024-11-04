@@ -1,10 +1,13 @@
 "use client";
 
 import NumberInput from "@/app/ui/NumberInput";
+import { editor_Atom } from "@/lib/jotai";
+import { useAtomValue } from "jotai";
 import React, { useState, useEffect } from "react";
 
-const FontSize = ({ editor }) => {
+const FontSize = () => {
   const [size, setSize] = useState(60);
+  const editor = useAtomValue(editor_Atom);
 
   useEffect(() => {
     if (!editor) return;
@@ -38,7 +41,7 @@ const FontSize = ({ editor }) => {
     };
 
     // מאזין ליצירת אובייקט חדש ובחירה אוטומטית שלו
-    canvas.on("object:added", (e) => {
+    canvas?.on("object:added", (e) => {
       const newObject = e.target;
       if (newObject) {
         canvas.setActiveObject(newObject);
@@ -46,21 +49,20 @@ const FontSize = ({ editor }) => {
       }
     });
 
-    canvas.on("mouse:down", updateInputNumber);
-    canvas.on("selection:created", updateInputNumber);
-    canvas.on("object:scaling", updateFontSize);
+    canvas?.on("mouse:down", updateInputNumber);
+    canvas?.on("selection:created", updateInputNumber);
+    canvas?.on("object:scaling", updateFontSize);
 
     return () => {
-      canvas.off("mouse:down", updateInputNumber);
-      canvas.off("selection:created", updateInputNumber);
-      canvas.off("object:added");
-      canvas.off("object:scaling", updateFontSize);
+      canvas?.off("mouse:down", updateInputNumber);
+      canvas?.off("selection:created", updateInputNumber);
+      canvas?.off("object:added");
+      canvas?.off("object:scaling", updateFontSize);
     };
   }, [editor]);
 
   // פונקציה לעדכון גודל הפונט בקנבס
   const handleFontSizeChange = (newSize) => {
-    const { canvas } = editor;
     const activeObject = canvas.getActiveObject();
     if (activeObject) {
       activeObject.set("fontSize", newSize);
@@ -70,7 +72,7 @@ const FontSize = ({ editor }) => {
   };
 
   return (
-    <fieldset className="w-[9.9rem] p-2 pt-1 border border-slate-700 rounded-sm flex-center gap-2">
+    <fieldset className="w-full p-2 pt-1 border border-slate-700 rounded-sm flex-center gap-2">
       <legend className="px-2 text-xs text-slate-400">גודל הגופן</legend>
 
       <NumberInput

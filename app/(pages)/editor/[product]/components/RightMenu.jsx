@@ -13,6 +13,7 @@ import {
 } from "./actions";
 import { Add02Icon, CancelCircleIcon, TextIcon } from "@/app/icons/icons";
 import ExtendedMenu from "./ExtendedMenu";
+import EditorButton from "./EditorButton";
 
 const buttonCn = cn(
   "z-10 w-full h-fit flex-center px-4 py-2",
@@ -118,13 +119,7 @@ const actions = ({
   },
 ];
 
-const RightMenu = ({
-  editor,
-  activeObject,
-  buttonClassName,
-  setShowMenu,
-  setClickEvent,
-}) => {
+const RightMenu = ({ editor, activeObject, setShowMenu, setClickEvent }) => {
   const router = useRouter();
   const [state, setState] = useState(null);
   const [canvasState, setCanvasState] = useState(null);
@@ -152,14 +147,14 @@ const RightMenu = ({
           state,
         }).map(({ title, icon, action, className }, i) => {
           return (
-            <button
+            <EditorButton
               key={i}
-              className={cn(buttonClassName, buttonCn, className)}
+              className={cn(buttonCn, className)}
               onClick={action}
             >
               {icon}
               {title}
-            </button>
+            </EditorButton>
           );
         })}
       </div>
