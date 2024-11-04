@@ -12,6 +12,10 @@ import ContextMenu from "./ContextMenu";
 import { Cancel02Icon, Copy02Icon } from "@/app/icons/icons";
 import ReactDOMServer from "react-dom/server"; // ייבוא ReactDOMServer
 import { duplicateObject, removeObject } from "./actions";
+import "fabric-history";
+import * as fabricModules from "fabric";
+import EditorHeader from "./EditorHeader";
+import ExtendedMenu from "./ExtendedMenu";
 
 const buttonClassName = cn(
   "cursor-pointer h-full w-10 p-1.5",
@@ -64,129 +68,210 @@ const Editor = ({ imageUrl_1, imageUrl_2 }) => {
       cornerScaleFactor: 2, // גודל הידיות
       transparentCorners: false,
     });
-  }, []);
 
-  /* עיצוב הידיות */
-  useEffect(() => {
-    if (!editor) return;
-
-    // הגדרת הידית העליונה-ימנית (מחיקה) עם האייקון
-    fabric.Object.prototype.controls.tr = new fabric.Control({
-      x: 0.5,
-      y: -0.5,
-      cursorStyle: "pointer",
-      mouseUpHandler: () => removeObject({ editor }), // שימוש בפונקציה למחיקת האובייקט
-      render: (ctx, left, top, styleOverride, fabricObject) => {
-        const size = 30;
-        const img = new Image();
-        img.src = deleteIconSrc;
-        img.onload = () => {
-          ctx.drawImage(img, left - size / 2, top - size / 2, size, size);
-        };
-      },
-    });
-
-    // הגדרת הידית העליונה-שמאלית (שכפול) עם האייקון
-    fabric.Object.prototype.controls.tl = new fabric.Control({
-      x: -0.5,
-      y: -0.5,
-      cursorStyle: "pointer",
-      mouseUpHandler: () =>
-        duplicateObject({ editor, setShowMenu, setClickEvent }), // שימוש בפונקציה לשכפול האובייקט
-      render: (ctx, left, top, styleOverride, fabricObject) => {
-        const size = 30;
-        const img = new Image();
-        img.src = duplicateIconSrc;
-        img.onload = () => {
-          ctx.drawImage(img, left - size / 2, top - size / 2, size, size);
-        };
-      },
-    });
-
-    editor.canvas.renderAll();
-  }, [editor, deleteIconSrc, duplicateIconSrc]);
-
-  // Editor component
-  useEffect(() => {
     if (!editor) return;
     const { canvas } = editor;
+
+    // מוודאים שהפונקציות של fabric-history יתווספו
+    canvas.includeDefaultHistory = true;
+
+    return () => {
+      canvas.off();
+    };
+  }, []);
+
+ 
+
+  // guide lines
+  useEffect(() => {
+    if (!editor || !editor.canvas) return;
+    const { canvas } = editor;
+    const { fabric } = fabricModules;
 
     const updateActiveObject = () => {
       const activeObj = canvas.getActiveObject();
       setActiveObject(activeObj || null);
     };
 
+    // חשב את מרכז הקנבס
+    const canvasCenterX = canvas.getWidth() / 2;
+    const canvasCenterY = canvas.getHeight() / 2;
+
+    let horizontalLine = null;
+    let verticalLine = null;
+
+    const moveObjectEvent = (e) => {
+      const obj = e.target;
+
+      // חשב את מיקום מרכז האובייקט בעזרת getCenterPoint
+      const objCenter = obj.getCenterPoint();
+      const objCenterX = objCenter.x;
+      const objCenterY = objCenter.y;
+
+      // בדוק אם מרכז האובייקט נמצא במרכז הקנבס
+      //const isCenterX = Math.abs(objCenterX - canvasCenterX) < 5;
+      const isCenterX = Math.abs(objCenterX - canvasCenterX) < 1;
+      const isCenterY = Math.abs(objCenterY - canvasCenterY) < 1;
+
+      // אם מרכז האובייקט קרוב למרכז הקנבס ואין קווים, צור אותם
+      if (isCenterX && !verticalLine) {
+        verticalLine = new fabric.Line(
+          [canvasCenterX, 0, canvasCenterX, canvas.getHeight()],
+          {
+            stroke: "red",
+            selectable: false,
+            evented: false,
+            hasBorders: false,
+            hasControls: false,
+            hoverCursor: "default",
+            excludeFromExport: true,
+          }
+        );
+        canvas.add(verticalLine);
+        canvas.discardActiveObject(); // הסר כל אובייקט נבחר בקנבס
+      }
+
+      if (isCenterY && !horizontalLine) {
+        horizontalLine = new fabric.Line(
+          [0, canvasCenterY, canvas.getWidth(), canvasCenterY],
+          {
+            stroke: "red",
+            selectable: false,
+            evented: false,
+            hasBorders: false,
+            hasControls: false,
+            hoverCursor: "default",
+            excludeFromExport: true,
+          }
+        );
+        canvas.add(horizontalLine);
+        canvas.discardActiveObject(); // הסר כל אובייקט נבחר בקנבס
+      }
+
+      // הסר את הקווים אם האובייקט כבר לא במרכז הקנבס
+      if (!isCenterX && verticalLine) {
+        canvas.remove(verticalLine);
+        verticalLine = null;
+      }
+
+      if (!isCenterY && horizontalLine) {
+        canvas.remove(horizontalLine);
+        horizontalLine = null;
+      }
+
+      // החזר את הפוקוס לאובייקט המוזז
+      canvas.setActiveObject(obj);
+      canvas.renderAll();
+    };
+
+    // הסר את הקווים כאשר המשתמש משחרר את העכבר
+    const removeLines = () => {
+      if (horizontalLine) {
+        canvas.remove(horizontalLine);
+        horizontalLine = null;
+      }
+      if (verticalLine) {
+        canvas.remove(verticalLine);
+        verticalLine = null;
+      }
+      canvas.renderAll();
+    };
+
+    // האזן לאירוע של הזזת אובייקט
+    canvas.on("object:moving", moveObjectEvent);
+    // הסר את הקווים כשמשחררים את העכבר
+    canvas.on("mouse:up", removeLines);
     canvas.on("selection:created", updateActiveObject);
     canvas.on("selection:updated", updateActiveObject);
     canvas.on("selection:cleared", () => setActiveObject(null));
 
+    // נקה את הקנבס כשהקומפוננטה מתפרקת
     return () => {
+      canvas.off("object:moving", moveObjectEvent);
+      canvas.off("mouse:up", removeLines);
       canvas.off("selection:created", updateActiveObject);
       canvas.off("selection:updated", updateActiveObject);
       canvas.off("selection:cleared");
     };
   }, [editor]);
 
-  // Update selectedColor when activeObject changes
-  useEffect(() => {
-    if (activeObject) {
-      const fillColor = activeObject.get("fill");
-      fillColor;
-    }
-  }, [activeObject]);
+  // פונקציות undo ו-redo
+  const undo = () => {
+    if (!editor) return;
+    const { canvas } = editor;
+    canvas.undo();
+  };
+
+  const redo = () => {
+    if (!editor) return;
+    const { canvas } = editor;
+    canvas.redo();
+  };
 
   return (
-    <div className="size-full bg-slate-100 flex-center overflow-hidden">
-      <RightMenu
-        editor={editor}
-        activeObject={activeObject}
-        buttonClassName={buttonClassName}
-        setShowMenu={setShowMenu}
-        setClickEvent={setClickEvent}
-      />
+    <div className="size-full bg-slate-100 flex-col-center overflow-hidden">
+      <EditorHeader editor={editor} />
 
-      {/* <ContextMenu editor={editor} /> */}
-
-      {/* flip canvases */}
-      <div className="relative size-full flex-col-center gap-4 p-9">
-        <ContextMenu
+      <div className="size-full bg-slate-100 flex-center overflow-hidden">
+        <RightMenu
           editor={editor}
-          showMenu={showMenu}
+          activeObject={activeObject}
+          buttonClassName={buttonClassName}
           setShowMenu={setShowMenu}
-          clickEvent={clickEvent}
+          setClickEvent={setClickEvent}
         />
 
-        <FlipCanvas
-          isFlipped={!isCanvas1}
-          frontContent={
-            <Canvas editor={editor1} onReady={onReady1} imageUrl={imageUrl_1} />
-          }
-          backContent={
-            <Canvas editor={editor2} onReady={onReady2} imageUrl={imageUrl_2} />
-          }
+        {/* flip canvases */}
+        <div className="relative size-full flex-col-center">
+          <div className="size-full flex-col-center gap-4 p-9">
+            <ContextMenu
+              editor={editor}
+              showMenu={showMenu}
+              setShowMenu={setShowMenu}
+              clickEvent={clickEvent}
+            />
+
+            <FlipCanvas
+              isFlipped={!isCanvas1}
+              frontContent={
+                <Canvas
+                  editor={editor1}
+                  onReady={onReady1}
+                  imageUrl={imageUrl_1}
+                />
+              }
+              backContent={
+                <Canvas
+                  editor={editor2}
+                  onReady={onReady2}
+                  imageUrl={imageUrl_2}
+                />
+              }
+            />
+            {/* החלפת צד */}
+            <button
+              className={cn(
+                "flex-center gap-1 py-2 px-4 rounded-sm",
+                "border border-transparent",
+                isCanvas1
+                  ? "bg-indigo-600 text-indigo-50 hover:bg-indigo-700 active:bg-indigo-800"
+                  : "bg-transparent text-indigo-600 border-indigo-600 hover:bg-indigo-50 active:bg-indigo-100"
+              )}
+              onClick={() => setIsCanvas1(!isCanvas1)}
+            >
+              {/* <Exchange01Icon className="text-indigo-50" /> */}
+              <p className="">{isCanvas1 ? "החלפה לצד א" : "החלפה לצד ב"}</p>
+            </button>
+          </div>
+        </div>
+
+        {/* menu left */}
+        <LeftMenu
+          editor={editor}
+          activeObject={activeObject}
+          buttonClassName={buttonClassName}
         />
-        {/* החלפת צד */}
-        <button
-          className={cn(
-            "flex-center gap-1 py-2 px-4 rounded-sm",
-            "border border-transparent",
-            isCanvas1
-              ? "bg-indigo-600 text-indigo-50 hover:bg-indigo-700 active:bg-indigo-800"
-              : "bg-transparent text-indigo-600 border-indigo-600 hover:bg-indigo-50 active:bg-indigo-100"
-          )}
-          onClick={() => setIsCanvas1(!isCanvas1)}
-        >
-          {/* <Exchange01Icon className="text-indigo-50" /> */}
-          <p className="">{isCanvas1 ? "החלפה לצד א" : "החלפה לצד ב"}</p>
-        </button>
       </div>
-
-      {/* menu left */}
-      <LeftMenu
-        editor={editor}
-        activeObject={activeObject}
-        buttonClassName={buttonClassName}
-      />
     </div>
   );
 };
@@ -253,7 +338,7 @@ export default Editor;
   </button>
 </div> */
 
-//! למחוק
+//! לא למחוק
 /* fabric.Object.prototype.controls.deleteControl = new fabric.Control({
       x: 0.5,
       y: -0.5,
@@ -277,3 +362,43 @@ export default Editor;
     });
 
     editor.canvas.renderAll(); */
+
+// ! /* עיצוב הידיות */
+/* useEffect(() => {
+    if (!editor) return;
+
+    // הגדרת הידית העליונה-ימנית (מחיקה) עם האייקון
+    fabric.Object.prototype.controls.tr = new fabric.Control({
+      x: 0.5,
+      y: -0.5,
+      cursorStyle: "pointer",
+      mouseUpHandler: () => removeObject({ editor }), // שימוש בפונקציה למחיקת האובייקט
+      render: (ctx, left, top, styleOverride, fabricObject) => {
+        const size = 30;
+        const img = new Image();
+        img.src = deleteIconSrc;
+        img.onload = () => {
+          ctx.drawImage(img, left - size / 2, top - size / 2, size, size);
+        };
+      },
+    });
+
+    // הגדרת הידית העליונה-שמאלית (שכפול) עם האייקון
+    fabric.Object.prototype.controls.tl = new fabric.Control({
+      x: -0.5,
+      y: -0.5,
+      cursorStyle: "pointer",
+      mouseUpHandler: () =>
+        duplicateObject({ editor, setShowMenu, setClickEvent }), // שימוש בפונקציה לשכפול האובייקט
+      render: (ctx, left, top, styleOverride, fabricObject) => {
+        const size = 30;
+        const img = new Image();
+        img.src = duplicateIconSrc;
+        img.onload = () => {
+          ctx.drawImage(img, left - size / 2, top - size / 2, size, size);
+        };
+      },
+    });
+
+    editor.canvas.renderAll();
+  }, [editor, deleteIconSrc, duplicateIconSrc]); */

@@ -6,7 +6,8 @@ export const addText = ({ editor, setShowMenu, setClickEvent }) => {
   // יצירת תיבת הטקסט
   const textBox = new window.fabric.IText("טקסט", {
     left: canvas.width / 2, // מרכז התיבה
-    top: canvas.height / 3, // מתחיל מעל הקנבס
+    top: canvas.height / 2, 
+    //top: canvas.height / 3, // מתחיל מעל הקנבס
     fontSize: 60, // גודל פונט ראשוני
     fill: "#000000", // צבע הפונט
     textAlign: "center", // יישור טקסט למרכז
@@ -41,11 +42,11 @@ export const addText = ({ editor, setShowMenu, setClickEvent }) => {
   const finalTop = canvas.height / 2;
 
   // הפעלת האנימציה של הירידה מלמעלה למטה
-  textBox.animate("top", finalTop, {
+  /* textBox.animate("top", finalTop, {
     onChange: canvas.renderAll.bind(canvas), // רענון הקנבס תוך כדי האנימציה
     duration: 1000, // משך האנימציה במילישניות
     easing: fabric.util.ease.easeOutBounce, // סגנון האנימציה
-  });
+  }); */
 };
 
 export const removeObject = ({ editor }) => {
@@ -90,11 +91,11 @@ export const duplicateObject = ({ editor, setShowMenu, setClickEvent }) => {
       const finalTop = activeObject.top + 40;
 
       // הפעלת האנימציה של הירידה מלמעלה למטה
-      cloned.animate("top", finalTop, {
+      /* cloned.animate("top", finalTop, {
         onChange: canvas.renderAll.bind(canvas), // רענון הקנבס תוך כדי האנימציה
         duration: 1000, // משך האנימציה במילישניות
         easing: fabric.util.ease.easeOutBounce, // סגנון האנימציה
-      });
+      }); */
 
       canvas.add(cloned);
       canvas.setActiveObject(cloned);

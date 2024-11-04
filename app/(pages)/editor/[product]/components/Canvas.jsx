@@ -3,7 +3,7 @@ import { FabricJSCanvas } from "fabricjs-react";
 
 const Canvas = ({ editor, onReady, imageUrl }) => {
   useEffect(() => {
-    if (!editor || !editor.canvas || !imageUrl) return;
+    if (!editor || !editor.canvas || !imageUrl || !fabric) return;
 
     fabric.Image.fromURL(
       imageUrl,
@@ -29,12 +29,10 @@ const Canvas = ({ editor, onReady, imageUrl }) => {
     return () => {
       if (editor?.canvas) {
         // ביטול כל המאזינים לאירועים
-        editor.canvas.off();
+        editor?.canvas?.off();
 
         // ניקוי הקנבס
-        editor.canvas.clear();
-
-        console.log("Canvas cleared successfully");
+        editor?.canvas?.clear();
       }
     };
   }, [editor, imageUrl]);
