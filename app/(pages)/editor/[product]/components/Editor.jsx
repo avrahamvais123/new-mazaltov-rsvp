@@ -169,7 +169,6 @@ const Editor = ({ imageUrl_1, imageUrl_2 }) => {
   const setCanvas = useSetAtom(canvas_Atom);
 
   const [layers, setLayers] = useState([]);
-  console.log("layers: ", layers);
   const [isCanvas1, setIsCanvas1] = useState(true);
   const [activeObject, setActiveObject] = useState(null);
   const [showMenu, setShowMenu] = useState(false);
@@ -273,18 +272,17 @@ const Editor = ({ imageUrl_1, imageUrl_2 }) => {
     const { canvas } = editor;
 
     const updateLayers = () => {
-      setLayers(
-        canvas
-          .getObjects()
-          .map((obj, index) => ({ id: obj.id || index, type: obj.type }))
-      );
+      setLayers(canvas.getObjects());
+      console.log("canvas.getObjects(): ", canvas.getObjects());
     };
 
+    canvas.on("object:created", updateLayers);
     canvas.on("object:added", updateLayers);
     canvas.on("object:removed", updateLayers);
     canvas.on("object:moved", updateLayers);
 
     return () => {
+      canvas.off("object:created", updateLayers);
       canvas.off("object:added", updateLayers);
       canvas.off("object:removed", updateLayers);
       canvas.off("object:moved", updateLayers);
