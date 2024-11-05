@@ -11,7 +11,7 @@ export async function POST(req) {
   const receivedSecret = req.headers.get("x-wc-webhook-signature");
   const expectedSecret = process.env.WC_WEBHOOK_SECRET;
 
-  if (receivedSecret !== expectedSecret) {
+  if (receivedSecret != expectedSecret) {
     return NextResponse.json({ message: "Forbidden" }, { status: 403 });
   }
 
