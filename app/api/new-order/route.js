@@ -9,7 +9,9 @@ const resend = new Resend(RESEND_API_KEY);
 export async function POST(req) {
   // בדיקת ה-Secret (אם הגדרת Secret בווב-הוק)
   const receivedSecret = req.headers.get("x-wc-webhook-signature");
+  console.log('receivedSecret: ', receivedSecret);
   const expectedSecret = process.env.WC_WEBHOOK_SECRET;
+  console.log('expectedSecret: ', expectedSecret);
 
   if (receivedSecret != expectedSecret) {
     return NextResponse.json({ message: "Forbidden" }, { status: 403 });
