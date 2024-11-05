@@ -2,32 +2,46 @@
 
 import { NextResponse } from "next/server";
 import { Resend } from "resend";
+import crypto from "crypto";
 
 const RESEND_API_KEY = process.env.RESEND_API_KEY;
+const WC_WEBHOOK_SECRET = process.env.WC_WEBHOOK_SECRET;
 const resend = new Resend(RESEND_API_KEY);
 
 export async function POST(req) {
-  // בדיקת ה-Secret (אם הגדרת Secret בווב-הוק)
-  const receivedSecret = req.headers.get("x-wc-webhook-signature");
-  console.log('receivedSecret: ', receivedSecret);
-  const expectedSecret = process.env.WC_WEBHOOK_SECRET;
-  console.log('expectedSecret: ', expectedSecret);
+  // קריאת תוכן הבקשה כטקסט לצורך חישוב ה-HMAC
+  const requestBody = await req.text();
 
-  if (receivedSecret != expectedSecret) {
+  // בדיקת ה-Secret
+  const receivedSecret = req.headers.get("x-wc-webhook-signature");
+  console.log("receivedSecret: ", receivedSecret);
+
+  // חישוב ה-HMAC באמצעות הסוד שלנו
+  const hmac = crypto
+    .createHmac("sha256", WC_WEBHOOK_SECRET)
+    .update(requestBody, "utf8")
+    .digest("base64");
+
+  console.log("calculated HMAC: ", hmac);
+
+  // בדיקת ההתאמה בין החתימה שקיבלנו לבין זו שחישבנו
+  if (receivedSecret !== hmac) {
+    console.log(
+      "Authentication failed: calculated HMAC does not match received signature."
+    );
     return NextResponse.json({ message: "Forbidden" }, { status: 403 });
   }
 
-  // בדיקת סוג התוכן של הבקשה
+  // קריאת הנתונים מהבקשה על סמך סוג התוכן
   const contentType = req.headers.get("content-type") || "";
   let orderData;
 
   if (contentType.includes("application/json")) {
     // במקרה של JSON, נשתמש בפענוח JSON רגיל
-    orderData = await req.json();
+    orderData = JSON.parse(requestBody);
   } else if (contentType.includes("application/x-www-form-urlencoded")) {
     // במקרה של URL-encoded, נשתמש ב-URLSearchParams כדי לפענח את הנתונים
-    const formData = await req.text();
-    orderData = Object.fromEntries(new URLSearchParams(formData));
+    orderData = Object.fromEntries(new URLSearchParams(requestBody));
   } else {
     return NextResponse.json(
       { message: "Unsupported content type" },
@@ -46,20 +60,20 @@ export async function POST(req) {
     to: email,
     subject: "קישור לתשלום",
     html: `
-        <table dir="rtl" width="100%" height="100%" style="font-family: Arial, sans-serif; line-height: 1.5; padding: 20px; text-align: center;">
-          <tr>
-            <td>
-              <p>לחץ על הקישור למעבר לעמוד התשלום:</p>
-              <a href="${paymentlink}" style="font-size: 18px; color: #4f46e5;">לתשלום לחץ כאן</a>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <p>בברכה,<br />צוות מזל טוב</p>
-            </td>
-          </tr>
-        </table>
-      `,
+      <table dir="rtl" width="100%" height="100%" style="font-family: Arial, sans-serif; line-height: 1.5; padding: 20px; text-align: center;">
+        <tr>
+          <td>
+            <p>לחץ על הקישור למעבר לעמוד התשלום:</p>
+            <a href="${paymentlink}" style="font-size: 18px; color: #4f46e5;">לתשלום לחץ כאן</a>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <p>בברכה,<br />צוות מזל טוב</p>
+          </td>
+        </tr>
+      </table>
+    `,
   });
 
   // תשובה ל-WooCommerce שהבקשה התקבלה
