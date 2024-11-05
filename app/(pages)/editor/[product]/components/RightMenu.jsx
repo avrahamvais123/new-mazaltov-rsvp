@@ -11,9 +11,19 @@ import {
   removeObject,
   saveCanvasState,
 } from "./actions";
-import { Add02Icon, CancelCircleIcon, TextIcon } from "@/app/icons/icons";
+import {
+  Add02Icon,
+  CancelCircleIcon,
+  Layers01Icon,
+  PaintBoardIcon,
+  StarIcon,
+  TextIcon,
+} from "@/app/icons/icons";
 import ExtendedMenu from "./ExtendedMenu";
 import EditorButton from "./EditorButton";
+import TextDesignOption from "./TextDesignOption";
+import ColorsOption from "./ColorsOption";
+import LayersOption from "./LayersOption";
 
 const buttonCn = cn(
   "z-10 w-full h-fit flex-center px-4 py-2",
@@ -32,8 +42,8 @@ const actions = ({
   editor,
   setClickEvent,
   setShowMenu,
-  showExtendedMenu,
-  setShowExtendedMenu,
+  content,
+  setContent,
   canvasState,
   setCanvasState,
   state,
@@ -42,60 +52,63 @@ const actions = ({
   {
     title: (
       <p className="text-xs leading-4 text-slate-500 group-hover:text-indigo-600">
-        הוספת טקסט
+        טקסט
       </p>
     ),
-    className: cn(
-      "group hover:text-indigo-600",
-      showExtendedMenu === "text" ? "brightness-90" : "brightness-100",
-      showExtendedMenu === "remove" && "rounded-bl-md"
-    ),
+    className: (i) =>
+      cn(
+        "group hover:text-indigo-600",
+        i == 0 ? "brightness-90" : "brightness-100",
+        i == 0 && "rounded-bl-md"
+      ),
     icon: (
       <TextIcon className="w-full h-1/2 text-slate-500 group-hover:text-indigo-600" />
     ),
-    action: () => {
+    action: (i) => {
       if (!editor) return;
       const { canvas } = editor;
-      //addText({ editor, setClickEvent, setShowMenu }),
-      setShowExtendedMenu((prev) => (prev !== "text" ? "text" : ""));
       canvas.renderAll();
+      setContent(<TextDesignOption />);
     },
   },
+  // colors
   {
     title: (
       <p className="text-xs leading-4 text-slate-500 group-hover:text-indigo-600">
-        מחיקת טקסט
+        צבעים
       </p>
     ),
-    className: cn(
-      "group hover:text-red-600",
-      showExtendedMenu === "remove" ? "brightness-90" : "brightness-100"
-    ),
-    icon: <TextIcon className="w-full h-1/2 text-slate-500" />,
-    action: () => {
-      removeObject({ editor });
-      setShowExtendedMenu((prev) => (prev !== "remove" ? "remove" : ""));
+    className: (i) =>
+      cn(
+        "group hover:text-red-600",
+        i == 1 ? "brightness-90" : "brightness-100"
+      ),
+    icon: <PaintBoardIcon className="w-full h-1/2 text-slate-500" />,
+    action: (i) => {
+      setContent(<ColorsOption />);
     },
   },
+  //layers
   {
     title: (
       <p className="text-xs leading-4 text-slate-500 group-hover:text-indigo-600">
-        שכפול
+        שכבות
       </p>
     ),
-    className: "group hover:text-green-600",
-    icon: <TextIcon className="w-full h-1/2 text-slate-500" />,
-    action: () => duplicateObject({ editor, setShowMenu }),
+    className: (i) => "group hover:text-green-600",
+    icon: <Layers01Icon className="w-full h-1/2 text-slate-500" />,
+    action: () => setContent(<LayersOption />),
   },
+  // add elements
   {
     title: (
       <p className="text-xs leading-4 text-slate-500 group-hover:text-indigo-600">
-        שמירת תבנית
+        אלמנטים
       </p>
     ),
-    className: "group hover:text-pink-600",
-    icon: <TextIcon className="w-full h-1/2 text-slate-500" />,
-    action: () => saveCanvasState({ editor, canvasState, setCanvasState }),
+    className: (i) => "group hover:text-pink-600",
+    icon: <StarIcon className="w-full h-1/2 text-slate-500" />,
+    action: () => setContent(<div>אלמנטים</div>),
   },
   {
     title: (
@@ -103,7 +116,7 @@ const actions = ({
         טעינת תבנית
       </p>
     ),
-    className: "group hover:text-yellow-600",
+    className: (i) => "group hover:text-yellow-600",
     icon: <TextIcon className="w-full h-1/2 text-slate-500" />,
     action: () => loadCanvasState({ editor, state }),
   },
@@ -113,7 +126,7 @@ const actions = ({
         תמונת תצוגה
       </p>
     ),
-    className: "group hover:text-cyan-600",
+    className: (i) => "group hover:text-cyan-600",
     icon: <TextIcon className="w-full h-1/2 text-slate-500" />,
     action: () => getCanvasThumbnail({ editor }),
   },
@@ -124,24 +137,19 @@ const RightMenu = ({ editor, activeObject, setShowMenu, setClickEvent }) => {
   const [state, setState] = useState(null);
   const [canvasState, setCanvasState] = useState(null);
   const [frontThumbnail, setFrontThumbnail] = useState(null);
-  const [showExtendedMenu, setShowExtendedMenu] = useState("");
-  console.log("showExtendedMenu: ", showExtendedMenu);
+  const [content, setContent] = useState(null);
 
   return (
     <div className="z-10 relative overflow-visible bg-slate-800 brightness-90 size-full max-w-20 flex-col-center justify-start">
-      <ExtendedMenu
-        editor={editor}
-        showExtendedMenu={showExtendedMenu}
-        content={content[showExtendedMenu]}
-      />
+      <ExtendedMenu content={content} />
 
       <div className="overflow-auto w-full h-fit grid grid-cols-1 auto-rows-auto">
         {actions({
           editor,
           setClickEvent,
           setShowMenu,
-          showExtendedMenu,
-          setShowExtendedMenu,
+          content,
+          setContent,
           canvasState,
           setCanvasState,
           state,
@@ -149,8 +157,8 @@ const RightMenu = ({ editor, activeObject, setShowMenu, setClickEvent }) => {
           return (
             <EditorButton
               key={i}
-              className={cn(buttonCn, className)}
-              onClick={action}
+              className={cn(buttonCn, className(i))}
+              onClick={() => action(i)}
             >
               {icon}
               {title}

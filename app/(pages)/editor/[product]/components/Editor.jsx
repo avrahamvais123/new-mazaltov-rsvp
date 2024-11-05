@@ -151,10 +151,18 @@ const zoomInOut = ({ canvas }) => {
   return { zoomCanvas, handleKeyPress };
 };
 
+// define layers
+const sortObjects = ({ canvas }) => {
+  canvas._objects.sort((a, b) => (a.zIndex > b.zIndex ? 1 : -1));
+  canvas.renderAll();
+};
+
 const Editor = ({ imageUrl_1, imageUrl_2 }) => {
   const setEditor = useSetAtom(editor_Atom);
   const setCanvas = useSetAtom(canvas_Atom);
 
+  const [layers, setLayers] = useState([]);
+  console.log('layers: ', layers);
   const [isCanvas1, setIsCanvas1] = useState(true);
   const [activeObject, setActiveObject] = useState(null);
   const [showMenu, setShowMenu] = useState(false);
@@ -250,6 +258,30 @@ const Editor = ({ imageUrl_1, imageUrl_2 }) => {
     };
   }, [editor]);
 
+  // update layers
+  useEffect(() => {
+    if (!editor) return;
+    const { canvas } = editor;
+
+    const updateLayers = () => {
+      setLayers(
+        canvas
+          .getObjects()
+          .map((obj, index) => ({ id: obj.id || index, type: obj.type }))
+      );
+    };
+
+    canvas.on("object:added", updateLayers);
+    canvas.on("object:removed", updateLayers);
+    canvas.on("object:moved", updateLayers);
+
+    return () => {
+      canvas.off("object:added", updateLayers);
+      canvas.off("object:removed", updateLayers);
+      canvas.off("object:moved", updateLayers);
+    };
+  }, [editor]);
+
   // פונקציות undo ו-redo
   const undo = () => {
     if (!editor) return;
@@ -318,9 +350,6 @@ const Editor = ({ imageUrl_1, imageUrl_2 }) => {
             </button>
           </div>
         </div>
-
-        {/* menu left */}
-        <LeftMenu />
       </div>
     </div>
   );

@@ -14,8 +14,8 @@ import {
 import { AnimatePresence, motion } from "framer-motion";
 
 const actions = [
-  () => (
-    <Select dir="rtl">
+  (key) => (
+    <Select key={key} dir="rtl">
       <SelectTrigger className="w-[180px] h-full">
         <SelectValue placeholder="בחר סוג פונט" />
       </SelectTrigger>
@@ -43,7 +43,7 @@ const ToolBar = ({ editor, showToolbar, setShowToolbar }) => {
           className="z-10 absolute-center top-6 w-[90%] h-10 mt-2 p-1 flex-center justify-start rounded-sm shadow-md shadow-slate-200 border border-slate-100 bg-white"
         >
           {actions.map((Component, i) => {
-            return <Component />;
+            return <Component key={i} />;
           })}
         </motion.div>
       )}

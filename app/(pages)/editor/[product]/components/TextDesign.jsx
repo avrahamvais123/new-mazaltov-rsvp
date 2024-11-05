@@ -9,9 +9,6 @@ import { editor_Atom } from "@/lib/jotai";
 import { useAtomValue } from "jotai";
 import React from "react";
 import EditorButton from "./EditorButton";
-import { cn } from "@/lib/utils";
-
-const iconClassName = "group-hover:text-white";
 
 const icons = [
   {

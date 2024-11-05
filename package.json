@@ -47,6 +47,8 @@
     "cloudinary": "^2.5.0",
     "clsx": "^2.1.1",
     "color": "^4.2.3",
+    "color-thief-react": "^2.1.0",
+    "colorthief": "^2.6.0",
     "contextmenujs": "^2.0.0",
     "dom-to-image": "^2.6.0",
     "embla-carousel-react": "^8.2.0",

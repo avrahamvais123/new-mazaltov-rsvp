@@ -1,4 +1,4 @@
-export const addText = ({ editor, setShowMenu, setClickEvent }) => {
+export const addText = ({ editor, setClickEvent = () => {} }) => {
   if (!editor || !editor?.canvas) return;
   const { canvas } = editor;
   console.log("fabric: ", fabric);
@@ -6,7 +6,7 @@ export const addText = ({ editor, setShowMenu, setClickEvent }) => {
   // יצירת תיבת הטקסט
   const textBox = new window.fabric.IText("טקסט", {
     left: canvas.width / 2, // מרכז התיבה
-    top: canvas.height / 2, 
+    top: canvas.height / 2,
     //top: canvas.height / 3, // מתחיל מעל הקנבס
     fontSize: 60, // גודל פונט ראשוני
     fill: "#000000", // צבע הפונט
@@ -29,7 +29,6 @@ export const addText = ({ editor, setShowMenu, setClickEvent }) => {
     if (e.button === 3) {
       // קוד 3 מסמן לחיצה ימנית
       console.log("לחיצה עם כפתור ימני על הריבוע!");
-      setShowMenu(true);
       setClickEvent(e);
     }
   });

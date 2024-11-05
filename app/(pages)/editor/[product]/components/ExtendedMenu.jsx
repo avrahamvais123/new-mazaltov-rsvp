@@ -2,11 +2,11 @@
 
 import React from "react";
 
-const ExtendedMenu = ({ editor, showExtendedMenu, content }) => {
+const ExtendedMenu = ({ content }) => {
   return (
     <>
-      {showExtendedMenu !== "" ? (
-        <div className="absolute top-0 right-full transition-all h-full w-64 flex-col-center justify-start bg-slate-800 brightness-90">
+      {content ? (
+        <div className="absolute top-0 right-full h-full w-64 p-4 flex-col-center justify-start transition-all bg-slate-800 brightness-90">
           {content}
         </div>
       ) : null}
