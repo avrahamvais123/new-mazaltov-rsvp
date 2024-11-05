@@ -11,6 +11,7 @@ const resend = new Resend(RESEND_API_KEY);
 export async function POST(req) {
   // קריאת תוכן הבקשה כטקסט לצורך חישוב ה-HMAC
   const requestBody = await req.text();
+  console.log('requestBody: ', requestBody);
 
   // בדיקת ה-Secret
   const receivedSecret = req.headers.get("x-wc-webhook-signature");
