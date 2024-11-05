@@ -21,13 +21,15 @@ const Page = async ({ params }) => {
 
   try {
     const { resources } = await cloudinary.api.resources_by_asset_folder(
-      `הזמנות/${decodedCategory}/תצוגה`
+      `הזמנות/${decodedCategory}/תצוגה`, {
+        max_results: 1000,
+      }
     );
 
-    const images = resources.map((resource) => {
-      const title = resource.public_id.split("/")[3];
+    const products = resources.map((product) => {
+      const title = product.public_id.split("/")[3];
       return {
-        imageUrl: resource.secure_url,
+        imageUrl: product.secure_url,
         title,
       };
     });
@@ -46,7 +48,7 @@ const Page = async ({ params }) => {
           />
         </div>
 
-        <Products images={images} category={decodedCategory} />
+        <Products prod={products} category={decodedCategory} />
       </div>
     );
   } catch (error) {

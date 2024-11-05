@@ -5,13 +5,14 @@ import Image from "next/image";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 
-const Products = ({ category, images }) => {
+const Products = ({ category, prod }) => {
   console.log("category: ", category);
   const [products, setProducts] = useState([]);
+  console.log('products: ', products);
 
   useEffect(() => {
-    setProducts(images);
-  }, [images]);
+    setProducts(prod);
+  }, [prod]);
 
   return (
     <div className="z-10 h-fit w-full max-w-6xl mt-52 p-8 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 2xl:grid-cols-4 auto-rows-auto items-start gap-8">
