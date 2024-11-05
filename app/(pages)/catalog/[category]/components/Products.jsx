@@ -1,12 +1,12 @@
 "use client";
 
 import { FavouriteIcon } from "@/app/icons/icons";
-import axios from "axios";
 import Image from "next/image";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
 
 const Products = ({ category, images }) => {
+  console.log("category: ", category);
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
@@ -40,7 +40,7 @@ const Products = ({ category, images }) => {
               <h4>{title}</h4>
               <p className="-mt-2 mb-2">בחרו הזמנה וכנסו לעצב</p>
               <Link
-                href={`/editor/${products[i].title}?referrer=${category}`}
+                href={`/editor/${products[i].title}`}
                 className="w-full text-center bg-indigo-700 hover:bg-indigo-800 hover:scale-110 active:scale-90 active:bg-indigo-900 text-indigo-50 transition-all duration-500 rounded-sm px-4 py-1.5"
               >
                 כנס לעיצוב
@@ -54,3 +54,57 @@ const Products = ({ category, images }) => {
 };
 
 export default Products;
+
+/* const api = new WooCommerceRestApi({
+  url: "https://hazmanot-mazaltov.com",
+  consumerKey: process.env.NEXT_PUBLIC_WC_CONSUMER_KEY,
+  consumerSecret: process.env.NEXT_PUBLIC_WC_CONSUMER_SECRET,
+  version: "wc/v3",
+}); */
+
+/* useEffect(() => {
+    console.log("api: ", api);
+    fetchOrders();
+    fetchFromWp();
+  }, []);
+
+  const fetchOrders = async () => {
+    try {
+      const res = await api.get("products", {
+        per_page: 100,
+        search: "הזמנה לבר מצווה", // כאן אפשר לשלוח את שם המוצר לחיפוש
+      });
+      console.log("res.data: ", res.data);
+      setNewProducts(
+        res.data.map(({ id, name, images }) => {
+          const imageUrl = images.filter(({ name }) =>
+            name.includes("תצוגה")
+          )[0]?.src;
+          return {
+            id,
+            title: name,
+            imageUrl: imageUrl,
+          };
+        })
+      );
+    } catch (error) {
+      console.error("error: ", error);
+    }
+  };
+
+  const fetchFromWp = async () => {
+    try {
+      const res = await axios.get(
+        "https://hazmanot-mazaltov.com/wp-json/wp/v2/media",
+        {
+          params: {
+            per_page: 100, // מספר התמונות בכל בקשה
+            search: "הזמנה לבר מצווה", // מונח החיפוש
+          },
+        }
+      );
+      console.log("Filtered Media: ", res.data);
+    } catch (error) {
+      console.log("Error fetching filtered media: ", error);
+    }
+  }; */

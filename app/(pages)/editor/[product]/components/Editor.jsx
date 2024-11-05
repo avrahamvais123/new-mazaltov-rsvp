@@ -16,7 +16,12 @@ import * as fabricModules from "fabric";
 import EditorHeader from "./EditorHeader";
 import ToolBar from "./ToolBar";
 import { useSetAtom } from "jotai";
-import { canvas_Atom, editor_Atom } from "@/lib/jotai";
+import {
+  canvas_Atom,
+  editor1_Atom,
+  editor2_Atom,
+  editor_Atom,
+} from "@/lib/jotai";
 
 // פונקציה שממירה את ה-SVG למחרוזת Base64
 const getSVGAsImage = (SVGComponent) => {
@@ -159,10 +164,12 @@ const sortObjects = ({ canvas }) => {
 
 const Editor = ({ imageUrl_1, imageUrl_2 }) => {
   const setEditor = useSetAtom(editor_Atom);
+  const setEditor1 = useSetAtom(editor1_Atom);
+  const setEditor2 = useSetAtom(editor2_Atom);
   const setCanvas = useSetAtom(canvas_Atom);
 
   const [layers, setLayers] = useState([]);
-  console.log('layers: ', layers);
+  console.log("layers: ", layers);
   const [isCanvas1, setIsCanvas1] = useState(true);
   const [activeObject, setActiveObject] = useState(null);
   const [showMenu, setShowMenu] = useState(false);
@@ -205,6 +212,8 @@ const Editor = ({ imageUrl_1, imageUrl_2 }) => {
     const { fabric } = fabricModules;
 
     setEditor(editor);
+    setEditor1(editor1);
+    setEditor2(editor2);
     setCanvas(canvas);
 
     const { moveObjectEvent, removeLines } = createGuidelines({ canvas });
