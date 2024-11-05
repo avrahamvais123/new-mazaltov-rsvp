@@ -6,11 +6,10 @@ export async function POST(req) {
   // בדיקת ה-Secret (אם הגדרת Secret בווב-הוק)
   const receivedSecret = req.headers.get("x-wc-webhook-signature");
   const expectedSecret = process.env.WC_WEBHOOK_SECRET;
-  console.log('process.env.WC_WEBHOOK_SECRET: ', process.env.WC_WEBHOOK_SECRET);
 
-  /* if (receivedSecret !== expectedSecret) {
+  if (receivedSecret !== expectedSecret) {
     return NextResponse.json({ message: "Forbidden" }, { status: 403 });
-  } */
+  }
 
   // קריאת נתוני ההזמנה
   const orderData = await req.json();
