@@ -26,7 +26,7 @@ export async function POST(req) {
   console.log("calculated HMAC: ", hmac);
 
   // בדיקת ההתאמה בין החתימה שקיבלנו לבין זו שחישבנו
-  if (receivedSecret !== requestBody) {
+  if (receivedSecret !== hmac) {
     console.log(
       "Authentication failed: calculated HMAC does not match received signature."
     );
