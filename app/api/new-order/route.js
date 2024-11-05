@@ -36,8 +36,8 @@ export async function POST(req) {
   console.log("New order received:", orderData);
 
   // שליחת המייל אם יש צורך
-  /* const email = orderData.billing.email; // נניח שכתובת האימייל נמצאת בשדה זה
-  const paymentlink = `${BASE_URL}/payment?order=${orderData.id}`;
+  const email = orderData.billing.email; // נניח שכתובת האימייל נמצאת בשדה זה
+  const paymentlink = `https://pages.greeninvoice.co.il/payments/links/447b0484-8d47-4bd5-8724-f0d95daacd32`;
 
   await resend.emails.send({
     from: "הזמנות מזל טוב <support@mazaltov-rsvp.co.il>",
@@ -58,7 +58,7 @@ export async function POST(req) {
           </tr>
         </table>
       `,
-  }); */
+  });
 
   // תשובה ל-WooCommerce שהבקשה התקבלה
   return NextResponse.json({
