@@ -3,9 +3,7 @@
 import { NextResponse } from "next/server";
 import { Resend } from "resend";
 
-const BASE_URL = process.env.BASE_URL;
 const RESEND_API_KEY = process.env.RESEND_API_KEY;
-
 const resend = new Resend(RESEND_API_KEY);
 
 export async function POST(req) {
@@ -17,17 +15,31 @@ export async function POST(req) {
     return NextResponse.json({ message: "Forbidden" }, { status: 403 });
   } */
 
-  // קריאת נתוני ההזמנה
-  const orderData = await req.json();
-  console.log('orderData: ', orderData);
+  // בדיקת סוג התוכן של הבקשה
+  const contentType = req.headers.get("content-type") || "";
+  let orderData;
 
-  // עיבוד הנתונים או ביצוע פעולות נוספות
+  if (contentType.includes("application/json")) {
+    // במקרה של JSON, נשתמש בפענוח JSON רגיל
+    orderData = await req.json();
+  } else if (contentType.includes("application/x-www-form-urlencoded")) {
+    // במקרה של URL-encoded, נשתמש ב-URLSearchParams כדי לפענח את הנתונים
+    const formData = await req.text();
+    orderData = Object.fromEntries(new URLSearchParams(formData));
+  } else {
+    return NextResponse.json(
+      { message: "Unsupported content type" },
+      { status: 415 }
+    );
+  }
+
   console.log("New order received:", orderData);
 
-  // בניית הקישור לאיפוס סיסמה
-  /* const paymentlink = ""
+  // שליחת המייל אם יש צורך
+  /* const email = orderData.billing.email; // נניח שכתובת האימייל נמצאת בשדה זה
+  const paymentlink = `${BASE_URL}/payment?order=${orderData.id}`;
 
-  resend.emails.send({
+  await resend.emails.send({
     from: "הזמנות מזל טוב <support@mazaltov-rsvp.co.il>",
     to: email,
     subject: "קישור לתשלום",
@@ -40,7 +52,7 @@ export async function POST(req) {
             </td>
           </tr>
           <tr>
-          <td>
+            <td>
               <p>בברכה,<br />צוות מזל טוב</p>
             </td>
           </tr>
