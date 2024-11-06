@@ -12,14 +12,7 @@ const ColorsOption = () => {
   const editor1 = useAtomValue(editor1_Atom);
   const editor2 = useAtomValue(editor2_Atom);
   const [selectedColor, setSelectedColor] = useState("#4f46e5");
-  const [myColors, setMyColors] = useState([
-    "white",
-    "white",
-    "white",
-    "white",
-    "white",
-    "white",
-  ]);
+  const [myColors, setMyColors] = useState([]);
   const [editingColorIndex, setEditingColorIndex] = useState(null);
 
   const imageUrl_1 = editor1?.canvas?.backgroundImage?._element?.currentSrc;
@@ -88,15 +81,24 @@ const ColorsOption = () => {
     }
   };
 
+  const handleSaveColor = () => {
+    setMyColors(() => [...myColors, selectedColor]);
+  };
+
   return (
     <div className="w-full flex-grow flex-col-center justify-start gap-2 overflow-auto">
       <ColorPicker
         selectedColor={selectedColor}
-        setSelectedColor={(color) => {
-          setSelectedColor(color);
-          handleColorChange(color); // מעדכן את הצבע הנבחר לכפתור במצב עריכה
-        }}
+        setSelectedColor={setSelectedColor}
+        //setSelectedColor={(color) => setSelectedColor(color)}
       />
+      <button
+        onClick={handleSaveColor}
+        className="w-fit px-4 py-1 rounded-sm bg-indigo-600 text-indigo-50 hover:brightness-90 active:brightness-75 transition-all"
+      >
+        שמירת צבע
+      </button>
+
       <div className="w-full flex-col-center gap-2">
         {/* הצבעים שלי */}
         <fieldset className="size-full p-2 pt-1 border border-slate-700 rounded-sm grid grid-cols-6 auto-rows-auto justify-start self-start gap-1">
@@ -108,7 +110,7 @@ const ColorsOption = () => {
               key={`myColor-${i}`}
               className="w-full aspect-square flex-center justify-center items-center bg-gray-300 rounded-sm"
               style={{ backgroundColor: color }}
-              onClick={() => setEditingColorIndex(i)} // מאפשר למשתמש לבחור איזה כפתור לערוך
+              onClick={() => setSelectedColor(color)}
             />
           ))}
         </fieldset>
