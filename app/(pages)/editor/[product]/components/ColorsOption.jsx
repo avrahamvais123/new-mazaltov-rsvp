@@ -13,7 +13,6 @@ const ColorsOption = () => {
   const editor2 = useAtomValue(editor2_Atom);
   const [selectedColor, setSelectedColor] = useState("#4f46e5");
   const [myColors, setMyColors] = useState([]);
-  const [editingColorIndex, setEditingColorIndex] = useState(null);
 
   const imageUrl_1 = editor1?.canvas?.backgroundImage?._element?.currentSrc;
   const imageUrl_2 = editor2?.canvas?.backgroundImage?._element?.currentSrc;
@@ -72,15 +71,6 @@ const ColorsOption = () => {
     };
   }, [editor, selectedColor]);
 
-  const handleColorChange = (color) => {
-    if (editingColorIndex !== null) {
-      const updatedColors = [...myColors];
-      updatedColors[editingColorIndex] = color;
-      setMyColors(updatedColors);
-      setEditingColorIndex(null); // סוגרים את מצב העריכה לאחר שינוי הצבע
-    }
-  };
-
   const handleSaveColor = () => {
     setMyColors(() => [...myColors, selectedColor]);
   };
@@ -101,7 +91,7 @@ const ColorsOption = () => {
 
       <div className="w-full flex-col-center gap-2">
         {/* הצבעים שלי */}
-        <fieldset className="size-full p-2 pt-1 border border-slate-700 rounded-sm grid grid-cols-6 auto-rows-auto justify-start self-start gap-1">
+        <fieldset className="size-full min-h-14 p-2 pt-1 border border-slate-700 rounded-sm grid grid-cols-6 auto-rows-auto justify-start self-start gap-1">
           <legend className="px-2 mr-2 text-xs text-slate-400">
             הצבעים שלי
           </legend>
