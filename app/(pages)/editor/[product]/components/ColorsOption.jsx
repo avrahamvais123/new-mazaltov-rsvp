@@ -14,8 +14,8 @@ const ColorsOption = () => {
   const [selectedColor, setSelectedColor] = useState("#4f46e5");
   const [myColors, setMyColors] = useState([]);
 
-  const imageUrl_1 = canvas1?.canvas?.backgroundImage?._element?.currentSrc;
-  const imageUrl_2 = canvas2?.canvas?.backgroundImage?._element?.currentSrc;
+  const imageUrl_1 = canvas1?.backgroundImage?._element?.currentSrc;
+  const imageUrl_2 = canvas2?.backgroundImage?._element?.currentSrc;
 
   const { data: colors_1, loading_1, error_1 } = usePalette(
     imageUrl_1,

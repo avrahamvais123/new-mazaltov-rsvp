@@ -227,6 +227,7 @@ const Editor = ({ imageUrl_1, imageUrl_2 }) => {
     };
   }, [fabric]);
 
+  // set current canvas
   useEffect(() => {
     setCanvas(isCanvas1 ? canvas1 : canvas2);
   }, [isCanvas1, canvas1, canvas2]);
@@ -311,6 +312,12 @@ const Editor = ({ imageUrl_1, imageUrl_2 }) => {
     };
   }, [canvas]);
 
+  const handleSwitchCanvas = () => {
+    canvas.discardActiveObject();
+    canvas.requestRenderAll();
+    setIsCanvas1(!isCanvas1);
+  };
+
   return (
     <div className="size-full bg-slate-100 flex-col-center overflow-hidden">
       <EditorHeader />
@@ -360,7 +367,7 @@ const Editor = ({ imageUrl_1, imageUrl_2 }) => {
                   ? "bg-indigo-600 text-indigo-50 hover:bg-indigo-700 active:bg-indigo-800"
                   : "bg-transparent text-indigo-600 border-indigo-600 hover:bg-indigo-50 active:bg-indigo-100"
               )}
-              onClick={() => setIsCanvas1(!isCanvas1)}
+              onClick={handleSwitchCanvas}
             >
               <p className="">{isCanvas1 ? "החלפה לצד א" : "החלפה לצד ב"}</p>
             </button>

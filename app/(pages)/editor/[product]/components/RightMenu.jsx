@@ -94,7 +94,6 @@ const RightMenu = ({ setShowMenu, setClickEvent }) => {
   const [canvasState, setCanvasState] = useState(null);
   const [activeOption, setActiveOption] = useState(null);
   const [content, setContent] = useState(null);
-  console.log("content: ", content);
 
   return (
     <div className="z-10 relative overflow-visible bg-slate-800 size-full max-w-20 flex-col-center justify-start">
