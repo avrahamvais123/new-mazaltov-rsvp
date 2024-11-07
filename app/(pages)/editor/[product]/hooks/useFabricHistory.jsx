@@ -3,11 +3,28 @@
 import { canvas_Atom } from "@/lib/jotai";
 import { useAtomValue } from "jotai";
 import { useEffect, useRef } from "react";
+import useUndo from "use-undo";
 
 const useFabricHistory = () => {
   const canvas = useAtomValue(canvas_Atom);
   const state = useRef([]); // מערך היסטוריה של JSON
   const mods = useRef(0); // משתנה למעקב אחר המיקום בהיסטוריה
+
+  //* use-undo
+  /* const [
+    countState,
+    {
+      set: setCount,
+      reset: resetCount,
+      undo: undoCount,
+      redo: redoCount,
+      canUndo,
+      canRedo,
+    },
+  ] = useUndo(0);
+
+  const { present: presentCount } = countState;
+  console.log("countState: ", countState); */
 
   useEffect(() => {
     if (!canvas) return;
