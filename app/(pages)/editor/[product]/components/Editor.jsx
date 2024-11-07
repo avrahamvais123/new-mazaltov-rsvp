@@ -16,7 +16,6 @@ import ToolBar from "./ToolBar";
 import { useAtom, useSetAtom } from "jotai";
 import { canvas_Atom, canvas1_Atom, canvas2_Atom } from "@/lib/jotai";
 import * as fabricModule from "fabric";
-import { width } from "@mui/system";
 
 const { fabric } = fabricModule;
 
@@ -166,7 +165,9 @@ const sortObjects = ({ canvas }) => {
 
 const Editor = ({ imageUrl_1, imageUrl_2 }) => {
   const [canvas, setCanvas] = useAtom(canvas_Atom);
+  console.log('canvas from Editor: ', canvas);
   const [canvas1, setCanvas1] = useAtom(canvas1_Atom);
+  console.log('canvas1: ', canvas1);
   const [canvas2, setCanvas2] = useAtom(canvas2_Atom);
   const canvasRef1 = useRef(null);
   const canvasRef2 = useRef(null);
@@ -216,6 +217,7 @@ const Editor = ({ imageUrl_1, imageUrl_2 }) => {
       stopContextMenu: true, // מונע תפריט ברירת מחדל של הדפדפן בלחיצה ימנית
     });
 
+    setCanvas(initialCanvas1);
     setCanvas1(initialCanvas1);
     setCanvas2(initialCanvas2);
     return () => {

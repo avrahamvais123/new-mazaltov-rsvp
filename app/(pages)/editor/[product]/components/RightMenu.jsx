@@ -41,8 +41,10 @@ const actions = ({ canvas, content, setContent }) => [
     className: () => cn(""),
     icon: <TextIcon className="w-full h-1/2" />,
     action: ({ isActiveOption }) => {
+      console.log('isActiveOption: ', isActiveOption);
+      console.log('canvas: ', canvas);
       if (!canvas) return;
-      canvas.renderAll();
+      //canvas.renderAll();
       setContent(isActiveOption && content ? null : <TextDesignOption />);
     },
   },
@@ -87,6 +89,7 @@ const actions = ({ canvas, content, setContent }) => [
 
 const RightMenu = ({ setShowMenu, setClickEvent }) => {
   const canvas = useAtomValue(canvas_Atom);
+  console.log('canvas: ', canvas);
   const [state, setState] = useState(null);
   const [canvasState, setCanvasState] = useState(null);
   const [activeOption, setActiveOption] = useState(null);
