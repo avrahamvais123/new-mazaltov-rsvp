@@ -1,57 +1,42 @@
-import React, { useEffect } from "react";
-import { FabricJSCanvas } from "fabricjs-react";
+import React, { useEffect, useRef } from "react";
+import * as fabricModule from "fabric";
 
-const Canvas = ({ editor, onReady, imageUrl }) => {
+const Canvas = ({ canvas, imageUrl, canvasRef }) => {
   useEffect(() => {
-    if (!editor || !editor.canvas || !imageUrl || !fabric) return;
+    if (!canvas || !imageUrl || !canvasRef.current) return;
 
+    const { fabric } = fabricModule;
+    
     fabric.Image.fromURL(
       imageUrl,
       (img) => {
-        img.scaleToWidth(editor.canvas.width);
-        img.scaleToHeight(editor.canvas.height);
+        img.scaleToWidth(canvas?.width);
+        img.scaleToHeight(canvas?.height);
         img.set({
           originX: "center",
           originY: "center",
-          left: editor.canvas.width / 2,
-          top: editor.canvas.height / 2,
+          left: canvas?.width / 2,
+          top: canvas?.height / 2,
         });
 
-        editor.canvas.setBackgroundImage(
-          img,
-          editor.canvas.renderAll.bind(editor.canvas),
-          { centeredScaling: true }
-        );
+        canvas?.setBackgroundImage(img, canvas.renderAll.bind(canvas), {
+          centeredScaling: true,
+          isMainImage: true,
+        });
       },
       { crossOrigin: "anonymous" }
     );
 
     return () => {
-      if (editor?.canvas) {
-        // ביטול כל המאזינים לאירועים
-        editor?.canvas?.off();
-
-        // ניקוי הקנבס
-        editor?.canvas?.clear();
-      }
+      canvas.off();
     };
-  }, [editor, imageUrl]);
-
-  const handleCanvasReady = (canvas) => {
-    // הגדרות קנבס מותאמות אישית
-    canvas.fireRightClick = true; // מאפשר זיהוי לחיצה ימנית
-    canvas.stopContextMenu = true; // מונע תפריט ברירת מחדל של הדפדפן בלחיצה ימנית
-    canvas.renderAll(); // רענון הקנבס עם ההגדרות החדשות
-  };
+  }, [imageUrl, canvasRef.current, canvas]);
 
   return (
-    <FabricJSCanvas
+    <canvas
       className="size-full"
-      onReady={(canvas) => {
-        onReady(canvas); // מבטיח שהקנבס נוצר
-        handleCanvasReady(canvas); // הגדרות מותאמות אישית עבור הקנבס
-      }}
-    />
+      ref={canvasRef}
+    ></canvas>
   );
 };
 

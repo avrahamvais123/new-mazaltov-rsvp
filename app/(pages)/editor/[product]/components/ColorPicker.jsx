@@ -12,21 +12,21 @@ import Color from "color";
 import "react-color-palette/css";
 import { cn } from "@/lib/utils";
 import { useAtomValue } from "jotai";
-import { editor_Atom } from "@/lib/jotai";
+import { canvas_Atom } from "@/lib/jotai";
 import EyeDropper from "./EyeDropper";
 
 const ColorPicker = ({ selectedColor, setSelectedColor }) => {
   const [color, setColor] = useColor("#4f46e5");
-  const editor = useAtomValue(editor_Atom);
+  const canvas = useAtomValue(canvas_Atom);
 
   const handleColorChange = (newColor) => {
     setSelectedColor(newColor.hex);
     setColor(newColor);
 
-    const activeObject = editor?.canvas?.activeObject;
+    const activeObject = canvas?.activeObject;
     if (activeObject) {
       activeObject.set("fill", newColor.hex);
-      editor?.canvas?.renderAll();
+      canvas?.renderAll();
     }
   };
 

@@ -1,9 +1,13 @@
 "use client";
 
+import { ArrowTurnBackwardIcon, ArrowTurnForwardIcon } from "@/app/icons/icons";
 import Image from "next/image";
 import React from "react";
+import useFabricHistory from "../hooks/useFabricHistory";
 
-const EditorHeader = ({ editor }) => {
+const EditorHeader = () => {
+  const { undo, redo } = useFabricHistory();
+
   return (
     <div className="w-full h-20 flex-center justify-between py-2 px-6 bg-slate-800">
       <Image
@@ -12,8 +16,20 @@ const EditorHeader = ({ editor }) => {
         width={60}
         height={60}
         priority
-        className="my-2 aspect-square"
+        className="my-2 aspect-square select-none"
       />
+
+      <div className="h-full w-fit flex-center gap-2">
+        <ArrowTurnForwardIcon
+          onClick={undo}
+          className="cursor-pointer size-10 p-2 text-indigo-50 bg-indigo-600 hover:brightness-90 active:brightness-75 transition-all rounded-sm"
+        />
+        <ArrowTurnBackwardIcon
+          onClick={redo}
+          className="cursor-pointer size-10 p-2 text-indigo-50 bg-indigo-600 hover:brightness-90 active:brightness-75 transition-all rounded-sm"
+        />
+      </div>
+
       <button className="px-4 py-1.5 bg-indigo-600 hover:brightness-90 active:brightness-75 transition-all text-white rounded-sm">
         שמירה
       </button>

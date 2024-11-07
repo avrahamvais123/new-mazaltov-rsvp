@@ -7,6 +7,8 @@ import {
 } from "@/app/icons/icons";
 import React from "react";
 import EditorButton from "./EditorButton";
+import { useAtomValue } from "jotai";
+import { canvas_Atom } from "@/lib/jotai";
 
 const icons = [
   {
@@ -23,15 +25,18 @@ const icons = [
   },
 ];
 
-const AlignText = ({ editor, buttonClassName }) => {
+const AlignText = () => {
+  const canvas = useAtomValue(canvas_Atom);
+
   const textAlign = (align) => {
-    const activeObject = editor?.canvas?.getActiveObject();
+    const activeObject = canvas?.getActiveObject();
     if (activeObject) {
       console.log("activeObject: ", activeObject);
       activeObject.set("textAlign", align); // שינוי יישור הטקסט
-      editor?.canvas?.renderAll(); // רענון הקנבס לאחר שינוי
+      canvas?.renderAll(); // רענון הקנבס לאחר שינוי
     }
   };
+  
   return (
     <fieldset className="w-full p-2 pt-1 border border-slate-700 rounded-sm flex-center gap-2">
       <legend className="px-2 text-xs text-slate-400">יישור טקסט</legend>

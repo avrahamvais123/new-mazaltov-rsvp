@@ -15,6 +15,8 @@ import EditorButton from "./EditorButton";
 import TextDesignOption from "./TextDesignOption";
 import ColorsOption from "./ColorsOption";
 import LayersOption from "./LayersOption";
+import { useAtomValue } from "jotai";
+import { canvas_Atom } from "@/lib/jotai";
 
 const buttonCn = (isActiveOption) =>
   cn(
@@ -32,17 +34,16 @@ const content = {
   text: <div className="size-full p-2 flex-col-center">text</div>,
 };
 
-const actions = ({ editor, content, setContent, state }) => [
+const actions = ({ canvas, content, setContent }) => [
   // text
   {
     title: "טקסט",
     className: () => cn(""),
     icon: <TextIcon className="w-full h-1/2" />,
-    action: () => {
-      if (!editor) return;
-      const { canvas } = editor;
+    action: ({ isActiveOption }) => {
+      if (!canvas) return;
       canvas.renderAll();
-      setContent(<TextDesignOption />);
+      setContent(isActiveOption && content ? null : <TextDesignOption />);
     },
   },
   // colors
@@ -50,8 +51,8 @@ const actions = ({ editor, content, setContent, state }) => [
     title: "צבעים",
     className: () => cn(""),
     icon: <PaintBoardIcon className="w-full h-1/2" />,
-    action: () => {
-      setContent(<ColorsOption />);
+    action: ({ isActiveOption }) => {
+      setContent(isActiveOption && content ? null : <ColorsOption />);
     },
   },
   //layers
@@ -59,14 +60,16 @@ const actions = ({ editor, content, setContent, state }) => [
     title: "שכבות",
     className: () => cn(""),
     icon: <Layers01Icon className="w-full h-1/2" />,
-    action: () => setContent(<LayersOption />),
+    action: ({ isActiveOption }) =>
+      setContent(isActiveOption && content ? null : <LayersOption />),
   },
   // add elements
   {
     title: "אלמנטים",
     className: () => cn(""),
     icon: <StarIcon className="w-full h-1/2" />,
-    action: () => setContent(<div>אלמנטים</div>),
+    action: ({ isActiveOption }) =>
+      setContent(isActiveOption && content ? null : <div>אלמנטים</div>),
   },
   {
     title: "טעינת תבנית",
@@ -82,19 +85,20 @@ const actions = ({ editor, content, setContent, state }) => [
   },
 ];
 
-const RightMenu = ({ editor, activeObject, setShowMenu, setClickEvent }) => {
-  const router = useRouter();
+const RightMenu = ({ setShowMenu, setClickEvent }) => {
+  const canvas = useAtomValue(canvas_Atom);
   const [state, setState] = useState(null);
   const [canvasState, setCanvasState] = useState(null);
   const [activeOption, setActiveOption] = useState(null);
   const [content, setContent] = useState(null);
+  console.log("content: ", content);
 
   return (
     <div className="z-10 relative overflow-visible bg-slate-800 size-full max-w-20 flex-col-center justify-start">
       <ExtendedMenu content={content} />
       <div className="overflow-auto w-full h-fit grid grid-cols-1 bg-transparent auto-rows-auto">
         {actions({
-          editor,
+          canvas,
           setClickEvent,
           setShowMenu,
           content,
@@ -112,12 +116,12 @@ const RightMenu = ({ editor, activeObject, setShowMenu, setClickEvent }) => {
                 className({ isActiveOption, activeOption })
               )}
               onClick={() => {
-                action();
+                action({ isActiveOption });
                 setActiveOption(i);
               }}
             >
               {icon}
-              <p className="text-xs leading-4">{title}</p>
+              <p className="text-xs leading-4 select-none">{title}</p>
             </EditorButton>
           );
         })}

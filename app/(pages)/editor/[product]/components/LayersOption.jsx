@@ -1,24 +1,26 @@
 "use client";
 
-import { editor_Atom } from "@/lib/jotai";
+import { canvas_Atom } from "@/lib/jotai";
 import { useAtomValue } from "jotai";
 import React, { useEffect, useState } from "react";
 
 const LayersOption = () => {
   const [layers, setLayers] = useState([]);
-  const editor = useAtomValue(editor_Atom);
+  const canvas = useAtomValue(canvas_Atom);
 
   useEffect(() => {
-    if (!editor) return;
-    const { canvas } = editor;
+    if (!canvas) return;
     setLayers(canvas.getObjects());
-  }, [editor]);
+  }, [canvas]);
 
   return (
     <div className="size-full flex-col-center justify-start gap-2">
       {layers.map((layer, i) => {
         return (
-          <div key={i} className="w-full h-10 bg-slate-800 brightness-90 flex-center rounded-sm">
+          <div
+            key={i}
+            className="w-full h-10 bg-slate-800 brightness-90 flex-center rounded-sm"
+          >
             {layer?.text}
           </div>
         );

@@ -1,17 +1,16 @@
 "use client";
 
 import NumberInput from "@/app/ui/NumberInput";
-import { editor_Atom } from "@/lib/jotai";
+import { canvas_Atom } from "@/lib/jotai";
 import { useAtomValue } from "jotai";
 import React, { useState, useEffect } from "react";
 
 const FontSize = () => {
   const [size, setSize] = useState(60);
-  const editor = useAtomValue(editor_Atom);
+  const canvas = useAtomValue(canvas_Atom);
 
   useEffect(() => {
-    if (!editor) return;
-    const { canvas } = editor;
+    if (!canvas) return;
 
     const updateFontSize = () => {
       const activeObject = canvas.getActiveObject();
@@ -59,7 +58,7 @@ const FontSize = () => {
       canvas?.off("object:added");
       canvas?.off("object:scaling", updateFontSize);
     };
-  }, [editor]);
+  }, [canvas]);
 
   // פונקציה לעדכון גודל הפונט בקנבס
   const handleFontSizeChange = (newSize) => {

@@ -10,40 +10,55 @@ import {
 } from "@/app/icons/icons";
 import React from "react";
 import EditorButton from "./EditorButton";
+import { useAtomValue } from "jotai";
+import { canvas_Atom } from "@/lib/jotai";
 
 const icons = [
   {
     Icon: AlignRightIcon,
     align: "right",
+    mode: "horizon",
   },
   {
     Icon: AlignHorizontalCenterIcon,
     align: "center",
+    mode: "horizon",
   },
   {
     Icon: AlignLeftIcon,
     align: "left",
+    mode: "horizon",
   },
   {
     Icon: AlignTopIcon,
     align: "top",
+    mode: "vertical",
   },
   {
     Icon: AlignVerticalCenterIcon,
     align: "center",
+    mode: "vertical",
   },
   {
     Icon: AlignBottomIcon,
     align: "bottom",
+    mode: "vertical",
   },
 ];
 
-const AlignObjects = ({ editor, buttonClassName }) => {
+const AlignObjects = () => {
+  const canvas = useAtomValue(canvas_Atom);
+
   const alignToHorizontally = (position) => {
-    const activeObject = editor?.canvas?.getActiveObject();
+    if (!canvas) return;
+    const activeObject = canvas?.getActiveObject();
     if (activeObject) {
-      const canvasWidth = editor.canvas.width;
+      const canvasWidth = canvas.width;
       const objectWidth = activeObject.getScaledWidth();
+      console.log("activeObject: ", activeObject);
+      console.log("canvasWidth: ", canvasWidth);
+      console.log("objectWidth: ", objectWidth);
+      console.log("fabric: ", fabric);
 
       switch (position) {
         case "left":
@@ -68,14 +83,15 @@ const AlignObjects = ({ editor, buttonClassName }) => {
           break;
       }
       activeObject.setCoords(); // עדכון הקואורדינטות לאחר שינוי
-      editor.canvas.renderAll(); // רענון הקנבס
+      canvas.renderAll(); // רענון הקנבס
     }
   };
 
   const alignToVertically = (position) => {
-    const activeObject = editor?.canvas?.getActiveObject();
+    if (!canvas) return;
+    const activeObject = canvas?.getActiveObject();
     if (activeObject) {
-      const canvasHeight = editor.canvas.height;
+      const canvasHeight = canvas.height;
       const objectHeight = activeObject.getScaledHeight();
 
       switch (position) {
@@ -101,7 +117,7 @@ const AlignObjects = ({ editor, buttonClassName }) => {
           break;
       }
       activeObject.setCoords(); // עדכון הקואורדינטות לאחר שינוי
-      editor.canvas.renderAll(); // רענון הקנבס
+      canvas.renderAll(); // רענון הקנבס
     }
   };
 
@@ -111,8 +127,9 @@ const AlignObjects = ({ editor, buttonClassName }) => {
         יישור אובייקט
       </legend>
       <div className="size-fit grid grid-cols-3 grid-rows-2 gap-2">
-        {icons.map(({ Icon, align }, i) => {
-          const onClick = i > 2 ? alignToHorizontally : alignToVertically;
+        {icons.map(({ Icon, align, mode }, i) => {
+          const onClick =
+            mode === "horizon" ? alignToHorizontally : alignToVertically;
           return (
             <EditorButton key={i}>
               <Icon onClick={() => onClick(align)} />

@@ -5,7 +5,7 @@ import {
   TextItalicIcon,
   TextUnderlineIcon,
 } from "@/app/icons/icons";
-import { editor_Atom } from "@/lib/jotai";
+import { canvas_Atom } from "@/lib/jotai";
 import { useAtomValue } from "jotai";
 import React from "react";
 import EditorButton from "./EditorButton";
@@ -26,10 +26,10 @@ const icons = [
 ];
 
 const TextDesign = () => {
-  const editor = useAtomValue(editor_Atom);
+  const canvas = useAtomValue(canvas_Atom);
 
   const toggleTextStyle = (style) => {
-    const activeObject = editor?.canvas?.getActiveObject();
+    const activeObject = canvas?.getActiveObject();
     if (activeObject) {
       switch (style) {
         case "bold":
@@ -50,7 +50,7 @@ const TextDesign = () => {
         default:
           break;
       }
-      editor.canvas.renderAll();
+      canvas.renderAll();
     }
   };
 

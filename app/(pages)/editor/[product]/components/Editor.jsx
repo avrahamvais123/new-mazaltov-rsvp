@@ -6,22 +6,19 @@ import { cn } from "@/lib/utils";
 import FlipCanvas from "./FlipCanvas";
 import Canvas from "./Canvas";
 import { indigo, red, slate } from "tailwindcss/colors";
-import LeftMenu from "./LeftMenu";
 import RightMenu from "./RightMenu";
 import ContextMenu from "./ContextMenu";
 import { Cancel02Icon, Copy02Icon } from "@/app/icons/icons";
 import ReactDOMServer from "react-dom/server"; // ייבוא ReactDOMServer
-import "fabric-history";
-import * as fabricModules from "fabric";
+//import "fabric-history";
 import EditorHeader from "./EditorHeader";
 import ToolBar from "./ToolBar";
-import { useSetAtom } from "jotai";
-import {
-  canvas_Atom,
-  editor1_Atom,
-  editor2_Atom,
-  editor_Atom,
-} from "@/lib/jotai";
+import { useAtom, useSetAtom } from "jotai";
+import { canvas_Atom, canvas1_Atom, canvas2_Atom } from "@/lib/jotai";
+import * as fabricModule from "fabric";
+import { width } from "@mui/system";
+
+const { fabric } = fabricModule;
 
 // פונקציה שממירה את ה-SVG למחרוזת Base64
 const getSVGAsImage = (SVGComponent) => {
@@ -47,6 +44,7 @@ const duplicateIconSrc = getSVGAsImage(
 
 // guide lines
 const createGuidelines = ({ canvas }) => {
+  if (!canvas) return;
   // חשב את מרכז הקנבס
   const canvasCenterX = canvas.getWidth() / 2;
   const canvasCenterY = canvas.getHeight() / 2;
@@ -79,6 +77,7 @@ const createGuidelines = ({ canvas }) => {
           hasControls: false,
           hoverCursor: "default",
           excludeFromExport: true,
+          isGuideLine: true,
         }
       );
       canvas.add(verticalLine);
@@ -96,6 +95,7 @@ const createGuidelines = ({ canvas }) => {
           hasControls: false,
           hoverCursor: "default",
           excludeFromExport: true,
+          isGuideLine: true,
         }
       );
       canvas.add(horizontalLine);
@@ -136,6 +136,8 @@ const createGuidelines = ({ canvas }) => {
 
 // zoom in and out
 const zoomInOut = ({ canvas }) => {
+  if (!canvas) return;
+
   // Function to update zoom level centered on canvas center
   const zoomCanvas = (zoomIn) => {
     const currentZoom = canvas.getZoom();
@@ -163,10 +165,11 @@ const sortObjects = ({ canvas }) => {
 };
 
 const Editor = ({ imageUrl_1, imageUrl_2 }) => {
-  const setEditor = useSetAtom(editor_Atom);
-  const setEditor1 = useSetAtom(editor1_Atom);
-  const setEditor2 = useSetAtom(editor2_Atom);
-  const setCanvas = useSetAtom(canvas_Atom);
+  const [canvas, setCanvas] = useAtom(canvas_Atom);
+  const [canvas1, setCanvas1] = useAtom(canvas1_Atom);
+  const [canvas2, setCanvas2] = useAtom(canvas2_Atom);
+  const canvasRef1 = useRef(null);
+  const canvasRef2 = useRef(null);
 
   const [layers, setLayers] = useState([]);
   const [isCanvas1, setIsCanvas1] = useState(true);
@@ -177,9 +180,7 @@ const Editor = ({ imageUrl_1, imageUrl_2 }) => {
   const [isDragging, setIsDragging] = useState(false);
   const [lastPosX, setLastPosX] = useState(0);
   const [lastPosY, setLastPosY] = useState(0);
-  const { editor: editor1, onReady: onReady1 } = useFabricJSEditor();
-  const { editor: editor2, onReady: onReady2 } = useFabricJSEditor();
-  const editor = isCanvas1 ? editor1 : editor2;
+
   /* initial fabric */
   useEffect(() => {
     fabric.Object.prototype.set({
@@ -192,28 +193,44 @@ const Editor = ({ imageUrl_1, imageUrl_2 }) => {
       cornerScaleFactor: 2, // גודל הידיות
       transparentCorners: false,
     });
-
-    if (!editor) return;
-    const { canvas } = editor;
-
-    // מוודאים שהפונקציות של fabric-history יתווספו
-    canvas.includeDefaultHistory = true;
-
-    return () => {
-      canvas.off();
-    };
   }, []);
 
-  // guide lines
+  // initial canvas
   useEffect(() => {
-    if (!editor || !editor.canvas) return;
-    const { canvas } = editor;
-    const { fabric } = fabricModules;
+    console.log("fabric: ", fabric);
 
-    setEditor(editor);
-    setEditor1(editor1);
-    setEditor2(editor2);
-    setCanvas(canvas);
+    const parentWidth = canvasRef1.current?.parentNode?.clientWidth;
+    const parentHeight = canvasRef1.current?.parentNode?.clientHeight;
+
+    const initialCanvas1 = new fabric.Canvas(canvasRef1.current, {
+      width: parentWidth,
+      height: parentHeight,
+      fireRightClick: true, // מאפשר זיהוי לחיצה ימנית
+      stopContextMenu: true, // מונע תפריט ברירת מחדל של הדפדפן בלחיצה ימנית
+    });
+
+    const initialCanvas2 = new fabric.Canvas(canvasRef2.current, {
+      width: parentWidth,
+      height: parentHeight,
+      fireRightClick: true, // מאפשר זיהוי לחיצה ימנית
+      stopContextMenu: true, // מונע תפריט ברירת מחדל של הדפדפן בלחיצה ימנית
+    });
+
+    setCanvas1(initialCanvas1);
+    setCanvas2(initialCanvas2);
+    return () => {
+      initialCanvas1?.dispose();
+      initialCanvas2?.dispose();
+    };
+  }, [fabric]);
+
+  useEffect(() => {
+    setCanvas(isCanvas1 ? canvas1 : canvas2);
+  }, [isCanvas1]);
+
+  // set editor & guide lines
+  useEffect(() => {
+    if (!canvas) return;
 
     const { moveObjectEvent, removeLines } = createGuidelines({ canvas });
     const { handleKeyPress } = zoomInOut({ canvas });
@@ -264,17 +281,19 @@ const Editor = ({ imageUrl_1, imageUrl_2 }) => {
       canvas.off("selection:cleared");
       window.removeEventListener("keydown", handleKeyPress);
     };
-  }, [editor]);
+  }, [canvas]);
 
   // update layers
   useEffect(() => {
-    if (!editor) return;
-    const { canvas } = editor;
+    if (!canvas) return;
 
     const updateLayers = () => {
       setLayers(canvas.getObjects());
       console.log("canvas.getObjects(): ", canvas.getObjects());
     };
+
+    // מוודאים שהפונקציות של fabric-history יתווספו
+    //canvas?.includeDefaultHistory = true;
 
     canvas.on("object:created", updateLayers);
     canvas.on("object:added", updateLayers);
@@ -287,28 +306,14 @@ const Editor = ({ imageUrl_1, imageUrl_2 }) => {
       canvas.off("object:removed", updateLayers);
       canvas.off("object:moved", updateLayers);
     };
-  }, [editor]);
-
-  // פונקציות undo ו-redo
-  const undo = () => {
-    if (!editor) return;
-    const { canvas } = editor;
-    canvas.undo();
-  };
-
-  const redo = () => {
-    if (!editor) return;
-    const { canvas } = editor;
-    canvas.redo();
-  };
+  }, [canvas]);
 
   return (
     <div className="size-full bg-slate-100 flex-col-center overflow-hidden">
-      <EditorHeader editor={editor} />
+      <EditorHeader />
 
       <div className="relative size-full bg-slate-100 flex-center overflow-hidden">
         <RightMenu
-          editor={editor}
           activeObject={activeObject}
           setShowMenu={setShowMenu}
           setClickEvent={setClickEvent}
@@ -325,22 +330,24 @@ const Editor = ({ imageUrl_1, imageUrl_2 }) => {
             />
 
             <FlipCanvas
+              sizes={{ width: 120 * 2.8, height: 180 * 2.8 }}
               isFlipped={!isCanvas1}
               frontContent={
                 <Canvas
-                  editor={editor1}
-                  onReady={onReady1}
+                  canvas={canvas1}
                   imageUrl={imageUrl_1}
+                  canvasRef={canvasRef1}
                 />
               }
               backContent={
                 <Canvas
-                  editor={editor2}
-                  onReady={onReady2}
+                  canvas={canvas2}
                   imageUrl={imageUrl_2}
+                  canvasRef={canvasRef2}
                 />
               }
             />
+
             {/* החלפת צד */}
             <button
               className={cn(
@@ -352,7 +359,6 @@ const Editor = ({ imageUrl_1, imageUrl_2 }) => {
               )}
               onClick={() => setIsCanvas1(!isCanvas1)}
             >
-              {/* <Exchange01Icon className="text-indigo-50" /> */}
               <p className="">{isCanvas1 ? "החלפה לצד א" : "החלפה לצד ב"}</p>
             </button>
           </div>
@@ -488,3 +494,49 @@ export default Editor;
 
     editor.canvas.renderAll();
   }, [editor, deleteIconSrc, duplicateIconSrc]); */
+
+//! היסטוריה
+/* 
+  const historyNew = () => {
+    fabric.Canvas.prototype.historyInit = function () {
+      this.historyUndo = [];
+      this.historyNextState = this.historyNext();
+
+      this.on({
+        "object:added": this.historySaveAction,
+        "object:removed": this.historySaveAction,
+        "object:modified": this.historySaveAction,
+      });
+    };
+
+    fabric.Canvas.prototype.historyNext = function () {
+      return JSON.stringify(this.toDatalessJSON(this.extraProps));
+    };
+
+    fabric.Canvas.prototype.historySaveAction = function () {
+      if (this.historyProcessing) return;
+
+      const json = this.historyNextState;
+      this.historyUndo.push(json);
+      this.historyNextState = this.historyNext();
+    };
+
+    fabric.Canvas.prototype.undo = function () {
+      // The undo process will render the new states of the objects
+      // Therefore, object:added and object:modified events will triggered again
+      // To ignore those events, we are setting a flag.
+      this.historyProcessing = true;
+
+      const history = this.historyUndo.pop();
+      if (history) {
+        this.loadFromJSON(history).renderAll();
+      }
+
+      this.historyProcessing = false;
+    };
+  }; */
+
+//! לא למחוק
+/* editor={editor1}
+                  onReady={onReady1}
+                  */

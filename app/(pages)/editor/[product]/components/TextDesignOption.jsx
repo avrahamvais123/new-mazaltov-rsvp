@@ -7,15 +7,15 @@ import TextDesign from "./TextDesign";
 import AlignText from "./AlignText";
 import AlignObjects from "./AlignObjects";
 import { useAtomValue } from "jotai";
-import { editor_Atom } from "@/lib/jotai";
+import { canvas_Atom } from "@/lib/jotai";
 import { addText } from "./actions";
 
 const TextDesignOption = () => {
-  const editor = useAtomValue(editor_Atom);
+  const canvas = useAtomValue(canvas_Atom);
 
   return (
     <div className="size-full bg-slate-800 overflow-auto p-6 max-w-60 flex-col-center justify-start gap-2">
-      <button onClick={() => addText({ editor })} className="">הוסף טקסט</button>
+      <button onClick={() => addText({ canvas })} className="">הוסף טקסט</button>
       <FontSize />
       <LineHeight />
       <TextDesign />

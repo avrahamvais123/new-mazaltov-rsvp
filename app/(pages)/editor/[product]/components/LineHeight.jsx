@@ -3,16 +3,15 @@
 import React, { useState } from "react";
 import { Slider } from "@/components/ui/slider";
 import { useAtomValue } from "jotai";
-import { editor_Atom } from "@/lib/jotai";
+import { canvas_Atom } from "@/lib/jotai";
 
 const LineHeight = () => {
   const [value, setValue] = useState(1.2);
-  const editor = useAtomValue(editor_Atom);
+  const canvas = useAtomValue(canvas_Atom);
 
   const updateLineHeight = (newLineHeight) => {
     setValue(newLineHeight);
-    if (!editor) return;
-    const { canvas } = editor;
+    if (!canvas) return;
     const activeObject = canvas.getActiveObject();
     if (activeObject) {
       activeObject.set("lineHeight", newLineHeight);

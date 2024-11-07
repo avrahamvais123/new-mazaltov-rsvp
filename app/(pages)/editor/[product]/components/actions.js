@@ -1,10 +1,9 @@
-export const addText = ({ editor, setClickEvent = () => {} }) => {
-  if (!editor || !editor?.canvas) return;
-  const { canvas } = editor;
+export const addText = ({ canvas, setClickEvent = () => {} }) => {
+  if (!canvas) return;
   console.log("fabric: ", fabric);
 
   // יצירת תיבת הטקסט
-  const textBox = new window.fabric.IText("טקסט", {
+  const textBox = new fabric.IText("טקסט", {
     left: canvas.width / 2, // מרכז התיבה
     top: canvas.height / 2,
     //top: canvas.height / 3, // מתחיל מעל הקנבס
@@ -48,9 +47,8 @@ export const addText = ({ editor, setClickEvent = () => {} }) => {
   }); */
 };
 
-export const removeObject = ({ editor }) => {
-  if (!editor) return;
-  const { canvas } = editor;
+export const removeObject = ({ canvas }) => {
+  if (!canvas) return;
   const activeObject = canvas.getActiveObject();
   if (activeObject) {
     canvas.remove(activeObject);
@@ -58,9 +56,8 @@ export const removeObject = ({ editor }) => {
   }
 };
 
-export const duplicateObject = ({ editor, setShowMenu, setClickEvent }) => {
-  if (!editor) return;
-  const { canvas } = editor;
+export const duplicateObject = ({ canvas, setShowMenu, setClickEvent }) => {
+  if (!canvas) return;
   const activeObject = canvas.getActiveObject();
   if (activeObject) {
     activeObject.clone((cloned) => {
@@ -103,30 +100,27 @@ export const duplicateObject = ({ editor, setShowMenu, setClickEvent }) => {
   }
 };
 
-export const addRectangle = ({ editor }) => {
-  if (!editor) return;
-  editor?.addRectangle();
+export const addRectangle = ({ canvas }) => {
+  if (!canvas) return;
+  canvas?.addRectangle();
 };
 
-export const saveCanvasState = ({ editor, canvasState, setCanvasState }) => {
-  if (!editor) return;
-  const { canvas } = editor;
+export const saveCanvasState = ({ canvas, canvasState, setCanvasState }) => {
+  if (!canvas) return;
   const state = canvas.toJSON();
   setCanvasState(state);
   return canvasState;
 };
 
-export const loadCanvasState = ({ editor, state }) => {
-  if (!editor) return;
-  const { canvas } = editor;
+export const loadCanvasState = ({ canvas, state }) => {
+  if (!canvas) return;
   canvas.loadFromJSON(state, () => {
     canvas.renderAll();
   });
 };
 // פונקציה לייצוא הקנבס כתמונה
-export const getCanvasThumbnail = ({ editor }) => {
-  if (!editor) return;
-  const { canvas } = editor;
+export const getCanvasThumbnail = ({ canvas }) => {
+  if (!canvas) return;
 
   // יצירת תמונה מוקטנת עם multiplier (יוצר תמונה ביחס של 0.2 מהגודל המקורי)
   const thumbnailDataUrl = canvas.toDataURL({

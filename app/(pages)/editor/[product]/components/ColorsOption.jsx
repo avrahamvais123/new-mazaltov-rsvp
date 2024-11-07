@@ -1,6 +1,6 @@
 "use client";
 
-import { editor1_Atom, editor2_Atom, editor_Atom } from "@/lib/jotai";
+import { canvas1_Atom, canvas2_Atom, canvas_Atom } from "@/lib/jotai";
 import { useAtomValue } from "jotai";
 import React, { useEffect, useState } from "react";
 import ColorPicker from "./ColorPicker";
@@ -8,14 +8,14 @@ import { usePalette } from "color-thief-react";
 import chroma from "chroma-js";
 
 const ColorsOption = () => {
-  const editor = useAtomValue(editor_Atom);
-  const editor1 = useAtomValue(editor1_Atom);
-  const editor2 = useAtomValue(editor2_Atom);
+  const canvas = useAtomValue(canvas_Atom);
+  const canvas1 = useAtomValue(canvas1_Atom);
+  const canvas2 = useAtomValue(canvas2_Atom);
   const [selectedColor, setSelectedColor] = useState("#4f46e5");
   const [myColors, setMyColors] = useState([]);
 
-  const imageUrl_1 = editor1?.canvas?.backgroundImage?._element?.currentSrc;
-  const imageUrl_2 = editor2?.canvas?.backgroundImage?._element?.currentSrc;
+  const imageUrl_1 = canvas1?.canvas?.backgroundImage?._element?.currentSrc;
+  const imageUrl_2 = canvas2?.canvas?.backgroundImage?._element?.currentSrc;
 
   const { data: colors_1, loading_1, error_1 } = usePalette(
     imageUrl_1,
@@ -48,8 +48,7 @@ const ColorsOption = () => {
   const complementaryColors_2 = getComplementaryColors(colors_2);
 
   useEffect(() => {
-    if (!editor) return;
-    const { canvas } = editor;
+    if (!canvas) return;
 
     const activeObject = canvas?.getActiveObject();
 
@@ -69,7 +68,7 @@ const ColorsOption = () => {
     return () => {
       canvas.off("selection:created", getObjectColor);
     };
-  }, [editor, selectedColor]);
+  }, [canvas, selectedColor]);
 
   const handleSaveColor = () => {
     setMyColors(() => [...myColors, selectedColor]);

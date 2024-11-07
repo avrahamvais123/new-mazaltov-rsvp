@@ -1,13 +1,12 @@
 "use client";
 
 import { CancelCircleIcon } from "@/app/icons/icons";
-import { editor_Atom } from "@/lib/jotai";
+import { canvas_Atom } from "@/lib/jotai";
 import { useAtomValue } from "jotai";
-import React, { useEffect, useState, useRef } from "react";
-import { useClickAway } from "react-use";
+import React, { useRef } from "react";
 
 const ContextMenu = ({ showMenu, setShowMenu, clickEvent }) => {
-  const editor = useAtomValue(editor_Atom);
+  const canvas = useAtomValue(canvas_Atom);
   const contextRef = useRef(null);
   /* useClickAway(contextRef, () => {
     setShowMenu(false);
@@ -23,7 +22,6 @@ const ContextMenu = ({ showMenu, setShowMenu, clickEvent }) => {
   };
 
   const duplicateObject = () => {
-    const { canvas } = editor;
     const activeObject = canvas.getActiveObject();
     if (activeObject) {
       activeObject.clone((cloned) => {
@@ -39,7 +37,6 @@ const ContextMenu = ({ showMenu, setShowMenu, clickEvent }) => {
   };
 
   const removeObject = () => {
-    const { canvas } = editor;
     const activeObject = canvas.getActiveObject();
     if (activeObject) {
       canvas.remove(activeObject);
