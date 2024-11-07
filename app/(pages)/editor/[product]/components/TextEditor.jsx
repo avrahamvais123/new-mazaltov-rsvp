@@ -1,36 +1,58 @@
 "use client";
 
+import { canvas_Atom } from "@/lib/jotai";
+import { cn } from "@/lib/utils";
+import { useAtomValue } from "jotai";
 import React, { useState, useEffect } from "react";
 
-const TextEditor = ({ editor, activeObject }) => {
+const TextEditor = ({ classNames, title = "עריכת טקסט", currentObject }) => {
+  console.log('currentObject: ', currentObject);
+  const canvas = useAtomValue(canvas_Atom);
   const [textValue, setTextValue] = useState("");
 
   useEffect(() => {
-    if (activeObject) {
-      setTextValue(activeObject.text || "");
+    if (!canvas) return;
+    //const activeObject = canvas.getActiveObject();
+
+    if (currentObject) {
+      setTextValue(currentObject.text || "");
     } else {
       setTextValue("");
     }
-  }, [activeObject]);
+  }, [canvas]);
 
   const handleTextChange = (e) => {
+    if (!canvas) return;
+    //const activeObject = canvas.getActiveObject();
+
     const newText = e.target.value;
     setTextValue(newText);
 
-    if (activeObject) {
-      activeObject.set("text", newText);
-      editor.canvas.renderAll();
+    if (currentObject) {
+      currentObject.set("text", newText);
+      canvas.renderAll();
     }
   };
 
   return (
-    <fieldset className="border border-slate-700 rounded-sm">
-      <legend className="px-2 mr-2 text-xs text-slate-400">עריכת טקסט</legend>
+    <fieldset
+      className={cn("border border-slate-700 rounded-sm", classNames?.fieldset)}
+    >
+      <legend
+        className={cn("px-2 mr-2 text-xs text-slate-400", classNames?.legend)}
+      >
+        {title}
+      </legend>
       <textarea
         value={textValue}
         rows={4}
-        placeholder="הכנס טקסט..."
-        className="resize-none w-full px-4 py-2 bg-transparent transition-all rounded-sm text-slate-400 focus:outline-none focus:border-indigo-600"
+        className={cn(
+          "resize-none w-full px-4 py-2",
+          "bg-transparent transition-all",
+          "rounded-sm text-slate-400",
+          "focus:outline-none focus:border-indigo-600",
+          classNames?.textarea
+        )}
         onChange={handleTextChange}
       />
     </fieldset>

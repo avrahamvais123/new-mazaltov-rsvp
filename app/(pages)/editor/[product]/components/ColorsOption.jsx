@@ -11,7 +11,9 @@ const ColorsOption = () => {
   const canvas = useAtomValue(canvas_Atom);
   const canvas1 = useAtomValue(canvas1_Atom);
   const canvas2 = useAtomValue(canvas2_Atom);
-  const [selectedColor, setSelectedColor] = useState("#4f46e5");
+  const [selectedColor, setSelectedColor] = useState(
+    canvas?.getActiveObject()?.fill || "#4f46e5"
+  );
   const [myColors, setMyColors] = useState([]);
 
   const imageUrl_1 = canvas1?.backgroundImage?._element?.currentSrc;

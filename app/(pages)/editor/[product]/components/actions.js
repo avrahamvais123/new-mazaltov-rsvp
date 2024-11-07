@@ -2,6 +2,13 @@ export const addText = ({ canvas, setClickEvent = () => {} }) => {
   if (!canvas) return;
   console.log("fabric: ", fabric);
 
+  const rtlText = (text) => {
+    return text
+      .split("\n")
+      .map((line) => line.split("").reverse().join(""))
+      .join("\n");
+  };
+
   // יצירת תיבת הטקסט
   const textBox = new fabric.IText("טקסט", {
     left: canvas.width / 2, // מרכז התיבה
@@ -12,15 +19,23 @@ export const addText = ({ canvas, setClickEvent = () => {} }) => {
     textAlign: "center", // יישור טקסט למרכז
     originX: "center",
     originY: "center",
-    centeredScaling: true,
-    editable: false,
+    direction: "rtl",
+    width: 300, // קביעת רוחב לתיבת הטקסט
   });
 
-  // הגדרת שליטה על הידיות
-  textBox.setControlVisible("ml", false); // ידית שמאל
-  textBox.setControlVisible("mr", false); // ידית ימין
-  textBox.setControlVisible("mt", false); // ידית עליונה
-  textBox.setControlVisible("mb", false); // ידית תחתונה
+  textBox.on("text:changed", () => {
+    const lines = textBox.text
+      .split("\n")
+      .map((line) => line.split("").reverse().join(""));
+    textBox.text = lines.join("\n");
+
+    // בדיקה אם השורות יוצאות מהמסגרת
+    if (textBox.height > textBox.getBoundingRect().height) {
+      textBox.height = textBox.getBoundingRect().height;
+    }
+
+    canvas.requestRenderAll();
+  });
 
   textBox.on("mousedown", (e) => {
     console.log("e: ", e);
