@@ -1,35 +1,69 @@
 "use client";
 
-import { canvas_Atom } from "@/lib/jotai";
+import { canvas_Atom, editingMode_Atom } from "@/lib/jotai";
 import { cn } from "@/lib/utils";
-import { useAtomValue } from "jotai";
+import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import React, { useState, useEffect } from "react";
 
-const TextEditor = ({ classNames, title = "עריכת טקסט", currentObject }) => {
-  console.log('currentObject: ', currentObject);
+const TextEditor = ({ classNames, title = "עריכת טקסט", activeObject }) => {
+  console.log("activeObject: ", activeObject);
   const canvas = useAtomValue(canvas_Atom);
+  const [editingMode, setEditingMode] = useAtom(editingMode_Atom);
   const [textValue, setTextValue] = useState("");
 
   useEffect(() => {
     if (!canvas) return;
-    //const activeObject = canvas.getActiveObject();
 
-    if (currentObject) {
-      setTextValue(currentObject.text || "");
+    console.log('activeObject from TextEditor: ', activeObject);
+
+    if (activeObject) {
+      setTextValue(activeObject?.text || "");
     } else {
       setTextValue("");
     }
-  }, [canvas]);
+  }, [canvas, activeObject]);
+
+  useEffect(() => {
+    console.log("editingMode: ", editingMode);
+  }, [editingMode]);
 
   const handleTextChange = (e) => {
     if (!canvas) return;
-    //const activeObject = canvas.getActiveObject();
+
+    setEditingMode(true);
 
     const newText = e.target.value;
     setTextValue(newText);
 
-    if (currentObject) {
-      currentObject.set("text", newText);
+    console.log("activeObject: ", activeObject);
+
+    if (activeObject) {
+      activeObject?.set("text", newText);
+      activeObject?.set("isEditing", true);
+      canvas.renderAll();
+    }
+  };
+
+  const handleFocus = () => {
+    if (!canvas) return;
+
+    setEditingMode(true);
+    console.log("on focus");
+
+    if (activeObject) {
+      activeObject?.set("isEditing", true);
+      canvas.renderAll();
+    }
+  };
+
+  const handleBlur = () => {
+    if (!canvas) return;
+
+    setEditingMode(false);
+    console.log("on blur");
+
+    if (activeObject) {
+      activeObject?.set("isEditing", false);
       canvas.renderAll();
     }
   };
@@ -50,9 +84,11 @@ const TextEditor = ({ classNames, title = "עריכת טקסט", currentObject }
           "resize-none w-full px-4 py-2",
           "bg-transparent transition-all",
           "rounded-sm text-slate-400",
-          "focus:outline-none focus:border-indigo-600",
+          "border border-transparent outline-none",
           classNames?.textarea
         )}
+        onFocus={handleFocus}
+        onBlur={handleBlur}
         onChange={handleTextChange}
       />
     </fieldset>

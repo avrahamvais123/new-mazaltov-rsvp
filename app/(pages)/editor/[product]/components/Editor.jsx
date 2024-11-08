@@ -13,10 +13,14 @@ import ReactDOMServer from "react-dom/server"; // ייבוא ReactDOMServer
 //import "fabric-history";
 import EditorHeader from "./EditorHeader";
 import ToolBar from "./ToolBar";
-import { useAtom, useSetAtom } from "jotai";
-import { canvas_Atom, canvas1_Atom, canvas2_Atom } from "@/lib/jotai";
+import { useAtom, useAtomValue } from "jotai";
+import {
+  canvas_Atom,
+  canvas1_Atom,
+  canvas2_Atom,
+  editingMode_Atom,
+} from "@/lib/jotai";
 import * as fabricModule from "fabric";
-import useUndo from "use-undo";
 
 const { fabric } = fabricModule;
 
@@ -168,6 +172,8 @@ const Editor = ({ imageUrl_1, imageUrl_2 }) => {
   const [canvas, setCanvas] = useAtom(canvas_Atom);
   const [canvas1, setCanvas1] = useAtom(canvas1_Atom);
   const [canvas2, setCanvas2] = useAtom(canvas2_Atom);
+  const [editingMode, setEditingMode] = useAtom(editingMode_Atom);
+
   const canvasRef1 = useRef(null);
   const canvasRef2 = useRef(null);
 
@@ -325,6 +331,33 @@ const Editor = ({ imageUrl_1, imageUrl_2 }) => {
       canvas.off("object:moved", updateLayers);
     };
   }, [canvas]);
+
+  // manage remove object
+  useEffect(() => {
+    if (!canvas) return;
+
+    const handleKeyDown = (event) => {
+      if (event.key === "Backspace") {
+        const activeObject = canvas.getActiveObject();
+        console.log('editingMode: ', editingMode);
+
+        // בודק אם האובייקט לא במצב עריכה ושאין אינפוט חיצוני בפוקוס
+        if (!editingMode && !activeObject?.isEditing) {
+          event.preventDefault();
+          canvas.remove(activeObject);
+          canvas.renderAll();
+        }
+      }
+    };
+
+    // הוספת מאזין לאירוע מקלדת
+    window.addEventListener("keydown", handleKeyDown);
+
+    // ניקוי מאזין האירועים כשעוזבים את הרכיב
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [canvas, editingMode]);
 
   return (
     <div className="size-full bg-slate-100 flex-col-center overflow-hidden">

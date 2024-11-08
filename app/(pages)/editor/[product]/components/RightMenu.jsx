@@ -89,7 +89,6 @@ const actions = ({ canvas, content, setContent }) => [
 
 const RightMenu = ({ setShowMenu, setClickEvent }) => {
   const canvas = useAtomValue(canvas_Atom);
-  console.log('canvas: ', canvas);
   const [state, setState] = useState(null);
   const [canvasState, setCanvasState] = useState(null);
   const [activeOption, setActiveOption] = useState(null);

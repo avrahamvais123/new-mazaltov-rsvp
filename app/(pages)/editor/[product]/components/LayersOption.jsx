@@ -21,7 +21,7 @@ const LayersOption = () => {
         return (
           <Fragment key={i}>
             <TextEditor
-              currentObject={layer}
+              activeObject={layer}
               title={layer?.text ? "טקסט" : "עריכת טקסט"}
               classNames={{}}
             />
