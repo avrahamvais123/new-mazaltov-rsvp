@@ -6,26 +6,34 @@ import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import React, { useState, useEffect } from "react";
 
 const TextEditor = ({ classNames, title = "עריכת טקסט", activeObject }) => {
+  console.log('classNames: ', classNames);
   console.log("activeObject: ", activeObject);
   const canvas = useAtomValue(canvas_Atom);
-  const [editingMode, setEditingMode] = useAtom(editingMode_Atom);
+  const setEditingMode = useSetAtom(editingMode_Atom);
   const [textValue, setTextValue] = useState("");
 
   useEffect(() => {
     if (!canvas) return;
-
-    console.log('activeObject from TextEditor: ', activeObject);
 
     if (activeObject) {
       setTextValue(activeObject?.text || "");
     } else {
       setTextValue("");
     }
-  }, [canvas, activeObject]);
 
-  useEffect(() => {
-    console.log("editingMode: ", editingMode);
-  }, [editingMode]);
+    const handleTextChange = () => {
+      setTextValue(activeObject?.text || "");
+    };
+
+    // מאזין לשינויים בטקסט בזמן אמת בעת עריכת התיבה
+    activeObject?.on("editing:entered", () => {
+      activeObject?.on("changed", handleTextChange);
+    });
+
+    return () => {
+      activeObject?.off("changed", handleTextChange);
+    };
+  }, [canvas, activeObject]);
 
   const handleTextChange = (e) => {
     if (!canvas) return;

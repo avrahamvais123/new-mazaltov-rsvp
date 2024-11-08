@@ -1,4 +1,9 @@
+import { v4 as uuidv4 } from 'uuid'; // ייבוא של uuid
+
+
 export const addText = ({ canvas, setClickEvent = () => {} }) => {
+  const uniqueId = uuidv4(); // יצירת מזהה ייחודי עם uuid
+
   if (!canvas) return;
   console.log("fabric: ", fabric);
 
@@ -21,6 +26,7 @@ export const addText = ({ canvas, setClickEvent = () => {} }) => {
     originY: "center",
     direction: "rtl",
     width: 300, // קביעת רוחב לתיבת הטקסט
+    id: uniqueId, // הוספת המזהה לאובייקט
   });
 
   textBox.on("text:changed", () => {
