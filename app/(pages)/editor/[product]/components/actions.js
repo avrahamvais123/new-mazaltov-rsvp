@@ -1,9 +1,6 @@
-import { v4 as uuidv4 } from 'uuid'; // ייבוא של uuid
-
+import { v4 as uuidv4 } from "uuid"; // ייבוא של uuid
 
 export const addText = ({ canvas, setClickEvent = () => {} }) => {
-  const uniqueId = uuidv4(); // יצירת מזהה ייחודי עם uuid
-
   if (!canvas) return;
   console.log("fabric: ", fabric);
 
@@ -26,7 +23,7 @@ export const addText = ({ canvas, setClickEvent = () => {} }) => {
     originY: "center",
     direction: "rtl",
     width: 300, // קביעת רוחב לתיבת הטקסט
-    id: uniqueId, // הוספת המזהה לאובייקט
+    id: uuidv4(), //
   });
 
   textBox.on("text:changed", () => {
@@ -52,6 +49,9 @@ export const addText = ({ canvas, setClickEvent = () => {} }) => {
       setClickEvent(e);
     }
   });
+
+  // הוספת customProperty ל־stateProperties כדי שיישמר ב־JSON
+  textBox.stateProperties.push("id");
 
   // הוספת תיבת הטקסט לקנבס
   canvas.add(textBox);

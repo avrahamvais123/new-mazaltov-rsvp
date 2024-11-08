@@ -38,18 +38,13 @@ const LayersOption = () => {
     };
   }, [canvas]);
 
-  useEffect(() => {
-    console.log("activeObject?.id: ", activeObject?.id);
-    console.log("layers: ", layers);
-  }, [activeObject]);
-
   return (
     <div className="size-full overflow-auto flex-col-center justify-start gap-2">
       {layers.map((layer, i) => {
         const isObjectSelected = layer?.id === activeObject?.id;
-        console.log("activeObject?.id: ", activeObject?.id);
-        console.log("layer?.id: ", layer?.id);
-        console.log("isObjectSelected: ", isObjectSelected);
+        console.log("activeObject: ", activeObject);
+        console.log("layer: ", layer);
+
         return (
           <Fragment key={i}>
             <TextEditor
@@ -57,7 +52,7 @@ const LayersOption = () => {
               title={layer?.text ? "טקסט" : "עריכת טקסט"}
               classNames={{
                 fieldset: isObjectSelected ? "border-indigo-600" : "",
-                legend: isObjectSelected ? "border-indigo-600" : "",
+                legend: isObjectSelected ? "text-indigo-600" : "",
               }}
             />
           </Fragment>

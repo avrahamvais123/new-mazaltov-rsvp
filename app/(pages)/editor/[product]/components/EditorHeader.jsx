@@ -1,12 +1,24 @@
 "use client";
 
 import { ArrowTurnBackwardIcon, ArrowTurnForwardIcon } from "@/app/icons/icons";
+import { canvas_Atom } from "@/lib/jotai";
+import { useAtomValue } from "jotai";
 import Image from "next/image";
 import React from "react";
 import useFabricHistory from "../hooks/useFabricHistory";
 
 const EditorHeader = () => {
   const { undo, redo } = useFabricHistory();
+  const canvas = useAtomValue(canvas_Atom);
+
+  /* const undo = () => {
+    if (!canvas) return;
+    canvas?.undo();
+  };
+  const redo = () => {
+    if (!canvas) return;
+    canvas?.redo();
+  }; */
 
   return (
     <div className="w-full h-20 flex-center justify-between py-2 px-6 bg-slate-800">

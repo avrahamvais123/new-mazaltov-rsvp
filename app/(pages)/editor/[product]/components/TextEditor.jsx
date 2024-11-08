@@ -6,8 +6,6 @@ import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import React, { useState, useEffect } from "react";
 
 const TextEditor = ({ classNames, title = "עריכת טקסט", activeObject }) => {
-  console.log('classNames: ', classNames);
-  console.log("activeObject: ", activeObject);
   const canvas = useAtomValue(canvas_Atom);
   const setEditingMode = useSetAtom(editingMode_Atom);
   const [textValue, setTextValue] = useState("");

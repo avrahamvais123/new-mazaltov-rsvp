@@ -30,17 +30,20 @@ const useFabricHistory = () => {
 
   const updateModifications = (saveHistory) => {
     if (saveHistory && canvas) {
-      // סינון האובייקטים הלא רלוונטיים להיסטוריה (כמו קווי עזר ותמונה ראשית)
+      // סינון האובייקטים הלא רלוונטיים להיסטוריה
       const filteredObjects = canvas
         .getObjects()
         .filter((obj) => !obj.isGuideLine && !obj.isMainImage);
-      const filteredCanvas = { ...canvas.toJSON(), objects: filteredObjects };
+      const filteredCanvas = {
+        ...canvas.toJSON(["id"]),
+        objects: filteredObjects.map((obj) => obj.toObject(["id"])), // שמירת המאפיין 'id' בלבד
+      };
       const currentState = JSON.stringify(filteredCanvas);
 
-      // ודא שהמצב הנוכחי שונה מהמצב האחרון שנשמר
+      // בדיקה אם המצב הנוכחי שונה מהמצב האחרון שנשמר
       if (state.current[state.current.length - 1] !== currentState) {
         state.current.push(currentState);
-        mods.current = 0; // אפס את mods כל פעם שמוסיפים מצב חדש
+        mods.current = 0; // איפוס המיקום בהיסטוריה
       }
     }
   };
@@ -50,8 +53,12 @@ const useFabricHistory = () => {
       mods.current += 1;
       const previousState =
         state.current[state.current.length - 1 - mods.current];
-      canvas.clear().renderAll();
-      canvas.loadFromJSON(previousState, () => {
+      console.log("previousState: ", previousState);
+      canvas.clear();
+      canvas.renderAll();
+      canvas.loadFromJSON(previousState, (o, object) => {
+        console.log("o: ", o);
+        console.log("object: ", object);
         canvas.renderAll();
       });
     }
@@ -61,7 +68,8 @@ const useFabricHistory = () => {
     if (mods.current > 0) {
       mods.current -= 1;
       const nextState = state.current[state.current.length - 1 - mods.current];
-      canvas.clear().renderAll();
+      canvas.clear();
+      canvas.renderAll();
       canvas.loadFromJSON(nextState, () => {
         canvas.renderAll();
       });

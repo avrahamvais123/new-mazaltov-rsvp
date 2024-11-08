@@ -13,6 +13,7 @@ import ReactDOMServer from "react-dom/server"; // ייבוא ReactDOMServer
 //import "fabric-history";
 import EditorHeader from "./EditorHeader";
 import ToolBar from "./ToolBar";
+import { v4 as uuidv4 } from "uuid"; // ייבוא של uuid
 import { useAtom, useAtomValue } from "jotai";
 import {
   canvas_Atom,
@@ -23,6 +24,17 @@ import {
 import * as fabricModule from "fabric";
 
 const { fabric } = fabricModule;
+
+const definedCustomProperty = () => {
+  // הוספת המאפיין המותאם אישית באופן גלובלי
+  fabric.Object.prototype.toObject = (function (toObject) {
+    return function () {
+      return fabric.util.object.extend(toObject.call(this), {
+        id: this.id,
+      });
+    };
+  })(fabric.Object.prototype.toObject);
+};
 
 // פונקציה שממירה את ה-SVG למחרוזת Base64
 const getSVGAsImage = (SVGComponent) => {
@@ -189,31 +201,30 @@ const Editor = ({ imageUrl_1, imageUrl_2 }) => {
 
   /* initial fabric */
   useEffect(() => {
+    // הגדרות מותאמות אישית לאובייקטים ב-Fabric.js
     fabric.Object.prototype.set({
-      borderColor: indigo[700], // צבע מסגרת ברירת המחדל
-      borderDashArray: [5, 5], // סגנון קווי המסגרת
-      borderScaleFactor: 2, // רוחב המסגרת
-      cornerStyle: "circle", // סגנון הידיות
-      cornerStrokeColor: indigo[700], // צבע קו הידיות
-      cornerColor: indigo[300], // צבע הידיות
-      cornerScaleFactor: 2, // גודל הידיות
+      borderColor: indigo[700],
+      borderDashArray: [5, 5],
+      borderScaleFactor: 2,
+      cornerStyle: "circle",
+      cornerStrokeColor: indigo[700],
+      cornerColor: indigo[300],
+      cornerScaleFactor: 2,
       transparentCorners: false,
     });
 
     fabric.Object.prototype.setControlsVisibility({
-      mt: false, // Hide top middle control
-      mb: false, // Hide bottom middle control
-      ml: false, // Hide middle left control
-      mr: false, // Hide middle right control
-      tl: true, // Hide top left corner
-      tr: true, // Hide top right corner
-      bl: true, // Hide bottom left corner
-      br: true, // Hide bottom right corner
+      mt: false,
+      mb: false,
+      ml: false,
+      mr: false,
+      tl: true,
+      tr: true,
+      bl: true,
+      br: true,
     });
 
-    //fabric.Textbox.prototype.editable = false;
     fabric.Textbox.prototype.centeredScaling = true;
-    //fabric.IText.prototype.editable = false;
     fabric.IText.prototype.centeredScaling = true;
   }, []);
 
@@ -339,7 +350,6 @@ const Editor = ({ imageUrl_1, imageUrl_2 }) => {
     const handleKeyDown = (event) => {
       if (event.key === "Backspace") {
         const activeObject = canvas.getActiveObject();
-        console.log('editingMode: ', editingMode);
 
         // בודק אם האובייקט לא במצב עריכה ושאין אינפוט חיצוני בפוקוס
         if (!editingMode && !activeObject?.isEditing) {
