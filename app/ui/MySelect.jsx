@@ -17,9 +17,10 @@ const MySelect = ({
   setValue = () => {},
   defaultValue,
   classNames = {},
+  placeholder,
 }) => {
   return (
-    <>
+    <div className=" relative w-full">
       <Select
         dir="rtl"
         defaultValue={defaultValue}
@@ -33,7 +34,7 @@ const MySelect = ({
             classNames?.trigger
           )}
         >
-          <SelectValue placeholder=" " />
+          <SelectValue placeholder={placeholder || " "} />
         </SelectTrigger>
         <SelectContent className={cn("rounded-sm", classNames?.content)}>
           {field?.options.map((option, index) => (
@@ -64,7 +65,7 @@ const MySelect = ({
           {errors[field?.name]?.message}
         </span>
       )}
-    </>
+    </div>
   );
 };
 

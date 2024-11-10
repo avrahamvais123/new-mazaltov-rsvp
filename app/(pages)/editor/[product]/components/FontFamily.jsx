@@ -98,7 +98,7 @@ const hebrewFonts = [
 
 const FontFamily = () => {
   const canvas = useAtomValue(canvas_Atom);
-  const [value, setValue] = useState(null);
+  const [value, setValue] = useState(hebrewFonts[0].value);
   console.log("value: ", value);
 
   const switchFont = (fontFamily) => {
