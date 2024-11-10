@@ -1,4 +1,5 @@
 import { v4 as uuidv4 } from "uuid"; // ייבוא של uuid
+import { varelaRound } from "@/app/fonts/fonts";
 
 export const addText = ({ canvas, setClickEvent = () => {} }) => {
   if (!canvas) return;
@@ -11,6 +12,9 @@ export const addText = ({ canvas, setClickEvent = () => {} }) => {
       .join("\n");
   };
 
+  const fontFamily = varelaRound.style.fontFamily;
+  console.log('fontFamily: ', fontFamily);
+
   // יצירת תיבת הטקסט
   const textBox = new fabric.IText("טקסט", {
     left: canvas.width / 2, // מרכז התיבה
@@ -22,6 +26,7 @@ export const addText = ({ canvas, setClickEvent = () => {} }) => {
     originX: "center",
     originY: "center",
     direction: "rtl",
+    fontFamily: fontFamily, // פונט ראשוני
     width: 300, // קביעת רוחב לתיבת הטקסט
     id: uuidv4(), //
   });

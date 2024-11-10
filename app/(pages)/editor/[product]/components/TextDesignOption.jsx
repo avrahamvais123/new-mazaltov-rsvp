@@ -11,6 +11,7 @@ import { canvas_Atom } from "@/lib/jotai";
 import { addText } from "./actions";
 import { cn } from "@/lib/utils";
 import TextEditor from "./TextEditor";
+import FontFamily from "./FontFamily";
 
 const TextDesignOption = () => {
   const canvas = useAtomValue(canvas_Atom);
@@ -23,10 +24,8 @@ const TextDesignOption = () => {
     const getActiveObject = () => {
       const activeObj = canvas.getActiveObject();
       if (activeObj) {
-        console.log("activeObj on created & updated: ", activeObj);
         setActiveObject(activeObj);
       } else {
-        console.log("activeObj on cleared: ", activeObj);
         setActiveObject(null);
       }
     };
@@ -55,6 +54,7 @@ const TextDesignOption = () => {
         הוסף טקסט
       </button>
       <TextEditor activeObject={activeObject} />
+      <FontFamily />
       <FontSize />
       <LineHeight />
       <TextDesign />
