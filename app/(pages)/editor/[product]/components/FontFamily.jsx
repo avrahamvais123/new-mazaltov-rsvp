@@ -99,7 +99,6 @@ const hebrewFonts = [
 const FontFamily = () => {
   const canvas = useAtomValue(canvas_Atom);
   const [value, setValue] = useState(hebrewFonts[0].value);
-  console.log("value: ", value);
 
   const switchFont = (fontFamily) => {
     if (!canvas) return;
@@ -115,16 +114,11 @@ const FontFamily = () => {
 
     const getObjectFontFamily = () => {
       const activeObject = canvas.getActiveObject();
-      console.log("activeObject: ", activeObject);
       if (!activeObject) return;
 
       const fontname = activeObject.fontFamily;
-      console.log("fontname: ", fontname);
-
       const getFontValue = hebrewFonts.find((font) => font.value === fontname)
         ?.value;
-      console.log("hebrewFonts[0].value: ", hebrewFonts[0].value);
-
       setValue(getFontValue);
     };
 
@@ -145,7 +139,6 @@ const FontFamily = () => {
       }}
       value={value}
       setValue={(name, val) => {
-        console.log("val: ", val);
         setValue(val);
         switchFont(val);
       }}

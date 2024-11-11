@@ -2,18 +2,20 @@
 
 import { canvas_Atom } from "@/lib/jotai";
 import { useAtomValue } from "jotai";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const useFabricHistory = () => {
   const canvas = useAtomValue(canvas_Atom);
   const state = useRef([]); // מערך היסטוריה של JSON
   const mods = useRef(0); // משתנה למעקב אחר המיקום בהיסטוריה
+  const [canUndo, setCanUndo] = useState(false);
+  const [canRedo, setCanRedo] = useState(false);
 
   useEffect(() => {
     if (!canvas) return;
 
     // שמור את המצב הראשוני של הקנבס בהיסטוריה
-    state.current.push(JSON.stringify(canvas.toJSON()));
+    state.current.push(JSON.stringify(canvas.toJSON(["id"])));
 
     const handleObjectModified = () => updateModifications(true);
     const handleObjectAdded = () => updateModifications(true);
@@ -22,7 +24,6 @@ const useFabricHistory = () => {
     canvas.on("object:modified", handleObjectModified);
 
     return () => {
-      if (!canvas) return;
       canvas.off("object:added", handleObjectAdded);
       canvas.off("object:modified", handleObjectModified);
     };
@@ -30,20 +31,26 @@ const useFabricHistory = () => {
 
   const updateModifications = (saveHistory) => {
     if (saveHistory && canvas) {
-      // סינון האובייקטים הלא רלוונטיים להיסטוריה
       const filteredObjects = canvas
         .getObjects()
         .filter((obj) => !obj.isGuideLine && !obj.isMainImage);
       const filteredCanvas = {
         ...canvas.toJSON(["id"]),
-        objects: filteredObjects.map((obj) => obj.toObject(["id"])), // שמירת המאפיין 'id' בלבד
+        objects: filteredObjects.map((obj) => obj.toObject(["id"])),
       };
       const currentState = JSON.stringify(filteredCanvas);
 
-      // בדיקה אם המצב הנוכחי שונה מהמצב האחרון שנשמר
       if (state.current[state.current.length - 1] !== currentState) {
+        if (mods.current > 0) {
+          state.current.splice(
+            state.current.length - mods.current,
+            mods.current
+          );
+          mods.current = 0;
+        }
         state.current.push(currentState);
-        mods.current = 0; // איפוס המיקום בהיסטוריה
+        setCanUndo(true);
+        setCanRedo(false);
       }
     }
   };
@@ -53,13 +60,10 @@ const useFabricHistory = () => {
       mods.current += 1;
       const previousState =
         state.current[state.current.length - 1 - mods.current];
-      console.log("previousState: ", previousState);
-      canvas.clear();
-      canvas.renderAll();
-      canvas.loadFromJSON(previousState, (o, object) => {
-        console.log("o: ", o);
-        console.log("object: ", object);
+      canvas.loadFromJSON(previousState, () => {
         canvas.renderAll();
+        setCanUndo(mods.current < state.current.length - 1);
+        setCanRedo(mods.current > 0);
       });
     }
   };
@@ -68,10 +72,10 @@ const useFabricHistory = () => {
     if (mods.current > 0) {
       mods.current -= 1;
       const nextState = state.current[state.current.length - 1 - mods.current];
-      canvas.clear();
-      canvas.renderAll();
       canvas.loadFromJSON(nextState, () => {
         canvas.renderAll();
+        setCanUndo(mods.current < state.current.length - 1);
+        setCanRedo(mods.current > 0);
       });
     }
   };
@@ -81,10 +85,12 @@ const useFabricHistory = () => {
       canvas.clear().renderAll();
       state.current = [];
       mods.current = 0;
+      setCanUndo(false);
+      setCanRedo(false);
     }
   };
 
-  return { undo, redo, clearCanvas };
+  return { undo, redo, clearCanvas, canUndo, canRedo };
 };
 
 export default useFabricHistory;

@@ -16,7 +16,6 @@ import FontFamily from "./FontFamily";
 const TextDesignOption = () => {
   const canvas = useAtomValue(canvas_Atom);
   const [activeObject, setActiveObject] = useState(null);
-  console.log("activeObject: ", activeObject);
 
   useEffect(() => {
     if (!canvas) return;

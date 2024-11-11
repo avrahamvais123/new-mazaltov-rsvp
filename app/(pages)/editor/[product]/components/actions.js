@@ -13,7 +13,6 @@ export const addText = ({ canvas, setClickEvent = () => {} }) => {
   };
 
   const fontFamily = varelaRound.style.fontFamily;
-  console.log('fontFamily: ', fontFamily);
 
   // יצירת תיבת הטקסט
   const textBox = new fabric.IText("טקסט", {

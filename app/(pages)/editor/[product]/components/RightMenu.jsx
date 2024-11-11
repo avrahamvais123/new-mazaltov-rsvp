@@ -43,10 +43,7 @@ const actions = ({ canvas, content, setContent }) => [
     className: () => cn(""),
     icon: <TextIcon className="w-full h-1/2" />,
     action: ({ isActiveOption }) => {
-      console.log("isActiveOption: ", isActiveOption);
-      console.log("canvas: ", canvas);
       if (!canvas) return;
-      //canvas.renderAll();
       setContent(isActiveOption && content ? null : <TextDesignOption />);
     },
   },
