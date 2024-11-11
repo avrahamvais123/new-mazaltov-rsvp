@@ -39,24 +39,44 @@ const LayersOption = () => {
   }, [canvas]);
 
   return (
-    <div className="size-full overflow-auto flex-col-center justify-start gap-2">
+    <div className="w-full h-fit overflow-auto grid grid-cols-2 auto-rows-auto justify-start gap-2">
       {layers.map((layer, i) => {
         const isObjectSelected = layer?.id === activeObject?.id;
         console.log("activeObject: ", activeObject);
         console.log("layer: ", layer);
+        console.log("layer?.type: ", layer?.type);
+        const textTypes = ["text", "i-text", "textbox"];
 
-        return (
-          <Fragment key={i}>
-            <TextEditor
-              activeObject={layer}
-              title={layer?.text ? "טקסט" : "עריכת טקסט"}
-              classNames={{
-                fieldset: isObjectSelected ? "border-indigo-600" : "",
-                legend: isObjectSelected ? "text-indigo-600" : "",
-              }}
-            />
-          </Fragment>
-        );
+        if (layer?.type === "image" || layer?.type === "group") {
+          return (
+            <div
+              key={i}
+              className={`col-span-1 size-full aspect-square border-2 border-dashed border-gray-200 ${
+                isObjectSelected ? "border-indigo-600" : ""
+              }`}
+              onClick={() => canvas?.setActiveObject(layer)}
+            >
+              <img
+                src={layer?.src}
+                alt="Layer"
+                className="size-full object-cover"
+              />
+            </div>
+          );
+        } else if (textTypes.includes(layer?.type)) {
+          return (
+            <Fragment key={i}>
+              <TextEditor
+                activeObject={layer}
+                title={layer?.text ? "טקסט" : "עריכת טקסט"}
+                classNames={{
+                  fieldset: isObjectSelected ? "col-span-2 border-indigo-600" : "col-span-2",
+                  legend: isObjectSelected ? "text-indigo-600" : "",
+                }}
+              />
+            </Fragment>
+          );
+        }
       })}
     </div>
   );

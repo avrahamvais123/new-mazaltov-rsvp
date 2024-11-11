@@ -240,6 +240,8 @@ const Editor = ({ imageUrl_1, imageUrl_2 }) => {
       height: parentHeight,
       fireRightClick: true, // מאפשר זיהוי לחיצה ימנית
       stopContextMenu: true, // מונע תפריט ברירת מחדל של הדפדפן בלחיצה ימנית
+      selection: true, // מאפשר בחירת אובייקטים וקבוצות
+      centeredScaling: true,
     });
 
     const initialCanvas2 = new fabric.Canvas(canvasRef2.current, {
@@ -247,6 +249,8 @@ const Editor = ({ imageUrl_1, imageUrl_2 }) => {
       height: parentHeight,
       fireRightClick: true, // מאפשר זיהוי לחיצה ימנית
       stopContextMenu: true, // מונע תפריט ברירת מחדל של הדפדפן בלחיצה ימנית
+      selection: true, // מאפשר בחירת אובייקטים וקבוצות
+      centeredScaling: true,
     });
 
     setCanvas(initialCanvas1);
@@ -264,7 +268,7 @@ const Editor = ({ imageUrl_1, imageUrl_2 }) => {
   }, [isCanvas1, canvas1, canvas2]);
 
   // set editor & guide lines
-  useEffect(() => {
+  /* useEffect(() => {
     if (!canvas) return;
 
     const { moveObjectEvent, removeLines } = createGuidelines({ canvas });
@@ -316,6 +320,102 @@ const Editor = ({ imageUrl_1, imageUrl_2 }) => {
       canvas.off("selection:cleared");
       window.removeEventListener("keydown", handleKeyPress);
     };
+  }, [canvas]); */
+
+  // create guide lines
+  useEffect(() => {
+    if (!canvas) return;
+
+    const centerX = canvas.width / 2;
+    const centerY = canvas.height / 2;
+
+    const textTypes = ["text", "i-text", "textbox"];
+
+    // יצירת קווי עזר אופקיים ואנכיים
+    const horizontalLine = new fabric.Line(
+      [0, centerY, canvas.width, centerY],
+      {
+        stroke: "skyblue",
+        borderDashArray: [5, 5],
+        selectable: false,
+        evented: false,
+        opacity: 0,
+      }
+    );
+
+    const verticalLine = new fabric.Line([centerX, 0, centerX, canvas.height], {
+      stroke: "skyblue",
+      borderDashArray: [5, 5],
+      selectable: false,
+      evented: false,
+      opacity: 0,
+    });
+
+    canvas.add(horizontalLine, verticalLine);
+
+    // פונקציה להצגת והסתרת קווי עזר
+    const showGuidelines = (showHorizontal, showVertical) => {
+      horizontalLine.set("opacity", showHorizontal ? 1 : 0);
+      verticalLine.set("opacity", showVertical ? 1 : 0);
+      canvas.renderAll();
+    };
+
+    // פונקציה לבדוק אם מרכז האובייקט קרוב למרכז הקנבס
+    const snapObjToCenter = (obj) => {
+      const tolerance = 10; // טולרנס לצימוד למרכז
+
+      // חישוב מרכז האובייקט עם מיקום וסקייל
+      const objCenterX = obj.left + obj.getScaledWidth() / 2;
+      const objCenterY = obj.top + obj.getScaledHeight() / 2;
+
+      const isNearCenterX = Math.abs(objCenterX - centerX) < tolerance;
+      const isNearCenterY = Math.abs(objCenterY - centerY) < tolerance;
+
+      // הצגת קווים לפי הקרבה למרכז בכיוונים השונים
+      showGuidelines(isNearCenterY, isNearCenterX);
+
+      // הצמדה למרכז רק כאשר יש התאמה
+      if (isNearCenterX) obj.set({ left: centerX - obj.getScaledWidth() / 2 });
+      if (isNearCenterY) obj.set({ top: centerY - obj.getScaledHeight() / 2 });
+
+      return isNearCenterX || isNearCenterY;
+    };
+    
+    // פונקציה לבדוק אם מרכז תיבת הטקסט קרוב למרכז הקנבס
+    const snapTextToCenter = (obj) => {
+      const tolerance = 10; // טולרנס לצימוד למרכז
+
+      // חישוב מרכז האובייקט עם מיקום וסקייל, תוך התחשבות ב-originX ו-originY כמרכז
+      let objCenterX = obj.left;
+      let objCenterY = obj.top;
+
+      const isNearCenterX = Math.abs(objCenterX - centerX) < tolerance;
+      const isNearCenterY = Math.abs(objCenterY - centerY) < tolerance;
+
+      // הצגת קווים לפי הקרבה למרכז בכיוונים השונים
+      showGuidelines(isNearCenterY, isNearCenterX);
+
+      // הצמדה למרכז רק כאשר יש התאמה
+      if (isNearCenterX) obj.set({ left: centerX });
+      if (isNearCenterY) obj.set({ top: centerY });
+
+      return isNearCenterX || isNearCenterY;
+    };
+
+    // הצמדת אובייקטים לקווים המרכזיים
+    canvas.on("object:moving", (e) => {
+      const obj = e.target;
+      if (textTypes?.includes(obj?.type)) {
+        snapTextToCenter(obj);
+      } else {
+        snapObjToCenter(obj);
+      }
+    });
+
+    // הסתרת קווי עזר בסיום הזזת אובייקט
+    canvas.on("mouse:up", () => {
+      showGuidelines(false, false);
+    });
   }, [canvas]);
 
   // update layers
@@ -368,6 +468,120 @@ const Editor = ({ imageUrl_1, imageUrl_2 }) => {
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, [canvas, editingMode]);
+
+  useEffect(() => {
+    if (!canvas) return;
+
+    // פונקציה לקיבוץ אובייקטים
+    const groupObjects = () => {
+      // בחר את האובייקטים שברצונך לקבץ
+      const selectedObjects = canvas.getActiveObject();
+      selectedObjects.toGroup();
+      canvas.renderAll();
+    };
+
+    // פונקציה לפירוק קבוצה
+    const ungroupObjects = () => {
+      // בדוק אם הקבוצה נבחרה
+      const group = canvas.getActiveObject();
+      if (group && group.type === "group") {
+        group.toActiveSelection();
+        canvas.requestRenderAll();
+      }
+    };
+
+    // פונקציה שתבוצע בעת לחיצה על קיצור מקלדת
+    const handleKeyDown = (event) => {
+      console.log("event: ", event);
+      // קיבוץ: Ctrl + G או Cmd + G
+      if (
+        (event.ctrlKey || event.metaKey) &&
+        event.key === "g" &&
+        !event.shiftKey
+      ) {
+        event.preventDefault(); // מניעת פעולות ברירת מחדל
+        groupObjects();
+      }
+      // פירוק קבוצה: Ctrl + Shift + G או Cmd + Shift + G
+      else if (
+        (event.ctrlKey || event.metaKey) &&
+        event.shiftKey &&
+        event.key === "g"
+      ) {
+        event.preventDefault(); // מניעת פעולות ברירת מחדל
+        ungroupObjects();
+      }
+    };
+
+    // הוספת האזנה לאירוע keydown
+    window.addEventListener("keydown", handleKeyDown);
+
+    // הסרת ההאזנה כאשר הרכיב יוצא מהדף
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [canvas]);
+
+  const guideLines = ({
+    canvas,
+    obj,
+    guideLines,
+    setGuideLines,
+    clearGuideLines = () => {},
+    guideLineExists = () => {},
+    createVerticalGuideLine = () => {},
+    createHorizontalGuideLine = () => {},
+  }) => {
+    if (!canvas) return;
+
+    const snappingDistance = 10;
+
+    const canvasWidth = canvas?.width;
+    const canvasHeight = canvas?.height;
+
+    const top = obj?.top;
+    const left = obj?.left;
+    const right = left + obj?.width * obj?.scaleX;
+    const bottom = top + obj?.height * obj?.scaleY;
+
+    const centerX = left + (obj?.width * obj?.scaleX) / 2;
+    const centerY = top + (obj?.height * obj?.scaleY) / 2;
+
+    let newGuideLines = [];
+
+    clearGuideLines(canvas);
+
+    let snapped = false;
+
+    // vertical guide line
+    if (Math.abs(centerX - canvasWidth / 2 < snappingDistance)) {
+      obj?.set({ left: 0 });
+      if (!guideLineExists(canvas, "vertical-center")) {
+        const line = createVerticalGuideLine(
+          canvas,
+          canvasWidth / 2,
+          "vertical-center"
+        );
+        newGuideLines.push(line);
+        canvas.add(line);
+      }
+      snapped = true;
+    }
+
+    if (Math.abs(centerY - canvasHeight / 2 < snappingDistance)) {
+      obj?.set({ left: 0 });
+      if (!guideLineExists(canvas, "vertical-center")) {
+        const line = createVerticalGuideLine(
+          canvas,
+          canvasWidth / 2,
+          "vertical-center"
+        );
+        newGuideLines.push(line);
+        canvas.add(line);
+      }
+      snapped = true;
+    }
+  };
 
   return (
     <div className="size-full bg-slate-100 flex-col-center overflow-hidden">

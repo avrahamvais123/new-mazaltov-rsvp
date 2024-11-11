@@ -89,35 +89,3 @@ export {
   notoRashi_Hebrew,
   lunasima,
 };
-
-/* 
-"Arial",
-  "Alef",
-  "Arimo",
-  "Assistant",
-  "Rubik",
-  "Noto Sans Hebrew",
-  "Heebo",
-  "Varela Round",
-  "Secular One",
-  "M PLUS Rounded 1c",
-  "M PLUS 1p",
-  "Frank Ruhl Libre",
-  "Bona Nova SC",
-  "Amatic SC",
-  "Tinos",
-  "Fredoka",
-  "David Libre",
-  "Bellefair",
-  "Miriam Libre",
-  "IBM Plex Sans Hebrew",
-  "Karantina",
-  "Solitreo",
-  "Noto Serif Hebrew",
-  "Noto Rashi Hebrew",
-  "Lunasima",
-*/
-
-// define 2 weights of a non-variable font
-//const sourceCodePro400 = Source_Sans_3({ weight: "400" });
-//const sourceCodePro700 = Source_Sans_3({ weight: "700" });

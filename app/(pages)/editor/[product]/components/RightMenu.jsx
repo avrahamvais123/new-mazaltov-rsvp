@@ -17,6 +17,8 @@ import ColorsOption from "./ColorsOption";
 import LayersOption from "./LayersOption";
 import { useAtomValue } from "jotai";
 import { canvas_Atom } from "@/lib/jotai";
+import UploadElements from "./UploadElements";
+import AddElementsOption from "./AddElementsOption";
 
 const buttonCn = (isActiveOption) =>
   cn(
@@ -41,8 +43,8 @@ const actions = ({ canvas, content, setContent }) => [
     className: () => cn(""),
     icon: <TextIcon className="w-full h-1/2" />,
     action: ({ isActiveOption }) => {
-      console.log('isActiveOption: ', isActiveOption);
-      console.log('canvas: ', canvas);
+      console.log("isActiveOption: ", isActiveOption);
+      console.log("canvas: ", canvas);
       if (!canvas) return;
       //canvas.renderAll();
       setContent(isActiveOption && content ? null : <TextDesignOption />);
@@ -67,11 +69,11 @@ const actions = ({ canvas, content, setContent }) => [
   },
   // add elements
   {
-    title: "אלמנטים",
+    title: "הוספת אלמנטים",
     className: () => cn(""),
     icon: <StarIcon className="w-full h-1/2" />,
     action: ({ isActiveOption }) =>
-      setContent(isActiveOption && content ? null : <div>אלמנטים</div>),
+      setContent(isActiveOption && content ? null : <AddElementsOption />),
   },
   {
     title: "טעינת תבנית",

@@ -13,8 +13,10 @@ const FontSize = () => {
     if (!canvas) return;
 
     const updateFontSize = () => {
+      const objectTypes = ["text", "i-text", "textbox"];
       const activeObject = canvas.getActiveObject();
-      if (!activeObject) return;
+
+      if (!activeObject || !objectTypes.includes(activeObject?.type)) return;
 
       const originalFontSize = activeObject.fontSize;
       const newFontSize = Math.round(originalFontSize * activeObject.scaleX);
@@ -26,46 +28,49 @@ const FontSize = () => {
       });
 
       setSize(newFontSize);
-
       activeObject.setCoords();
       canvas.renderAll();
     };
 
     const updateInputNumber = () => {
+      const objectTypes = ["text", "i-text", "textbox"];
       const activeObject = canvas.getActiveObject();
-      if (activeObject) {
-        const fontSize = Math.round(activeObject.fontSize);
-        setSize(fontSize);
-      }
+
+      if (!activeObject || !objectTypes.includes(activeObject?.type)) return;
+
+      const originalFontSize = activeObject.fontSize;
+      const newFontSize = Math.round(originalFontSize * activeObject.scaleX);
+
+      setSize(newFontSize);
     };
 
-    // מאזין ליצירת אובייקט חדש ובחירה אוטומטית שלו
-    canvas?.on("object:added", (e) => {
+    const updateObjectAdded = (e) => {
       const newObject = e.target;
       if (newObject) {
         canvas.setActiveObject(newObject);
         updateInputNumber();
       }
-    });
+    };
 
-    canvas?.on("mouse:down", updateInputNumber);
-    canvas?.on("selection:created", updateInputNumber);
-    canvas?.on("object:scaling", updateFontSize);
+    canvas.on("object:added", updateObjectAdded);
+    canvas.on("mouse:down", updateInputNumber);
+    canvas.on("selection:created", updateInputNumber);
+    canvas.on("object:scaling", updateFontSize);
 
     return () => {
-      canvas?.off("mouse:down", updateInputNumber);
-      canvas?.off("selection:created", updateInputNumber);
-      canvas?.off("object:added");
-      canvas?.off("object:scaling", updateFontSize);
+      canvas.off("object:added", updateObjectAdded);
+      canvas.off("mouse:down", updateInputNumber);
+      canvas.off("selection:created", updateInputNumber);
+      canvas.off("object:scaling", updateFontSize);
     };
   }, [canvas]);
 
-  // פונקציה לעדכון גודל הפונט בקנבס
   const handleFontSizeChange = (newSize) => {
     const activeObject = canvas.getActiveObject();
     if (activeObject) {
-      activeObject.set("fontSize", newSize);
-      setSize(newSize);
+      const roundedSize = Math.round(newSize); // עיגול הגודל למספר שלם
+      activeObject.set("fontSize", roundedSize);
+      setSize(roundedSize);
       canvas.renderAll();
     }
   };
@@ -78,26 +83,15 @@ const FontSize = () => {
         max={Infinity}
         value={size}
         setValue={(newSize) => {
-          setSize(newSize);
           handleFontSizeChange(newSize);
         }}
-        onDecrement={() => {
-          const newSize = size - 1;
-          handleFontSizeChange(newSize);
-        }}
-        onIncrement={() => {
-          const newSize = size + 1;
-          handleFontSizeChange(newSize);
-        }}
-        onInput={(e) => {
-          const newSize = parseFloat(e.target.value);
-          handleFontSizeChange(newSize);
-        }}
+        onDecrement={() => handleFontSizeChange(size - 1)}
+        onIncrement={() => handleFontSizeChange(size + 1)}
+        onInput={(e) => handleFontSizeChange(parseFloat(e.target.value))}
         classNames={{
           wrapper: "rounded-sm p-0 w-full bg-slate-800 border-none",
           input: "h-8 w-full bg-transparent text-slate-400 rounded-sm",
           buttons: "rounded-sm size-full size-8 aspect-square border-slate-600",
-          buttonDecrement: "",
         }}
       />
     </fieldset>
