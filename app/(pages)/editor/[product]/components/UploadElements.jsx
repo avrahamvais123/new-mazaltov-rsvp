@@ -6,6 +6,8 @@ import { useAtomValue } from "jotai";
 import { canvas_Atom } from "@/lib/jotai";
 import { FileUploadIcon } from "@/app/icons/icons";
 import { cn } from "@/lib/utils";
+import { v4 as uuidv4 } from "uuid"; // ייבוא של uuid
+
 const { fabric } = fabricModule;
 
 const UploadElements = () => {
@@ -30,6 +32,8 @@ const UploadElements = () => {
           const svgGroup = fabric.util.groupSVGElements(objects, options);
           svgGroup.scaleToWidth(canvas.width / 2); // שנה לפי גודל הקנבס
           svgGroup.scaleToHeight(canvas.height / 2); // שנה לפי גודל הקנבס
+          svgGroup.set({ src: svgData }); // הוסף את ה-src כמאפיין
+          svgGroup.set({ id: uuidv4() }); // הוסף את ה-src כמאפיין
           canvas.add(svgGroup);
           canvas.centerObject(svgGroup); // מיקום במרכז הקנבס
           canvas.renderAll();
@@ -37,8 +41,8 @@ const UploadElements = () => {
       };
       reader.readAsText(file);
     }
-    // ניהול קובץ PNG
-    else if (fileType === "image/png") {
+    // ניהול קובץ PNG או JPG
+    else if (fileType === "image/png" || fileType === "image/jpeg") {
       const reader = new FileReader();
       reader.onload = function (e) {
         const dataURL = e.target.result;
@@ -46,6 +50,8 @@ const UploadElements = () => {
         fabric.Image.fromURL(dataURL, (img) => {
           img.scaleToWidth(canvas.width / 2); // שינוי הגודל בהתאם לצורך
           img.scaleToHeight(canvas.height / 2); // שינוי הגודל בהתאם לצורך
+          img.set({ src: dataURL }); // הוסף את ה-src כמאפיין
+          img.set({ id: uuidv4() }); // הוסף את ה-src כמאפיין
           canvas.add(img);
           canvas.centerObject(img); // מיקום במרכז הקנבס
           canvas.renderAll();
@@ -53,7 +59,7 @@ const UploadElements = () => {
       };
       reader.readAsDataURL(file);
     } else {
-      alert("Please upload a valid SVG or PNG file.");
+      alert("Please upload a valid SVG, PNG, or JPG file.");
     }
   }
 
@@ -68,7 +74,7 @@ const UploadElements = () => {
       {/* אינפוט קובץ מוסתר */}
       <input
         type="file"
-        accept=".svg, .png"
+        accept=".svg, .png, .jpg, .jpeg"
         onChange={handleFileUpload}
         ref={fileInputRef}
         className="hidden"
@@ -78,9 +84,9 @@ const UploadElements = () => {
       <button
         onClick={triggerFileInput}
         className={cn(
-          "w-full p-4 flex-col-center gap-2 rounded-md", 
-          "border-2 border-dashed border-indigo-600", 
-          "hover:border-solid hover:bg-indigo-600", 
+          "w-full p-4 flex-col-center gap-2 rounded-md",
+          "border-2 border-dashed border-indigo-600",
+          "hover:border-solid hover:bg-indigo-600",
           "transition duration-200"
         )}
       >

@@ -12,6 +12,7 @@ import { addText } from "./actions";
 import { cn } from "@/lib/utils";
 import TextEditor from "./TextEditor";
 import FontFamily from "./FontFamily";
+import LetterSpacing from "./LetterSpacing";
 
 const TextDesignOption = () => {
   const canvas = useAtomValue(canvas_Atom);
@@ -56,6 +57,7 @@ const TextDesignOption = () => {
       <FontFamily />
       <FontSize />
       <LineHeight />
+      <LetterSpacing />
       <TextDesign />
       <AlignText />
       <AlignObjects />

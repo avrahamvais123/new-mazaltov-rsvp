@@ -54,10 +54,10 @@ const Page = async ({ searchParams }) => {
   if (!users) return null;
 
   return (
-    <div className="size-full flex-col-center justify-start items-start gap-4 p-4">
+    <div className="size-full overflow-hidden flex-col-center justify-start items-start gap-4 p-4">
       <h1 className="text-2xl font-bold mb-8">לוח ניהול משתמשים</h1>
 
-      <div className="size-full test overflow-auto flex-col-center items-start justify-start -space-y">
+      <div className="size-full overflow-auto flex-col-center items-start justify-start -space-y">
         {users.map((user, idx) => {
           return (
             <>

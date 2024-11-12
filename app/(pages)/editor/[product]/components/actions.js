@@ -1,5 +1,5 @@
 import { v4 as uuidv4 } from "uuid"; // ייבוא של uuid
-
+import fabricModule from "fabric"; 
 export const addText = ({ canvas, setClickEvent = () => {} }) => {
   if (!canvas) return;
   console.log("fabric: ", fabric);
@@ -144,4 +144,31 @@ export const getCanvasThumbnail = ({ canvas }) => {
 
   // שמירת התמונה הממוזערת בסטייט
   setFrontThumbnail(thumbnailDataUrl);
+};
+
+export const addRect = ({ canvas }) => {
+  if (!fabric || !canvas) return;
+  const rect = new fabric.Rect({
+    width: 100,
+    height: 100,
+    left: canvas.width / 2, // מרכז התיבה
+    top: canvas.height / 2,
+    fill: "white",
+    id: uuidv4(), //
+  });
+  canvas.add(rect);
+  canvas.renderAll();
+};
+
+export const addCircle = ({ canvas }) => {
+  if (!fabric || !canvas) return;
+  const circle = new fabric.Circle({
+    radius: 50, // הגדרת רדיוס במקום רוחב וגובה
+    fill: "white",
+    left: canvas.width / 2, // מרכז התיבה
+    top: canvas.height / 2,
+    id: uuidv4(), //
+  });
+  canvas.add(circle);
+  canvas.renderAll();
 };

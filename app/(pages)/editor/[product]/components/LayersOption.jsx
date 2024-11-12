@@ -4,7 +4,71 @@ import { canvas_Atom } from "@/lib/jotai";
 import { useAtomValue } from "jotai";
 import React, { Fragment, useEffect, useState } from "react";
 import TextEditor from "./TextEditor";
+import { cn } from "@/lib/utils";
+import AnimatedComponent from "./AnimateComponent";
 
+const TextLayer = ({ layer, isObjectSelected }) => {
+  const textTypes = ["text", "i-text", "textbox"];
+
+  if (textTypes.includes(layer?.type)) {
+    return (
+      <TextEditor
+        activeObject={layer}
+        title={layer?.text ? "טקסט" : "עריכת טקסט"}
+        classNames={{
+          fieldset: cn(isObjectSelected ? "border-indigo-600" : ""),
+          legend: isObjectSelected ? "text-indigo-600" : "",
+        }}
+      />
+    );
+  }
+};
+
+const ShapeLayer = ({ layer, isObjectSelected }) => {
+  if (layer?.type === "rect" || layer?.type === "circle") {
+    return (
+      <div
+        className={cn(
+          "size-full aspect-square",
+          "border-2 border-dashed border-gray-200",
+          isObjectSelected ? "border-indigo-600" : ""
+        )}
+        onClick={() => canvas?.setActiveObject(layer)}
+      >
+        <div
+          className="size-full"
+          style={{
+            backgroundColor: layer?.fill,
+            borderRadius: layer?.type === "circle" ? "50%" : "0",
+          }}
+        />
+      </div>
+    );
+  }
+};
+
+const ImageLayer = ({ layer, isObjectSelected }) => {
+  console.log("layer from image layer: ", layer);
+  if (layer?.type === "image" || layer?.type === "group") {
+    return (
+      <div
+        className={cn(
+          "size-full p-2 aspect-square",
+          "border-2 border-dashed border-gray-200",
+          "transition-all",
+          isObjectSelected ? "border-indigo-600" : ""
+        )}
+        onClick={() => canvas?.setActiveObject(layer)}
+      >
+        <img
+          src={layer?.src}
+          alt="Layer"
+          className="size-full object-contain"
+        />
+      </div>
+    );
+  }
+};
 const LayersOption = () => {
   const [layers, setLayers] = useState([]);
   const [activeObject, setActiveObject] = useState(null);
@@ -39,44 +103,16 @@ const LayersOption = () => {
   }, [canvas]);
 
   return (
-    <div className="w-full h-fit overflow-auto grid grid-cols-2 auto-rows-auto justify-start gap-2">
+    <div className="size-full p-4 overflow-auto flex-col-center justify-start  gap-2">
       {layers.map((layer, i) => {
         const isObjectSelected = layer?.id === activeObject?.id;
-        console.log("activeObject: ", activeObject);
-        console.log("layer: ", layer);
-        console.log("layer?.type: ", layer?.type);
-        const textTypes = ["text", "i-text", "textbox"];
-
-        if (layer?.type === "image" || layer?.type === "group") {
-          return (
-            <div
-              key={i}
-              className={`col-span-1 size-full aspect-square border-2 border-dashed border-gray-200 ${
-                isObjectSelected ? "border-indigo-600" : ""
-              }`}
-              onClick={() => canvas?.setActiveObject(layer)}
-            >
-              <img
-                src={layer?.src}
-                alt="Layer"
-                className="size-full object-cover"
-              />
-            </div>
-          );
-        } else if (textTypes.includes(layer?.type)) {
-          return (
-            <Fragment key={i}>
-              <TextEditor
-                activeObject={layer}
-                title={layer?.text ? "טקסט" : "עריכת טקסט"}
-                classNames={{
-                  fieldset: isObjectSelected ? "col-span-2 border-indigo-600" : "col-span-2",
-                  legend: isObjectSelected ? "text-indigo-600" : "",
-                }}
-              />
-            </Fragment>
-          );
-        }
+        return (
+          <Fragment key={i}>
+            <TextLayer layer={layer} isObjectSelected={isObjectSelected} />
+            <ImageLayer layer={layer} isObjectSelected={isObjectSelected} />
+            <ShapeLayer layer={layer} isObjectSelected={isObjectSelected} />
+          </Fragment>
+        );
       })}
     </div>
   );
