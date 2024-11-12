@@ -11,6 +11,7 @@ import ToolBar from "./ToolBar";
 import * as fabricModule from "fabric";
 import UseInitialCanvas from "../hooks/useInitialCanvas";
 import "fabric-history";
+import GuideLines from "./GuideLines";
 
 const { fabric } = fabricModule;
 
@@ -81,24 +82,27 @@ const Editor = ({ imageUrl_1, imageUrl_2 }) => {
               clickEvent={clickEvent}
             />
 
-            <FlipCanvas
-              sizes={{ width: 120 * 2.8, height: 180 * 2.8 }}
-              isFlipped={!isCanvas1}
-              frontContent={
-                <Canvas
-                  canvas={canvas1}
-                  imageUrl={imageUrl_1}
-                  canvasRef={canvasRef1}
-                />
-              }
-              backContent={
-                <Canvas
-                  canvas={canvas2}
-                  imageUrl={imageUrl_2}
-                  canvasRef={canvasRef2}
-                />
-              }
-            />
+            <div className="relative">
+              <GuideLines />
+              <FlipCanvas
+                sizes={{ width: 120 * 2.8, height: 180 * 2.8 }}
+                isFlipped={!isCanvas1}
+                frontContent={
+                  <Canvas
+                    canvas={canvas1}
+                    imageUrl={imageUrl_1}
+                    canvasRef={canvasRef1}
+                  />
+                }
+                backContent={
+                  <Canvas
+                    canvas={canvas2}
+                    imageUrl={imageUrl_2}
+                    canvasRef={canvasRef2}
+                  />
+                }
+              />
+            </div>
 
             {/* החלפת צד */}
             <button

@@ -5,13 +5,16 @@ import {
   canvas2_Atom,
   canvas_Atom,
   editingMode_Atom,
+  showGuideLine_horizontal_Atom,
+  showGuideLine_vertical_Atom,
 } from "@/lib/jotai";
-import { useAtom } from "jotai";
+import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import { useEffect, useRef, useState } from "react";
 import * as fabricModule from "fabric";
 import { indigo, red, slate } from "tailwindcss/colors";
 import { Cancel02Icon, Copy02Icon } from "@/app/icons/icons";
 import ReactDOMServer from "react-dom/server";
+import { varelaRound } from "@/app/fonts/fonts";
 
 const { fabric } = fabricModule;
 
@@ -44,7 +47,9 @@ const UseInitialCanvas = () => {
   const [canvas, setCanvas] = useAtom(canvas_Atom);
   const [canvas1, setCanvas1] = useAtom(canvas1_Atom);
   const [canvas2, setCanvas2] = useAtom(canvas2_Atom);
-  const [editingMode, setEditingMode] = useAtom(editingMode_Atom);
+  const editingMode = useAtomValue(editingMode_Atom);
+  const setShowGuideLine_vertical = useSetAtom(showGuideLine_vertical_Atom);
+  const setShowGuideLine_horizontal = useSetAtom(showGuideLine_horizontal_Atom);
 
   const [layers, setLayers] = useState([]);
   const [isCanvas1, setIsCanvas1] = useState(true);
@@ -61,9 +66,11 @@ const UseInitialCanvas = () => {
       cornerColor: indigo[300],
       cornerScaleFactor: 2,
       transparentCorners: false,
+      originX: "center",
+      originY: "center",
     });
 
-    fabric.Object.prototype.setControlsVisibility({
+    fabric.IText.prototype.setControlsVisibility({
       mt: false,
       mb: false,
       ml: false,
@@ -74,8 +81,12 @@ const UseInitialCanvas = () => {
       br: true,
     });
 
-    fabric.Textbox.prototype.centeredScaling = true;
-    fabric.IText.prototype.centeredScaling = true;
+    fabric.IText.prototype.fontFamily = varelaRound.style.fontFamily;
+    fabric.IText.prototype.fontSize = 60;
+    fabric.IText.prototype.fill = "black";
+    fabric.IText.prototype.direction = "rtl";
+    fabric.IText.prototype.width = 300;
+    fabric.IText.prototype.textAlign = "center";
   }, []);
 
   // initial canvas
@@ -103,9 +114,8 @@ const UseInitialCanvas = () => {
       centeredScaling: true,
     });
 
-    initialCanvas1.extraProps = ['id']; // הוספת המאפיינים המותאמים אישית
-    initialCanvas2.extraProps = ['id']; // הוספת המאפיינים המותאמים אישית
-
+    initialCanvas1.extraProps = ["id"]; // הוספת המאפיינים המותאמים אישית
+    initialCanvas2.extraProps = ["id"]; // הוספת המאפיינים המותאמים אישית
 
     setCanvas(initialCanvas1);
     setCanvas1(initialCanvas1);
@@ -130,39 +140,10 @@ const UseInitialCanvas = () => {
 
     const textTypes = ["text", "i-text", "textbox"];
 
-    // יצירת קווי עזר אופקיים ואנכיים
-    const horizontalLine = new fabric.Line(
-      [0, centerY, canvas.width, centerY],
-      {
-        stroke: "skyblue",
-        strokeDashArray: [5, 5],
-        strokeWidth: 2,
-        selectable: false,
-        evented: false,
-        opacity: 0,
-        isGuideLine: true,
-        excludeFromExport: true // This object will not be recorded in history.
-      }
-    );
-
-    const verticalLine = new fabric.Line([centerX, 0, centerX, canvas.height], {
-      stroke: "skyblue",
-      strokeDashArray: [5, 5],
-      strokeWidth: 2,
-      selectable: false,
-      evented: false,
-      opacity: 0,
-      isGuideLine: true,
-      excludeFromExport: true // This object will not be recorded in history.
-    });
-
-    canvas.add(horizontalLine, verticalLine);
-
     // פונקציה להצגת והסתרת קווי עזר
     const showGuidelines = (showHorizontal, showVertical) => {
-      horizontalLine.set("opacity", showHorizontal ? 1 : 0);
-      verticalLine.set("opacity", showVertical ? 1 : 0);
-      canvas.renderAll();
+      setShowGuideLine_vertical(showVertical);
+      setShowGuideLine_horizontal(showHorizontal);
     };
 
     // פונקציה לבדוק אם מרכז האובייקט קרוב למרכז הקנבס
@@ -210,15 +191,12 @@ const UseInitialCanvas = () => {
     // הצמדת אובייקטים לקווים המרכזיים
     canvas.on("object:moving", (e) => {
       const obj = e.target;
-      if (textTypes?.includes(obj?.type)) {
-        snapTextToCenter(obj);
-      } else {
-        snapObjToCenter(obj);
-      }
+      snapTextToCenter(obj);
     });
 
     // הסתרת קווי עזר בסיום הזזת אובייקט
     canvas.on("mouse:up", () => {
+      console.log("mouse:up: ");
       showGuidelines(false, false);
     });
   }, [canvas]);
@@ -340,3 +318,39 @@ const UseInitialCanvas = () => {
 };
 
 export default UseInitialCanvas;
+
+/* // יצירת קווי עזר אופקיים ואנכיים
+    const horizontalLine = new fabric.Line(
+      [0, centerY, canvas.width, centerY],
+      {
+        stroke: "skyblue",
+        strokeDashArray: [5, 5],
+        strokeWidth: 2,
+        selectable: false,
+        evented: false,
+        opacity: 0,
+        isGuideLine: true,
+        id: "guideLine-horizontal",
+        excludeFromExport: true, // This object will not be recorded in history.
+      }
+    );
+
+    const verticalLine = new fabric.Line([centerX, 0, centerX, canvas.height], {
+      stroke: "skyblue",
+      strokeDashArray: [5, 5],
+      strokeWidth: 2,
+      selectable: false,
+      evented: false,
+      opacity: 0,
+      id: "guideLine-vertical",
+      isGuideLine: true,
+      excludeFromExport: true, // This object will not be recorded in history.
+    });
+
+    canvas.add(horizontalLine, verticalLine);
+
+      horizontalLine.set("opacity", showHorizontal ? 1 : 0);
+      verticalLine.set("opacity", showVertical ? 1 : 0);
+      canvas.renderAll();
+    
+    */

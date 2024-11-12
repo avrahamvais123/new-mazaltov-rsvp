@@ -1,15 +1,16 @@
 "use client";
 
-import React from "react";
+import React, { useRef } from "react";
 import fabricModule from "fabric";
 import { useAtomValue } from "jotai";
 import { canvas_Atom } from "@/lib/jotai";
 import { FileUploadIcon } from "@/app/icons/icons";
+import { cn } from "@/lib/utils";
 const { fabric } = fabricModule;
 
 const UploadElements = () => {
   const canvas = useAtomValue(canvas_Atom);
-  const fileInputRef = React.useRef(null);
+  const fileInputRef = useRef(null);
 
   function handleFileUpload(event) {
     if (!canvas) return;
@@ -76,9 +77,15 @@ const UploadElements = () => {
       {/* כפתור מותאם לפתיחת חלון העלאה */}
       <button
         onClick={triggerFileInput}
-        className="w-full flex-center p-4 *:text-indigo-50 bg-indigo-500 rounded-md hover:bg-indigo-600 transition duration-200"
+        className={cn(
+          "w-full p-4 flex-col-center gap-2 rounded-md", 
+          "border-2 border-dashed border-indigo-600", 
+          "hover:border-solid hover:bg-indigo-600", 
+          "transition duration-200"
+        )}
       >
-        <FileUploadIcon />
+        <FileUploadIcon className="text-indigo-100" />
+        <p className="text-sm text-indigo-100">העלאת אלמנט</p>
       </button>
     </div>
   );
