@@ -9,7 +9,9 @@ import {
 import StepsBar from "@/app/ui/StepsBar";
 import SlideUploadImage from "./SlideUploadImage";
 import SlideOptions from "./SlideOptions";
+import SlideDetails from "./SlideDetails";
 import SlidePayment from "./SlidePayment";
+import SlideCreateLink from "./SlideCreateLink";
 
 const stepsData = [
   {
@@ -21,16 +23,23 @@ const stepsData = [
   },
   {
     id: 2,
-    name: "כמות מוזמנים",
-    description: "כמות מוזמנים",
-    Component: SlideOptions,
+    name: "פרטי האירוע",
+    description: "פרטי האירוע",
+    Component: SlideDetails,
     status: "",
   },
-  {
+  /* {
     id: 3,
     name: "תשלום",
     description: "תשלום",
     Component: SlidePayment,
+    status: "",
+  }, */
+  {
+    id: 4,
+    name: "יצירת קישור",
+    description: "יצירת קישור",
+    Component: SlideCreateLink,
     status: "",
   },
 ];
@@ -38,10 +47,10 @@ const stepsData = [
 export default function Progression() {
   const [carouselApi, setCarouselApi] = useState(null);
   /* current for the StepsBar */
-  const [current, setCurrent] = React.useState(0);
-  const [count, setCount] = React.useState(0);
+  const [current, setCurrent] = useState(0);
+  const [count, setCount] = useState(0);
   /* steps for the slides */
-  const [steps, setSteps] = React.useState(stepsData);
+  const [steps, setSteps] = useState(stepsData);
 
   useEffect(() => {
     if (!carouselApi) {

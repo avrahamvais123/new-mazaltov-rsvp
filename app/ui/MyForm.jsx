@@ -6,6 +6,26 @@ import MyRadioGroup from "./MyRadioGroup";
 import Textarea from "./Textarea";
 import MyUploader from "./MyUploader";
 
+const Submit = ({ noSubmit, customSubmit, submitName, classNames }) => {
+  if (noSubmit) return;
+
+  if (customSubmit) {
+    return customSubmit;
+  } else {
+    return (
+      <button
+        type="submit"
+        className={cn(
+          "bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 transition-all text-indigo-50 px-4 py-2 rounded-sm",
+          classNames?.submit
+        )}
+      >
+        {submitName ? submitName : "שלח"}
+      </button>
+    );
+  }
+};
+
 const MyForm = forwardRef(
   (
     {
@@ -15,6 +35,7 @@ const MyForm = forwardRef(
       fieldsClassName,
       fields = [],
       onSubmit,
+      noSubmit,
       customSubmit,
       submitName,
       success,
@@ -23,6 +44,7 @@ const MyForm = forwardRef(
     },
     ref
   ) => {
+    
     const {
       handleSubmit,
       register,
@@ -132,19 +154,12 @@ const MyForm = forwardRef(
           })}
         </div>
         {children}
-        {customSubmit ? (
-          customSubmit
-        ) : (
-          <button
-            type="submit"
-            className={cn(
-              "bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 transition-all text-indigo-50 px-4 py-2 rounded-sm",
-              classNames?.submit
-            )}
-          >
-            {submitName ? submitName : "שלח"}
-          </button>
-        )}
+        <Submit
+          noSubmit={noSubmit}
+          customSubmit={customSubmit}
+          submitName={submitName}
+          classNames={classNames}
+        />
       </form>
     );
   }

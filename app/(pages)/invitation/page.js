@@ -4,30 +4,19 @@ import InvitaionForm from "./components/InvitaionForm";
 import Link from "next/link";
 
 export const metadata = {
-  title: "הזמנה דיגיטלית לבר המצווה של ינון קצב",
-  description: "הזמנה דיגיטלית לבר המצווה של ינון קצב",
+  title: "מזל טוב אישורי הגעה",
+  description: "הזמנה דיגיטלית",
 };
 
 const Page = ({ searchParams }) => {
-  const email = searchParams.email;
-  const client = searchParams.client;
-  const title = searchParams.title;
-  const name = searchParams.name;
-  const img_1 = searchParams.img_1;
-  const img_2 = searchParams.img_2;
-  const waze = searchParams.waze;
-  const gm = searchParams.gm;
-
-  const data = {
-    name,
-    email,
-    client,
-    title,
-    img_1,
-    img_2,
-    waze,
-    gm,
-  };
+  const email = searchParams?.email || "";
+  const client = searchParams?.client || "";
+  const title = searchParams?.title || "";
+  const name = searchParams?.name || "";
+  const img_1 = searchParams?.img_1 || "";
+  const img_2 = searchParams?.img_2 || "";
+  const waze = searchParams?.waze || "";
+  const gm = searchParams?.gm || "";
 
   return (
     <div className="size-full p-6 md:p-10 flex-col-center justify-start gap-4 md:gap-8 overflow-auto">

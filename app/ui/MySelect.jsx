@@ -30,7 +30,7 @@ const MySelect = ({
       >
         <SelectTrigger
           className={cn(
-            "w-full border px-4 py-5 rounded-none text-md shadow-none",
+            "w-full border border-slate-300 px-4 py-5 rounded-md text-md shadow-none",
             classNames?.trigger
           )}
         >
