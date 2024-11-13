@@ -25,6 +25,7 @@ import { cn } from "@/lib/utils";
 
 const ADMIN_EMAIL = process.env.NEXT_PUBLIC_ADMIN_EMAIL;
 
+const protectionPaths = ["/users-management", "/create-invitation", "/#prices"];
 const Menu = ({ open, setOpen }) => {
   const { data: session, status } = useSession();
   const pathname = usePathname();
@@ -38,12 +39,12 @@ const Menu = ({ open, setOpen }) => {
       onClick: () => setOpen(false),
     },
     // "/create-invitation"
-    /* {
+    {
       href: "/create-invitation",
       Text: (props) => <span {...props}>יצירת הזמנה</span>,
       Icon: (props) => <FileAddIcon {...props} />,
       onClick: () => setOpen(false),
-    }, */
+    },
     // "/prices"
     {
       href: "/#prices",
@@ -110,7 +111,7 @@ const Menu = ({ open, setOpen }) => {
               const isActive = pathname === href;
               const isAdmin = session?.user?.email === ADMIN_EMAIL;
 
-              if (href === "/users-management" && !isAdmin) return null;
+              if (protectionPaths.includes(href) && !isAdmin) return null;
 
               return (
                 <Link
