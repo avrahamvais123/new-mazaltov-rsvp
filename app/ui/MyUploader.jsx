@@ -15,7 +15,7 @@ import { useUpdate } from "react-use";
 
 const greenColor = "#05C851";
 
-export default function MyUploader({ onSubmit = () => {} }) {
+export default function MyUploader({ onSubmit = () => {}, classNames = {} }) {
   const update = useUpdate();
 
   const getUploadParams = ({ meta }) => {

@@ -73,5 +73,5 @@ module.exports = {
       },
     },
   },
-  plugins: [require("tailwindcss-animate"), require("tailwindcss-3d")],
+  plugins: [require("tailwindcss-animate"), /* require("tailwindcss-3d") */],
 };

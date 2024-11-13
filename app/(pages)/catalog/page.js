@@ -1,8 +1,9 @@
 import Breadcrumbs from "@/app/ui/Breadcrumbs";
 import cloudinary from "@/lib/cloudinary";
-import Image from "next/image";
-import Link from "next/link";
-import React from "react";
+import { cn } from "@/lib/utils";
+import React, { Fragment } from "react";
+import Category from "./components/Category";
+import SwitchModes from "./components/SwitchModes";
 
 const ng_url_1 =
   "https://img.freepik.com/premium-photo/photograph-ritual-jewish-objects-including-prayer-vestments-with-hebrew-inscription-reading-1-object-symbols-read-tefillin-hand-on2-they-read-tefillin-head_329479-1805.jpg?w=1480";
@@ -69,46 +70,44 @@ const findImageUrl = async (imageKey) => {
   return secure_url;
 };
 
+const Title = () => {
+  return (
+    <div className="absolute top-0 w-full h-72 p-8 flex-col-center gap-2 bg-indigo-700">
+      {/* ניווט עמודים */}
+      <div className="z-10 flex-col-center gap-1">
+        <Breadcrumbs items={items} />
+        <h1 className="text-white text-center">קטגוריות</h1>
+      </div>
+
+      <SwitchModes />
+
+      {/* תמונת רקע */}
+      <img
+        src={ng_url_2}
+        className="absolute inset-0 object-cover size-full opacity-15"
+      />
+    </div>
+  );
+};
+
 const Page = () => {
   return (
     <div className="relative size-full p-8 flex-center bg-indigo-50 overflow-auto">
-      <div className="absolute top-0 w-full h-72 p-8 flex-col-center gap-2 bg-indigo-700">
-        {/* ניווט עמודים */}
-        <div className="z-10 flex-col-center gap-1">
-          <Breadcrumbs items={items} />
-          <h1 className="text-white text-center">קטגוריות</h1>
-        </div>
-        <img
-          src={ng_url_2}
-          className="absolute inset-0 object-cover size-full opacity-15"
-        />
-      </div>
+      <Title />
 
-      <div className="size-full max-w-5xl mt-96 grid grid-cols-3 grid-rows-2 gap-4">
+      <div
+        className={cn(
+          "size-full max-w-5xl mt-96",
+          "grid grid-cols-1 md:grid-cols-3",
+          "auto-rows-auto gap-4"
+        )}
+      >
         {categories.map(async ({ link, name, id, imageKey }, i) => {
           const imageUrl = await findImageUrl(imageKey);
-
           return (
-            <Link key={id} href={link} className="z-10 size-full rounded-xl">
-              <div className="relative h-full shadow-xl shadow-transparent hover:shadow-indigo-200 hover:scale-105 duration-500 flex-col-center gap-2 bg-white p-2 rounded-lg transition-all">
-                {/* <div className="absolute inset-0 w-full h-10 bg-indigo-600 rounded-t-md" /> */}
-
-                <div className="relative size-full rounded-lg">
-                  <Image
-                    src={imageUrl}
-                    alt="product image"
-                    fill
-                    priority
-                    className="object-cover rounded-lg"
-                  />
-                </div>
-
-                <div className="flex-col-center gap-1 p-4">
-                  <h4>{name}</h4>
-                  <p className="-mt-2 mb-2">בחרו הזמנה וכנסו לעצב</p>
-                </div>
-              </div>
-            </Link>
+            <Fragment key={id}>
+              <Category link={link} name={name} imageUrl={imageUrl} />
+            </Fragment>
           );
         })}
       </div>

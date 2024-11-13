@@ -46,6 +46,8 @@ const fields = [
 ];
 
 const InvitaionForm = ({ email, client }) => {
+  console.log('client: ', client);
+  console.log('email: ', email);
   const [quantity, setQuantity] = useState(1);
   console.log("quantity: ", quantity);
   const { reset, register, handleSubmit, watch } = useForm({

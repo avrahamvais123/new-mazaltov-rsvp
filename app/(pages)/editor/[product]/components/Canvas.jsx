@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect } from "react";
 import * as fabricModule from "fabric";
 
 const Canvas = ({ canvas, imageUrl, canvasRef }) => {
@@ -6,7 +6,7 @@ const Canvas = ({ canvas, imageUrl, canvasRef }) => {
     if (!canvas || !imageUrl || !canvasRef.current) return;
 
     const { fabric } = fabricModule;
-    
+
     fabric.Image.fromURL(
       imageUrl,
       (img) => {
@@ -28,7 +28,7 @@ const Canvas = ({ canvas, imageUrl, canvasRef }) => {
     );
 
     return () => {
-      canvas.off();
+      canvas?.off();
     };
   }, [imageUrl, canvasRef.current, canvas]);
 

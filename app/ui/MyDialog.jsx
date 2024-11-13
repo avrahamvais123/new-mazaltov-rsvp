@@ -36,6 +36,7 @@ const MyDialog = ({
           <button variant="outline">פתיחת המודאל</button>
         )}
       </DialogTrigger>
+      
       <DialogContent
         closeProps={{
           onClick: () => currentSetOpen(false),

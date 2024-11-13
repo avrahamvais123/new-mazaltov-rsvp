@@ -4,6 +4,7 @@ import Input from "./Input";
 import MySelect from "./MySelect";
 import MyRadioGroup from "./MyRadioGroup";
 import Textarea from "./Textarea";
+import MyUploader from "./MyUploader";
 
 const MyForm = forwardRef(
   (
@@ -104,6 +105,18 @@ const MyForm = forwardRef(
                     fieldsClassName={classNames?.fields}
                     className={field?.className}
                   />
+                ) : field?.type === "upload" ? (
+                  <MyUploader
+                    onSubmit={field?.onSubmit}
+                    rows={field?.rows}
+                    cols={field?.cols}
+                    value={value}
+                    field={field}
+                    register={register}
+                    errors={errors}
+                    fieldsClassName={classNames?.fields}
+                    className={field?.className}
+                  />
                 ) : (
                   <Input
                     value={value}
@@ -125,7 +138,7 @@ const MyForm = forwardRef(
           <button
             type="submit"
             className={cn(
-              "bg-indigo-600 text-indigo-50 px-4 py-2 rounded-sm",
+              "bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 transition-all text-indigo-50 px-4 py-2 rounded-sm",
               classNames?.submit
             )}
           >
