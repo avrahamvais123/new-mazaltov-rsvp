@@ -56,7 +56,7 @@ const Page = async ({ searchParams }) => {
 
   return (
     <div className="size-full overflow-hidden flex-col-center justify-start items-start gap-4 p-4">
-      <h1 className="text-xl mb-8 text-slate-400">לוח ניהול משתמשים</h1>
+      <h1 className="text-xl mb-4 text-slate-400">לוח ניהול משתמשים</h1>
       <UsersList users={users} />
     </div>
   );

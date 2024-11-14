@@ -16,9 +16,11 @@ const MyDialog = ({
   content = () => {},
   customSubmit = () => {},
   title = "מודאל",
-  description = "פרטים על המודאל",
+  description,
   noFooter = false,
   Icon = () => {},
+  onConfirm = () => {},
+  onCancel = () => {},
   open,
   setOpen,
 }) => {
@@ -36,7 +38,7 @@ const MyDialog = ({
           <button variant="outline">פתיחת המודאל</button>
         )}
       </DialogTrigger>
-      
+
       <DialogContent
         closeProps={{
           onClick: () => currentSetOpen(false),
@@ -61,7 +63,14 @@ const MyDialog = ({
             {customSubmit() ? (
               customSubmit({ open: currentOpen, setOpen: currentSetOpen })
             ) : (
-              <button onClick={() => currentSetOpen(false)} type="submit">
+              <button
+                onClick={() => {
+                  currentSetOpen(false);
+                  onConfirm();
+                  console.log("open: ", open);
+                }}
+                type="submit"
+              >
                 אישור
               </button>
             )}
