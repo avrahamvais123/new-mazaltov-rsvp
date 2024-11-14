@@ -18,10 +18,6 @@ const greenColor = "#05C851";
 export default function MyUploader({ onSubmit = () => {}, classNames = {} }) {
   const update = useUpdate();
 
-  const getUploadParams = ({ meta }) => {
-    return { url: "https://httpbin.org/post" };
-  };
-
   const Preview = (props) => {
     const { cancel, restart, remove, xhr, file, meta } = props?.fileWithMeta;
     const { name, percent, status, previewUrl } = meta;
@@ -220,7 +216,7 @@ export default function MyUploader({ onSubmit = () => {}, classNames = {} }) {
 
   return (
     <Dropzone
-      getUploadParams={getUploadParams}
+      //getUploadParams={getUploadParams}
       onChangeStatus={handleChangeStatus}
       onSubmit={onSubmit}
       getFilesFromEvent={getFilesFromEvent}
@@ -241,3 +237,7 @@ export default function MyUploader({ onSubmit = () => {}, classNames = {} }) {
     />
   );
 }
+
+/* const getUploadParams = ({ meta }) => {
+    return { url: "https://httpbin.org/post" };
+  }; */

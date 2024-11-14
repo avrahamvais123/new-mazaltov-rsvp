@@ -7,29 +7,16 @@ import ResetPassword from "./components/ResetPassword";
 import jwt from "jsonwebtoken";
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
+import { cn } from "@/lib/utils";
+import UsersList from "./components/UsersList";
 
 const JWT_SECRET = process.env.JWT_SECRET;
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL;
 
-/* 
-** אזור מנהל המשתמשים
-*/
-const Page = async ({ searchParams }) => {
-  const session = await auth();
-  console.log("session: ", session);
-
-  if (session?.user?.email !== ADMIN_EMAIL) {
-    redirect("/");
-  }
-
-  const token = searchParams?.token;
-  console.log("token: ", token);
-
-  let decodedToken;
-
+const verifyToken = (token) => {
   // ניהול שגיאות
   try {
-    decodedToken = jwt?.verify(token, JWT_SECRET);
+    return jwt?.verify(token, JWT_SECRET);
   } catch (error) {
     console.log("Token error: ", error.message);
 
@@ -44,6 +31,20 @@ const Page = async ({ searchParams }) => {
       </div>
     );
   }
+};
+
+/*
+ ** אזור מנהל המשתמשים
+ */
+const Page = async ({ searchParams }) => {
+  const session = await auth();
+
+  if (session?.user?.email !== ADMIN_EMAIL) {
+    redirect("/");
+  }
+
+  // אימות הטוקן
+  const decodedToken = verifyToken(searchParams?.token);
 
   // המשך בקוד רק אם הטוקן תקף
   if (!decodedToken) return null;
@@ -55,46 +56,14 @@ const Page = async ({ searchParams }) => {
 
   return (
     <div className="size-full overflow-hidden flex-col-center justify-start items-start gap-4 p-4">
-      <h1 className="text-2xl font-bold mb-8">לוח ניהול משתמשים</h1>
-
-      <div className="size-full overflow-auto flex-col-center items-start justify-start -space-y">
-        {users.map((user, idx) => {
-          return (
-            <>
-              <div
-                key={user?.email}
-                className="w-full p-4 flex-center justify-start items-start gap-4 border-b first:border-t"
-              >
-                <Image
-                  src={user?.image || "/images/user-1.png"}
-                  alt="תמונת המשתמש"
-                  width={45}
-                  height={45}
-                  className="rounded-full bg-slate-50 ring-4 ring-slate-100"
-                />
-                <div className="flex-col-center justify-start items-start gap-0.5">
-                  <h4 className="mb-1 -mt-1">{user?.name}</h4>
-                  <span className="flex-center justify-start gap-2">
-                    <PassportIcon className="size-5 text-slate-400" />
-                    <p className="text-sm">{user?._id.toString()}</p>
-                  </span>
-
-                  <span className="flex-center justify-start gap-2">
-                    <MailAtSign01Icon className="size-5 text-slate-400" />
-                    <p className="text-sm">{user?.email}</p>
-                  </span>
-
-                  <span className="flex-center justify-start gap-2">
-                    <ResetPassword token={decodedToken} email={user?.email} />
-                  </span>
-                </div>
-              </div>
-            </>
-          );
-        })}
-      </div>
+      <h1 className="text-xl mb-8 text-slate-400">לוח ניהול משתמשים</h1>
+      <UsersList users={users} />
     </div>
   );
 };
 
 export default Page;
+
+/* <span className="flex-center justify-start gap-2">
+                      <ResetPassword token={decodedToken} email={user?.email} />
+                    </span> */

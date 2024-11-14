@@ -14,6 +14,9 @@ export const POST = async (req) => {
     const file = formData.get("file");
     const public_id = formData.get("public_id");
     const folder = formData.get("folder");
+    console.log('file: ', file);
+    console.log('public_id: ', public_id);
+    console.log('folder: ', folder);
 
     // Convert file to a Base64 string
     const buffer = await file.arrayBuffer();
@@ -23,7 +26,7 @@ export const POST = async (req) => {
     // Upload to Cloudinary
     const uploadResponse = await cloudinary.uploader.upload(base64Image, {
       upload_preset: "my_upload_preset",
-      folder: `mazaltov-rsvp/${folder}`,
+      folder: folder,
       unique_filename: true,
       public_id: public_id,
       resource_type: "auto",
