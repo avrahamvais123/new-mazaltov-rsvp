@@ -5,6 +5,12 @@ import Image from "next/image";
 import React, { Fragment, useState } from "react";
 
 const BTN_CLASSNAME = cn("w-full bg-slate-50 text-slate-600 px-2 py-1");
+
+/* 
+  event
+  name: ""
+
+*/
 const UsersList = ({ users = [] }) => {
   const [currentUser, setCurrentUser] = useState({});
   const [currentTab, setCurrentTab] = useState("");
@@ -35,6 +41,7 @@ const UsersList = ({ users = [] }) => {
             const activeTab = currentTab === tab;
             return (
               <button
+              key={idx}
                 onClick={onTab}
                 className={cn(
                   BTN_CLASSNAME,
