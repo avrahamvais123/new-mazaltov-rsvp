@@ -1,14 +1,11 @@
-import { MailAtSign01Icon, PassportIcon } from "@/app/icons/icons";
 import { getCollection } from "@/lib/mongoDB";
-import Image from "next/image";
 import React from "react";
 import SendAccessLink from "./components/SendAccessLink";
 import ResetPassword from "./components/ResetPassword";
 import jwt from "jsonwebtoken";
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
-import { cn } from "@/lib/utils";
-import UsersList from "./components/UsersList";
+import ManagementUsers from "./components/ManagementUsers";
 
 const JWT_SECRET = process.env.JWT_SECRET;
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL;
@@ -54,12 +51,7 @@ const Page = async ({ searchParams }) => {
 
   if (!users) return null;
 
-  return (
-    <div className="size-full overflow-hidden flex-col-center justify-start items-start gap-4 p-4">
-      <h1 className="text-xl mb-4 text-slate-400">לוח ניהול משתמשים</h1>
-      <UsersList users={users} />
-    </div>
-  );
+  return <ManagementUsers users={users} />;
 };
 
 export default Page;

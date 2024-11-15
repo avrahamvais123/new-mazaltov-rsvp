@@ -9,13 +9,13 @@ import { useSession } from "next-auth/react";
 import Link from "next/link";
 import React, { useState } from "react";
 
-const getName = (invitationDetails) => {
+const getTitle = (invitationDetails) => {
   if (invitationDetails?.eventType === "חתונה") {
-    return `${invitationDetails?.groom_name} ו${invitationDetails?.bride_name}`;
+    return `הזמנה לחתונה של ${invitationDetails?.groom_name} ו${invitationDetails?.bride_name}`;
   } else if (invitationDetails?.eventType === "בר מצווה") {
-    return invitationDetails?.groom_name;
+    return `הזמנה לבר המצווה של ${invitationDetails?.groom_name}`;
   } else if (invitationDetails?.eventType === "בת מצווה") {
-    return invitationDetails?.bride_name;
+    return `הזמנה לבת המצווה של ${invitationDetails?.bride_name}`;
   } else {
     return invitationDetails?.parents;
   }
@@ -56,12 +56,8 @@ const SlideCreateLink = ({ carouselApi }) => {
   const createEventMutation = useMutation({
     mutationFn: async () => {
       const res = await axios.post("/api/events", {
-        name: "new event",
+        title: "new event",
         date: new Date(),
-        description: "new event description",
-        location: "new event location",
-        guests: [],
-        attendees: [],
       });
     },
   });
@@ -81,13 +77,9 @@ const SlideCreateLink = ({ carouselApi }) => {
   });
 
   const createLink = async () => {
-    const name = encodeURIComponent(invitationDetails?.title);
-    console.log("name: ", name);
-    const email = encodeURIComponent(session?.user?.email);
-    const client = encodeURIComponent(name);
-    const title = encodeURIComponent(
-      `הזמנה ל${invitationDetails.eventType} של`
-    );
+    const email = session?.user?.email;
+    const client = session?.user?.name;
+    const title = getTitle(invitationDetails);
     const waze = encodeURIComponent(invitationDetails.wazeLink);
     const googleMap = encodeURIComponent(invitationDetails.googleMapsLink);
 

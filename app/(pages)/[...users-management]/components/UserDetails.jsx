@@ -49,7 +49,7 @@ const UserDetails = ({ currentUser }) => {
 
       {/* tabs */}
       <div className="w-full flex-center bg-white">
-        {["אירועים", "עיצובים", "אישי"].map((tab, idx) => {
+        {["אירועים", "עיצובים", "עריכה"].map((tab, idx) => {
           const activeTab = currentTab === tab;
           return (
             <button
@@ -73,11 +73,20 @@ const UserDetails = ({ currentUser }) => {
         {/* content */}
         {currentTab === "אירועים" && <div>אירועים אחרונים שהוספתי</div>}
         {currentTab === "עיצובים" && <div>עיצובים אחרוינים שהוספתי</div>}
-        {currentTab === "אישי" && (
+        {currentTab === "עריכה" && (
           <div>
-            <h5>אני משתמש באתר הזה:</h5>
-            <p>מתארים אותי: {currentUser?.name}</p>
-            <p>אתי משתמש באתר הזה על ידי: {currentUser?.email}</p>
+            <p>
+              <b>שם: </b>
+              {currentUser?.name}
+            </p>
+            <p>
+              <b>מייל: </b>
+              {currentUser?.email}
+            </p>
+            <p>
+              <b>מזהה לקוח: </b>
+              {currentUser?._id}
+            </p>
           </div>
         )}
       </div>

@@ -40,13 +40,6 @@ const fields = (watch) => [
     ],
   },
   {
-    name: "title",
-    label: "שם האירוע",
-    span: 6,
-    required: true,
-    helper: "שם האירוע שיופיע בראש ההזמנה הדיגיטלית, לדוגמה: הזמנה לחתונה של יוסי ומירי",
-  },
-  {
     name: "date",
     label: "תאריך האירוע",
     type: "date",
