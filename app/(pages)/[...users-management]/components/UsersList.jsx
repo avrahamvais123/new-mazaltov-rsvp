@@ -1,6 +1,13 @@
 "use client";
 
-import { Delete02Icon, MoreVerticalIcon } from "@/app/icons/icons";
+import {
+  Delete02Icon,
+  MoreVerticalIcon,
+  InboxIcon,
+  Edit02Icon,
+  PartyIcon,
+  PaintBoardIcon,
+} from "@/app/icons/icons";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import React, { Fragment, useState } from "react";
@@ -8,57 +15,119 @@ import UserDetails from "./UserDetails";
 import MyDialog from "@/app/ui/MyDialog";
 import MyDropdown from "@/app/ui/MyDropdown";
 
-const actions = ({
-  user,
-  setOpenDialog,
-  setDialogTitle,
-  setDialogContent,
-  setDialogOnConfirm,
-}) => [
+const actions = ({ user, setDialogDetails, setOpenDialog }) => [
+  /* אירועים */
+  {
+    text: (
+      <div className="flex-center gap-2">
+        <PartyIcon className="size-5 text-slate-400" />
+        אירועים
+      </div>
+    ),
+    action: (e) => {
+      console.log("events", user);
+      setOpenDialog(true);
+      setDialogDetails({
+        title: "כל האירועים של הלקוח",
+        content: () => (
+          <div>{`האם אתה בטוח שברצונך לערוך את ${user?.name}?`}</div>
+        ),
+        onConfirm: () => {
+          console.log("הלקוח נערך בהצלחה!!");
+        },
+      });
+    },
+  },
+  /* עיצובים */
+  {
+    text: (
+      <div className="flex-center gap-2">
+        <PaintBoardIcon className="size-5 text-slate-400" />
+        עיצובים
+      </div>
+    ),
+    action: (e) => {
+      console.log("designs", user);
+      setOpenDialog(true);
+      setDialogDetails({
+        title: "כל העיצובים של הלקוח",
+        content: () => (
+          <div>{`האם אתה בטוח שברצונך לערוך את ${user?.name}?`}</div>
+        ),
+        onConfirm: () => {
+          console.log("הלקוח נערך בהצלחה!!");
+        },
+      });
+    },
+  },
+  /* עריכת לקוח */
+  {
+    text: (
+      <div className="flex-center gap-2">
+        <Edit02Icon className="size-5 text-slate-400" />
+        עריכת לקוח
+      </div>
+    ),
+    action: (e) => {
+      console.log("edit", user);
+      setOpenDialog(true);
+      setDialogDetails({
+        title: "עריכת לקוח",
+        content: () => (
+          <div>{`האם אתה בטוח שברצונך לערוך את ${user?.name}?`}</div>
+        ),
+        onConfirm: () => {
+          console.log("הלקוח נערך בהצלחה!!");
+        },
+      });
+    },
+  },
+  /* מחיקת לקוח */
   {
     text: (
       <div className="flex-center gap-2">
         <Delete02Icon className="size-5 text-slate-400" />
-        מחיקה
+        מחיקת לקוח
       </div>
     ),
+
     action: (e) => {
       console.log("delete", user);
       setOpenDialog(true);
-      setDialogTitle("מחיקת לקוח");
-      setDialogContent(
-        <div>{`האם אתה בטוח שברצונך למחוק את ${user?.name}?`}</div>
-      );
-      const onConfirm = () => {
-        console.log("הלקוח נמחק בהצלחה");
-      };
-      setDialogOnConfirm(() => onConfirm);
+      setDialogDetails({
+        title: "מחיקת לקוח",
+        content: () => (
+          <div>{`האם אתה בטוח שברצונך למחוק את ${user?.name}?`}</div>
+        ),
+        onConfirm: () => {
+          console.log("הלקוח נמחק בהצלחה!!");
+        },
+      });
     },
   },
 ];
 
 const UsersList = ({ users = [] }) => {
   const [currentUser, setCurrentUser] = useState({});
-  const [openDialog, setOpenDialog] = useState(false);
-  const [dialogTitle, setDialogTitle] = useState(null);
-  const [dialogContent, setDialogContent] = useState(null);
-  const [dialogOnConfirm, setDialogOnConfirm] = useState(null);
   const [openDropdown, setOpenDropdown] = useState(false);
-
-  const Content = ({ open, setOpen }) => {
-    return dialogContent;
-  };
+  const [openDialog, setOpenDialog] = useState(false);
+  const [dialogDetails, setDialogDetails] = useState({
+    title: "",
+    content: () => <Fragment />,
+    onConfirm: () => {},
+  });
 
   return (
     <>
       <MyDialog
-        title={dialogTitle}
-        noDescription
-        content={Content}
         open={openDialog}
         setOpen={setOpenDialog}
-        onConfirm={dialogOnConfirm}
+        title={dialogDetails.title}
+        noDescription
+        content={dialogDetails.content}
+        onConfirm={dialogDetails.onConfirm}
       />
+
       <div className="size-full flex-col-center md:flex-row gap-4 overflow-hidden">
         {/* details */}
         <UserDetails currentUser={currentUser} />
@@ -93,7 +162,7 @@ const UsersList = ({ users = [] }) => {
                     <h4 className="text-sm -mb-0.5">{user?.name}</h4>
                     <p
                       className={cn(
-                        "text-sm text-slate-400 truncate text-left direction-ltr max-w-32",
+                        "text-sm text-slate-400 max-md:truncate text-left direction-ltr max-md:max-w-40",
                         activeUser ? "text-indigo-800" : ""
                       )}
                     >
@@ -106,13 +175,7 @@ const UsersList = ({ users = [] }) => {
                   open={openDropdown}
                   setOpen={setOpenDropdown}
                   title="פעולות"
-                  items={actions({
-                    setOpenDialog,
-                    setDialogTitle,
-                    setDialogContent,
-                    setDialogOnConfirm,
-                    user,
-                  })}
+                  items={actions({ user, setOpenDialog, setDialogDetails })}
                 >
                   <button
                     onClick={() => setOpenDropdown(!openDropdown)}

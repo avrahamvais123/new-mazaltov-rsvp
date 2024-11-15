@@ -29,7 +29,7 @@ const MyDropdown = ({ children, title, content, items = [] }) => {
           {items?.map((item, idx) => {
             return (
               <Fragment key={idx}>
-                <DropdownMenuItem key={idx} onClick={item?.action}>
+                <DropdownMenuItem key={idx} className="cursor-pointer" onClick={item?.action}>
                   {item?.text}
                   {item?.shortcut && (
                     <DropdownMenuShortcut>

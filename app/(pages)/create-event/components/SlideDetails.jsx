@@ -40,11 +40,11 @@ const fields = (watch) => [
     ],
   },
   {
-    name: "email",
-    label: "אימייל",
-    type: "text",
+    name: "title",
+    label: "שם האירוע",
     span: 6,
     required: true,
+    helper: "שם האירוע שיופיע בראש ההזמנה הדיגיטלית, לדוגמה: הזמנה לחתונה של יוסי ומירי",
   },
   {
     name: "date",

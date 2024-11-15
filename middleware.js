@@ -28,7 +28,7 @@ export function middleware(req) {
   // מערך של נתיבים קיימים
   const existingPages = [
     "/",
-    "/create-invitation",
+    "/create-event",
     "/invitation",
     "/test",
     "/katzav",

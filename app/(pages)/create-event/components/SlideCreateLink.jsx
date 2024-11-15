@@ -25,7 +25,6 @@ const SlideCreateLink = ({ carouselApi }) => {
   console.log("session: ", session);
   const invitationDetails = useAtomValue(invitation_details_Atom);
   const [link, setLink] = useState("");
-  const [localLink, setLocalLink] = useState("");
 
   console.log("invitationDetails: ", invitationDetails);
 
@@ -54,6 +53,19 @@ const SlideCreateLink = ({ carouselApi }) => {
     }
   };
 
+  const createEventMutation = useMutation({
+    mutationFn: async () => {
+      const res = await axios.post("/api/events", {
+        name: "new event",
+        date: new Date(),
+        description: "new event description",
+        location: "new event location",
+        guests: [],
+        attendees: [],
+      });
+    },
+  });
+
   const uploadImageMutation = useMutation({
     mutationFn: async ({ file, public_id }) => {
       const res = await uploadImage({ file, public_id });
@@ -69,9 +81,9 @@ const SlideCreateLink = ({ carouselApi }) => {
   });
 
   const createLink = async () => {
-    const name = getName(invitationDetails);
+    const name = encodeURIComponent(invitationDetails?.title);
     console.log("name: ", name);
-    const email = encodeURIComponent(invitationDetails.email);
+    const email = encodeURIComponent(session?.user?.email);
     const client = encodeURIComponent(name);
     const title = encodeURIComponent(
       `הזמנה ל${invitationDetails.eventType} של`
@@ -93,13 +105,10 @@ const SlideCreateLink = ({ carouselApi }) => {
     });
 
     const link = `https://www.mazaltov-rsvp.co.il/invitation?email=${email}&client=${client}&title=${title}&name=${name}&waze=${waze}&gm=${googleMap}&img_1=${img_1}&img_2=${img_2}`;
-    const localLink = `localhost:3000/invitation?email=${email}&client=${client}&title=${title}&name=${name}&waze=${waze}&gm=${googleMap}&img_1=${img_1}&img_2=${img_2}`;
 
-    console.log("localLink: ", localLink);
     console.log("link: ", link);
 
     setLink(link);
-    setLocalLink(localLink);
   };
 
   return (
@@ -115,14 +124,6 @@ const SlideCreateLink = ({ carouselApi }) => {
         rel="noopener noreferrer"
       >
         לינק אמיתי
-      </Link>
-      <Link
-        href={localLink}
-        className={link ? "text-red-600" : ""}
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        לינק לבדיקה
       </Link>
     </div>
   );

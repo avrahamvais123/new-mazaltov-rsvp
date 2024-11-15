@@ -40,7 +40,7 @@ const Menu = ({ open, setOpen }) => {
     },
     // "/create-invitation"
     {
-      href: "/create-invitation",
+      href: "/create-event",
       Text: (props) => <span {...props}>יצירת הזמנה</span>,
       Icon: (props) => <FileAddIcon {...props} />,
       onClick: () => setOpen(false),
