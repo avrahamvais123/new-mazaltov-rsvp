@@ -4,7 +4,8 @@ import { UserCircleIcon } from "@/app/icons/icons";
 import { cn } from "@/lib/utils";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
-import React, { useState } from "react";
+import Link from "next/link";
+import React, { useEffect, useState } from "react";
 
 const BTN_CLASSNAME = cn(
   "relative w-full bg-slate-50 text-slate-400 transition-all px-2 py-1"
@@ -12,24 +13,31 @@ const BTN_CLASSNAME = cn(
 
 const UserDetails = ({ currentUser }) => {
   const [currentTab, setCurrentTab] = useState("אירועים");
+  const [events, setEvents] = useState([]);
+  console.log("events: ", events);
+
+  const getEventMutation = useMutation({
+    mutationFn: async () => {
+      try {
+        const res = await axios.get(
+          `/api/events?linkedEmail=${currentUser?.email}`
+        );
+        setEvents(res?.data?.events);
+        console.log("res: ", res);
+      } catch (error) {
+        console.error("error: ", error);
+      }
+    },
+  });
 
   const onTab = (e) => {
     const tab = e.target.textContent.trim();
     setCurrentTab(tab);
   };
 
-  /* const createEventMutation = useMutation({
-    mutationFn: async () => {
-      const res = await axios.post("/api/events", {
-        name: "new event",
-        date: new Date(),
-        description: "new event description",
-        location: "new event location",
-        guests: [],
-        attendees: [],
-      });
-    },
-  }); */
+  useEffect(() => {
+    getEventMutation.mutate();
+  }, [currentUser]);
 
   return (
     <div
@@ -71,7 +79,37 @@ const UserDetails = ({ currentUser }) => {
 
       <div className="">
         {/* content */}
-        {currentTab === "אירועים" && <div>אירועים אחרונים שהוספתי</div>}
+        {currentTab === "אירועים" && (
+          <div className="size-full flex-col-center gap-2">
+            {events.map(
+              ({ title, date, img_1, googleMap, waze, eventType, link }, i) => {
+                return (
+                  <Link
+                    key={i}
+                    href={link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={cn(
+                      "w-full p-4 rounded-sm transition-all",
+                      "flex-col-center items-start gap-0.5",
+                      "bg-slate-50 border border-slate-200",
+                      "hover:bg-indigo-50 hover:border-indigo-700",
+                      "active:bg-indigo-100 active:border-indigo-800"
+                    )}
+                  >
+                    <p>{title}</p>
+                    <p>תאריך האירוע: {date}</p>
+                    <img
+                      src={img_1}
+                      alt="תמונת ההזמנה"
+                      className="object-contain size-32 rounded-sm"
+                    />
+                  </Link>
+                );
+              }
+            )}
+          </div>
+        )}
         {currentTab === "עיצובים" && <div>עיצובים אחרוינים שהוספתי</div>}
         {currentTab === "עריכה" && (
           <div>
