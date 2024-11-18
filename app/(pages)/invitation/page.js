@@ -3,12 +3,23 @@ import Image from "next/image";
 import InvitaionForm from "./components/InvitaionForm";
 import Link from "next/link";
 
-export const metadata = {
+
+export async function generateMetadata({ searchParams }) {
+  console.log('searchParams: ', searchParams);
+
+  return {
+    title: searchParams?.title || "מזל טוב אישורי הגעה",
+    description: searchParams?.title || "מזל טוב אישורי הגעה",
+  };
+}
+
+/* export const metadata = {
   title: "מזל טוב אישורי הגעה",
   description: "הזמנה דיגיטלית",
-};
+}; */
 
-const Page = ({ searchParams }) => {
+const Page = ({ searchParams }, ...props) => {
+  console.log('props: ', props);
   const email = searchParams?.email || "";
   const client = searchParams?.client || "";
   const title = searchParams?.title || "";

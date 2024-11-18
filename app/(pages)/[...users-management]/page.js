@@ -1,7 +1,6 @@
 import { getCollection } from "@/lib/mongoDB";
 import React from "react";
 import SendAccessLink from "./components/SendAccessLink";
-import ResetPassword from "./components/ResetPassword";
 import jwt from "jsonwebtoken";
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
@@ -11,13 +10,38 @@ const JWT_SECRET = process.env.JWT_SECRET;
 const ADMIN_EMAIL = process.env.ADMIN_EMAIL;
 
 const verifyToken = (token) => {
-  // ניהול שגיאות
   try {
     return jwt?.verify(token, JWT_SECRET);
   } catch (error) {
     console.log("Token error: ", error.message);
+    return null; // החזרת null אם הטוקן אינו תקף
+  }
+};
 
-    // ניהול השגיאה: כאן ניתן להחזיר הודעה למשתמש או לעשות כל פעולה אחרת
+const Page = async ({ searchParams }) => {
+  const session = await auth();
+
+  if (session?.user?.email !== ADMIN_EMAIL) {
+    redirect("/");
+  }
+
+  // ודא ש-`searchParams` נטען לפני הגישה אליו
+  const { token } = await searchParams;
+
+  if (!token) {
+    return (
+      <div className="size-full flex-col-center justify-center items-center p-4">
+        <h1 className="text-2xl font-bold text-red-500">אין טוקן</h1>
+        <p className="mb-4">נא לנסות שוב עם קישור חוקי.</p>
+        <SendAccessLink />
+      </div>
+    );
+  }
+
+  // אימות הטוקן
+  const decodedToken = verifyToken(token);
+
+  if (!decodedToken) {
     return (
       <div className="size-full flex-col-center justify-center items-center p-4">
         <h1 className="text-2xl font-bold text-red-500">פג תוקף הקישור</h1>
@@ -28,30 +52,19 @@ const verifyToken = (token) => {
       </div>
     );
   }
-};
-
-/*
- ** אזור מנהל המשתמשים
- */
-const Page = async ({ searchParams }) => {
-  const session = await auth();
-
-  if (session?.user?.email !== ADMIN_EMAIL) {
-    redirect("/");
-  }
-
-  // אימות הטוקן
-  const decodedToken = verifyToken(searchParams?.token);
-
-  // המשך בקוד רק אם הטוקן תקף
-  if (!decodedToken) return null;
 
   const usersCollection = await getCollection("users");
   const users = await usersCollection.find().toArray();
 
   if (!users) return null;
 
-  return <ManagementUsers users={users} />;
+  const plainUsers = users.map((user) => ({
+    ...user,
+    _id: user._id.toString(),
+    createdAt: user.createdAt?.toISOString(),
+  }));
+
+  return <ManagementUsers users={plainUsers} />;
 };
 
 export default Page;
