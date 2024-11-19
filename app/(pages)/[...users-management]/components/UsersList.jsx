@@ -7,12 +7,12 @@ import Image from "next/image";
 import MyDropdown from "@/app/ui/MyDropdown";
 
 const LIstUsers = ({
-  users,
+  users = [],
   actions,
   currentUser,
   setCurrentUser,
   setDialogDetails,
-  setOpenDialog
+  setOpenDialog,
 }) => {
   const [openDropdown, setOpenDropdown] = useState(false);
 

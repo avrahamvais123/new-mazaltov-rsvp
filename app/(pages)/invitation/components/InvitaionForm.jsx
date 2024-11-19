@@ -49,7 +49,6 @@ const InvitaionForm = ({ email, client }) => {
   console.log('client: ', client);
   console.log('email: ', email);
   const [quantity, setQuantity] = useState(1);
-  console.log("quantity: ", quantity);
   const { reset, register, handleSubmit, watch } = useForm({
     defaultValues: {
       status: "מגיעים",
@@ -91,6 +90,7 @@ const InvitaionForm = ({ email, client }) => {
 
   const sendRSVPMutation = useMutation({
     mutationFn: async (data) => {
+      console.log('data: ', data);
       try {
         const res = await axios.post("/api/invitation", {
           ...data,

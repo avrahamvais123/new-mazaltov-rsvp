@@ -4,19 +4,25 @@ import bcrypt from "bcryptjs";
 
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD;
 
+export const GET = async () => {
+  try {
+    const usersCollection = await getCollection("users");
+    const users = await usersCollection.find().toArray();
+    return NextResponse.json({ users, message: "הלקוחות נטענו בהצלחה!" });
+  } catch (error) {
+    console.log("error: ", error);
+    return NextResponse.json({ error: error?.message }, { status: 500 });
+  }
+};
+
 export const PATCH = async (req) => {
   try {
-    const {
-      email,
-      currentPassword,
-      newPassword,
-      name,
-      image,
-    } = await req.json();
-    
-    console.log('newPassword: ', newPassword);
-    console.log('currentPassword: ', currentPassword);
-    console.log('email: ', email);
+    const { email, currentPassword, newPassword, name, image } =
+      await req.json();
+
+    console.log("newPassword: ", newPassword);
+    console.log("currentPassword: ", currentPassword);
+    console.log("email: ", email);
 
     const usersCollection = await getCollection("users");
     const user = await usersCollection.findOne({ email: email });

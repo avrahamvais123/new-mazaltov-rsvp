@@ -7,8 +7,35 @@ import { actions } from "./usersListActions";
 import LIstUsers from "./UsersList";
 import { cn } from "@/lib/utils";
 import { UserAdd01Icon } from "@/app/icons/icons";
+import axios from "axios";
+import { useQuery } from "@tanstack/react-query";
 
-const UsersList = ({ users = [] }) => {
+const UsersList = () => {
+  const getUsers = async () => {
+    try {
+      const res = await axios.get("/api/users");
+      return res.data; // החזר את הנתונים מהבקשה
+    } catch (error) {
+      console.error("error: ", error);
+      throw error; // חשוב לזרוק שגיאה כדי ש-React Query יוכל להתמודד איתה
+    }
+  };
+
+  const { data: users, isLoading, refetch, status } = useQuery({
+    queryKey: ["users"],
+    queryFn: async () => {
+      try {
+        const res = await axios.get("/api/users");
+        return res?.data?.users; // החזר את הנתונים מהבקשה
+      } catch (error) {
+        console.error("error: ", error);
+        throw error; // חשוב לזרוק שגיאה כדי ש-React Query יוכל להתמודד איתה
+      }
+    },
+    //enabled: !!session?.user?.email,
+    staleTime: 300000, // Cache data for 5 minutes
+  });
+
   const [currentUser, setCurrentUser] = useState({});
   const [openDialog, setOpenDialog] = useState(false);
   const [dialogDetails, setDialogDetails] = useState({
