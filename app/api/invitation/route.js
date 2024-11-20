@@ -21,6 +21,8 @@ export const POST = async (req) => {
       belongsTo,
     });
 
+    console.log("Resend API Key in Production: ", process.env.RESEND_API_KEY);
+
     resend.emails.send({
       from: "מזל טוב אישורי הגעה <support@mazaltov-rsvp.co.il>",
       to: belongsTo,
