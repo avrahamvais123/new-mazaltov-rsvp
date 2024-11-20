@@ -26,7 +26,7 @@ export const POST = async (req) => {
       to: belongsTo,
       //to: "avrahamvais123@gmail.com",
       subject: `${name} ${status}`,
-      html: rsvpMessageHtml(name, status),
+      html: rsvpMessageHtml(client, name, status),
     });
 
     return NextResponse.json({ message: "success", data: results });
