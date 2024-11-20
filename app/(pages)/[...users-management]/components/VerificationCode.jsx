@@ -100,7 +100,7 @@ const VerificationCode = () => {
     );
   };
 
-  return <>{isCodeVerified ? <Verification /> : <ManagementUsers />}</>;
+  return <>{!isCodeVerified ? <Verification /> : <ManagementUsers />}</>;
 };
 
 export default VerificationCode;
