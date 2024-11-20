@@ -30,6 +30,7 @@ export function middleware(req) {
     "/",
     "/create-event",
     "/invitation",
+    "/visitor-tracking",
     "/test",
     "/katzav",
     "/berenshtein",
