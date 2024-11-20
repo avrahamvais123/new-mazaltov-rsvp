@@ -5,8 +5,11 @@ import React, { useState } from "react";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import MyDropdown from "@/app/ui/MyDropdown";
+import { BounceLoader, PulseLoader } from "react-spinners";
+import { indigo } from "tailwindcss/colors";
 
 const LIstUsers = ({
+  isLoading,
   users = [],
   actions,
   currentUser,
@@ -18,6 +21,13 @@ const LIstUsers = ({
 
   return (
     <div className="size-full overflow-auto flex-col-center items-start justify-start -space-y">
+      {isLoading && (
+        <div className="size-full flex-col-center gap-1">
+          <PulseLoader size={15} color={indigo[600]} />
+          <h4 className="">טוען משתמשים...</h4>
+        </div>
+      )}
+
       {users.map((user, idx) => {
         const activeUser = user?.email === currentUser?.email;
 

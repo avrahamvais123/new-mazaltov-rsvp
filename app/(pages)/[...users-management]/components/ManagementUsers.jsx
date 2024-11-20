@@ -11,16 +11,6 @@ import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 
 const UsersList = () => {
-  const getUsers = async () => {
-    try {
-      const res = await axios.get("/api/users");
-      return res.data; // החזר את הנתונים מהבקשה
-    } catch (error) {
-      console.error("error: ", error);
-      throw error; // חשוב לזרוק שגיאה כדי ש-React Query יוכל להתמודד איתה
-    }
-  };
-
   const { data: users, isLoading, refetch, status } = useQuery({
     queryKey: ["users"],
     queryFn: async () => {
@@ -48,6 +38,7 @@ const UsersList = () => {
 
   return (
     <div className="size-full overflow-hidden flex-col-center justify-start items-start gap-4 p-4">
+      {/* dialog */}
       <MyDialog
         open={openDialog}
         setOpen={setOpenDialog}
@@ -79,6 +70,7 @@ const UsersList = () => {
 
         {/* users list */}
         <LIstUsers
+          isLoading={isLoading}
           users={users}
           actions={actions}
           currentUser={currentUser}
