@@ -1,4 +1,4 @@
-import Ably from "ably/promises";
+/* import Ably from "ably/promises";
 
 const ably = new Ably.Realtime.Promise(process.env.ABLY_API_KEY);
 const channel = ably.channels.get("visitor-tracker");
@@ -14,3 +14,4 @@ export async function POST(req) {
 
   return new Response(JSON.stringify({ success: true }), { status: 200 });
 }
+ */
