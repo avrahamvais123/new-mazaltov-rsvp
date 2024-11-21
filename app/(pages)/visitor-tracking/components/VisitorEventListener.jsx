@@ -39,9 +39,9 @@ const VisitorEventListener = () => {
   }, []);
 
   return (
-    <div className="size-full p-4 flex flex-col gap-4 bg-slate-50">
+    <div className="size-full p-4 flex flex-col gap-4 overflow-hidden bg-slate-50">
       <h1 className="text-2xl">רשימת מבקרים באתר:</h1>
-      <ul className="flex flex-col gap-2">
+      <ul className="flex flex-col gap-2 overflow-auto">
         {visitors.map((visitor) => (
           <li
             key={visitor.visitorId}
@@ -50,15 +50,15 @@ const VisitorEventListener = () => {
             <UserCircleIcon className="text-slate-300" />
             <div className="">
               <strong>מזהה מבקר:</strong> {visitor.visitorId} <br />
+              <strong>אונליין:</strong> {visitor.isVisible ? "כן" : "לא"} <br />
               <strong>עמוד נוכחי:</strong>{" "}
               {visitor.pages[visitor.pages.length - 1]} <br />
               <strong>רשימת עמודים:</strong>{" "}
-              <ul>
+              <ul className="h-20 overflow-auto p-2 border border-slate-200 rounded-sm">
                 {visitor.pages.map((page, index) => (
                   <li key={index}>{page}</li>
                 ))}
               </ul>
-              <strong>אונליין:</strong> {visitor.isVisible ? "כן" : "לא"} <br />
               <strong>משך הזמן באתר:</strong> {visitor.totalTimeSpent || 0}{" "}
               שניות
             </div>
