@@ -8,7 +8,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import Script from "next/script";
 import SetUser from "./SetUser";
 import MuiProvider from "./MuiProvider";
-import VisitorTracker from "./VisitorTracker.jsx";
+import VisitorTracker from "../(pages)/visitor-tracking/components/VisitorTracker";
 
 const GA_TRACKING_ID = process.env.NEXT_PUBLIC_GA_TRACKING_ID;
 
