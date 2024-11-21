@@ -46,7 +46,6 @@ const VisitorEventListener = () => {
           console.log("visitor: ", visitor);
           const currentPage =
             visitor.pages[visitor?.pages?.length - 1]?.path || "";
-          console.log("currentPage: ", currentPage);
           return (
             <li
               key={visitor.visitorId}
@@ -63,10 +62,11 @@ const VisitorEventListener = () => {
                   {visitor.pages.map((page, index) => {
                     return (
                       <li key={index}>
-                        <div>
-                          <strong>עמוד:</strong> {page.path} <br />
-                          <strong>תאריך:</strong>{" "}
-                          {new Date(page.date).toLocaleString()}
+                        <div className="flex items-end gap-2">
+                          <span>{page.path}</span> <br />
+                          <span className="text-[.6rem] mb-0.5">
+                            {new Date(page.date).toLocaleString()}
+                          </span>
                         </div>
                       </li>
                     );
