@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Pusher from "pusher-js";
 import { UserCircleIcon } from "@/app/icons/icons";
+import { cn } from "@/lib/utils";
 
 const VisitorEventListener = () => {
   const [visitors, setVisitors] = useState([]);
@@ -51,11 +52,20 @@ const VisitorEventListener = () => {
               key={visitor.visitorId}
               className="p-4 flex gap-2 bg-white border border-slate-200 rounded-sm"
             >
-              <UserCircleIcon className="text-slate-300" />
+              {/* image */}
+              <div className="relative size-fit">
+                <UserCircleIcon className="text-slate-300" />
+                <span
+                  className={cn(
+                    "absolute bottom-0 right-0 size-3.5 border-2 border-white rounded-full",
+                    visitor.isVisible ? "bg-green-600" : "bg-red-600"
+                  )}
+                />
+              </div>
+
+              {/* details */}
               <div className="">
-                <strong>מזהה מבקר:</strong> {visitor.visitorId} <br />
-                <strong>אונליין:</strong> {visitor.isVisible ? "כן" : "לא"}{" "}
-                <br />
+                <strong>מזהה משתמש:</strong> {visitor.visitorId} <br />
                 <strong>עמוד נוכחי:</strong> {currentPage} <br />
                 <strong>רשימת עמודים:</strong>
                 <ul className="h-20 overflow-auto p-2 border border-slate-200 rounded-sm">
