@@ -14,11 +14,17 @@ export async function POST(request) {
   const { visitorId, page, isVisible, duration } = await request.json();
 
   // קבלת הנתונים הקיימים או יצירת אובייקט חדש
-  const visitorData = activeVisitors.get(visitorId) || { pages: [], totalTimeSpent: 0 };
+  const visitorData = activeVisitors.get(visitorId) || {
+    pages: [],
+    totalTimeSpent: 0,
+  };
 
   // הוספת העמוד לרשימה בסדר כרונולוגי
+  /* if (page) {
+    visitorData.pages.push(page); // הוספת עמוד עם תאריך
+  }   */
   if (page) {
-    visitorData.pages.push(page);
+    visitorData.pages.push({ path: page.path, date: page.date });
   }
 
   // עדכון זמן השהייה

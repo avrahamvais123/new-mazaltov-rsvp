@@ -25,27 +25,22 @@ export default function VisitorTracker() {
     const visitorId = getVisitorId();
     let startTime = Date.now();
 
-    const sendPageView = (page) => {
+    const sendPageView = () => {
       const duration = Math.round((Date.now() - startTime) / 1000); // זמן שהייה
       startTime = Date.now(); // עדכון זמן התחלה
 
       axios
         .post("/api/visitors", {
           visitorId,
-          page,
-          duration, // זמן שהייה
+          page: { path: pathname, date: new Date().toISOString() }, // נתוני עמוד עם תאריך
+          duration,
         })
         .then((response) => console.log("Page view updated:", response.data))
         .catch((error) => console.error("Error updating page view:", error));
     };
 
     // שליחת עמוד ראשוני
-    sendPageView(pathname);
-
-    // מעקב אחר שינוי עמודים
-    const handlePageChange = () => {
-      sendPageView(pathname);
-    };
+    sendPageView();
 
     // מעקב אחר מצב חלון
     const handleVisibilityChange = () => {
@@ -65,7 +60,9 @@ export default function VisitorTracker() {
     // טיפול בעזיבת האתר
     const handleBeforeUnload = () => {
       const totalTimeSpent = Math.round((Date.now() - startTime) / 1000);
-      axios.delete("/api/visitors", { data: { visitorId, totalTimeSpent } });
+      axios.delete("/api/visitors", {
+        data: { visitorId, totalTimeSpent },
+      });
     };
 
     window.addEventListener("beforeunload", handleBeforeUnload);
