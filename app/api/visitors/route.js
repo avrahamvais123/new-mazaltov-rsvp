@@ -12,6 +12,8 @@ let activeVisitors = new Map();
 
 export async function POST(request) {
   const { visitorId, page, isVisible, duration } = await request.json();
+  console.log('page: ', page);
+  console.log('visitorId: ', visitorId);
 
   // קבלת הנתונים הקיימים או יצירת אובייקט חדש
   const visitorData = activeVisitors.get(visitorId) || {

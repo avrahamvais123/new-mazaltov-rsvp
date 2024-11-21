@@ -14,8 +14,9 @@ export const getVisitorId = () => {
   return visitorId;
 };
 
-export const sendPageView = () => {
+export const sendPageView = (pathname) => {
   const visitorId = getVisitorId();
+  console.log('visitorId: ', visitorId);
 
   const duration = Math.round((Date.now() - startTime) / 1000); // זמן שהייה
   startTime = Date.now(); // עדכון זמן התחלה

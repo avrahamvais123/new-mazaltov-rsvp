@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import {
   handleBeforeUnload,
   handleVisibilityChange,
+  sendPageView,
 } from "../utils/visitor-tracking-utils";
 
 export default function VisitorTracker() {
@@ -12,6 +13,8 @@ export default function VisitorTracker() {
 
   useEffect(() => {
     if (typeof window === "undefined") return;
+
+    sendPageView(pathname);
 
     document.addEventListener("visibilitychange", handleVisibilityChange);
     window.addEventListener("beforeunload", handleBeforeUnload);
