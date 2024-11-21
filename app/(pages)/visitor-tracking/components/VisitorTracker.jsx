@@ -2,7 +2,10 @@
 
 import { useEffect } from "react";
 import { usePathname } from "next/navigation";
-import { handleBeforeUnload, handleVisibilityChange } from "../utils/visitor-tracking-utils";
+import {
+  handleBeforeUnload,
+  handleVisibilityChange,
+} from "../utils/visitor-tracking-utils";
 
 export default function VisitorTracker() {
   const pathname = usePathname();

@@ -14,9 +14,9 @@ export const getVisitorId = () => {
   return visitorId;
 };
 
-const visitorId = getVisitorId();
-
 export const sendPageView = () => {
+  const visitorId = getVisitorId();
+
   const duration = Math.round((Date.now() - startTime) / 1000); // זמן שהייה
   startTime = Date.now(); // עדכון זמן התחלה
 
@@ -32,6 +32,8 @@ export const sendPageView = () => {
 
 // מעקב אחר מצב חלון
 export const handleVisibilityChange = () => {
+  const visitorId = getVisitorId();
+
   const isVisible = !document.hidden;
 
   axios
@@ -45,6 +47,8 @@ export const handleVisibilityChange = () => {
 
 // טיפול בעזיבת האתר
 export const handleBeforeUnload = () => {
+  const visitorId = getVisitorId();
+
   const totalTimeSpent = Math.round((Date.now() - startTime) / 1000);
   axios.delete("/api/visitors", {
     data: { visitorId, totalTimeSpent },
