@@ -8,9 +8,7 @@ import {
 } from "@/components/ui/carousel";
 import StepsBar from "@/app/ui/StepsBar";
 import SlideUploadImage from "./SlideUploadImage";
-import SlideOptions from "./SlideOptions";
 import SlideDetails from "./SlideDetails";
-import SlidePayment from "./SlidePayment";
 import SlideCreateLink from "./SlideCreateLink";
 
 const stepsData = [
