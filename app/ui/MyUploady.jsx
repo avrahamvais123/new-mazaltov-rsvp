@@ -1,12 +1,10 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import Uploady, {
+import {
   useBatchStartListener,
   useItemProgressListener,
   useAbortItem,
-  useItemRetry,
-  FILE_STATES,
 } from "@rpldy/uploady";
 import retryEnhancer, { useBatchRetry } from "@rpldy/retry-hooks";
 import UploadPreview from "@rpldy/upload-preview";
@@ -79,12 +77,13 @@ const UploadyListeners = ({ setStatus }) => {
 };
 
 // קומפוננטת Preview מותאמת אישית
-const Preview = ({ id, url, name, type, status }) => {
+const Preview = ({ id, url, name, type, status, removePreview }) => {
   const abortItem = useAbortItem();
 
   const onAbortItem = () => {
     console.log("id: ", id);
     abortItem(id);
+    removePreview(id);
   };
 
   return (
@@ -121,12 +120,9 @@ const Preview = ({ id, url, name, type, status }) => {
       {/* actions */}
       <div className="flex items-center gap-2">
         <ReloadIcon className="size-4 text-slate-400 hover:text-indigo-600" />
-        <Delete02Icon className="size-4 text-slate-400 hover:text-red-600" />
+        <Delete02Icon onClick={onAbortItem} className="size-4 text-slate-400 hover:text-red-600" />
       </div>
 
-      <button onClick={onAbortItem} className="">
-        abort
-      </button>
     </div>
   );
 };
