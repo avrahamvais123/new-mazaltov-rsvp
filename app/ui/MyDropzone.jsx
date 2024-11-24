@@ -5,7 +5,7 @@ import { useDropzone } from "react-dropzone";
 
 const MyDropzone = () => {
   const [files, setFiles] = useState([]); // סטייט לניהול קבצים
-  console.log('files: ', files);
+  console.log("files: ", files);
 
   const onDrop = (acceptedFiles) => {
     acceptedFiles.forEach((file) => {
@@ -52,29 +52,39 @@ const MyDropzone = () => {
       )
     );
 
-    // סימולציה להעלאה לשרת
-    let progress = 0;
-    const uploadInterval = setInterval(() => {
-      setFiles((prevFiles) =>
-        prevFiles.map((f) => {
-          if (f.file === file) {
-            if (f.paused) {
-              clearInterval(uploadInterval);
-              return f; // אם השהיה, לא להמשיך
-            }
+    const formData = new FormData();
+    formData.append("file", file);
 
-            progress = Math.min(f.progress + 10, 100);
-            if (progress === 100) {
-              clearInterval(uploadInterval);
-              return { ...f, progress, status: "uploaded" };
-            }
+    const xhr = new XMLHttpRequest();
+    xhr.open("POST", "https://httpbin.org/post");
 
-            return { ...f, progress };
-          }
-          return f;
-        })
-      );
-    }, 500); // עדכון כל חצי שנייה
+    // מעקב אחרי התקדמות העלאה
+    xhr.upload.onprogress = (event) => {
+      if (event.lengthComputable) {
+        const progress = Math.round((event.loaded / event.total) * 100);
+        setFiles((prevFiles) =>
+          prevFiles.map((f) => (f.file === file ? { ...f, progress } : f))
+        );
+      }
+    };
+
+    // תגובה לאחר העלאה מוצלחת
+    xhr.onload = () => {
+      if (xhr.status === 200) {
+        setFiles((prevFiles) =>
+          prevFiles.map((f) =>
+            f.file === file ? { ...f, status: "uploaded" } : f
+          )
+        );
+      }
+    };
+
+    // טיפול בשגיאות
+    xhr.onerror = () => {
+      alert("שגיאה בהעלאת הקובץ!");
+    };
+
+    xhr.send(formData);
   };
 
   const pauseUpload = (file) => {
@@ -94,24 +104,30 @@ const MyDropzone = () => {
     setFiles((prevFiles) => prevFiles.filter((f) => f.file !== file));
   };
 
-  const { getRootProps, getInputProps } = useDropzone({ onDrop });
+  const { getRootProps, getInputProps, ...rest } = useDropzone({ onDrop });
+  console.log("rest: ", rest);
 
   return (
     <div>
-      <div {...getRootProps()} className="border-2 border-dashed p-4 mb-4">
+      {/* dropzone */}
+      <div {...getRootProps()} className="border-2 border-dashed p-4">
         <input {...getInputProps()} />
         <p>גרור ושחרר קבצים כאן, או לחץ כדי לבחור קבצים</p>
       </div>
 
+      {/* files list */}
       {files.length > 0 && (
-        <div>
+        <div className="">
           {files.map(({ file, preview, progress, status, paused }) => (
-            <div key={file.name} className="flex items-center mb-4">
+            <div
+              key={file.name}
+              className="mb-4 p-2 flex-center gap-2 border border-slate-200 rounded-sm"
+            >
               {preview && (
                 <img
                   src={preview}
                   alt={file.name}
-                  className="w-16 h-16 object-cover mr-4"
+                  className="size-16 object-cover rounded-sm"
                 />
               )}
               <div className="flex-1">
@@ -122,7 +138,7 @@ const MyDropzone = () => {
                     style={{
                       width: `${progress}%`,
                     }}
-                  ></div>
+                  />
                 </div>
                 <div className="flex space-x-2">
                   {status === "pending" && (

@@ -1,153 +1,69 @@
 "use client";
 
-import React, { useState, useEffect, useRef } from "react";
+import React from "react";
 import Uppy from "@uppy/core";
-import { DragDrop } from "@uppy/react";
 import Tus from "@uppy/tus";
-import Hebrew from "@uppy/locales/lib/he_IL";
+import {
+  DragDrop,
+  Dashboard,
+  ProgressBar,
+  StatusBar,
+  useUppyState,
+} from "@uppy/react";
 import "@uppy/core/dist/style.css";
+import "@uppy/dashboard/dist/style.css";
 import "@uppy/drag-drop/dist/style.css";
+import "@uppy/progress-bar/dist/style.css";
+import "@uppy/status-bar/dist/style.min.css";
+import { useMemo } from "react";
+import { useEffect } from "react";
+import { useState } from "react";
 
-const UppyDropzone = () => {
-  const [uploadedFiles, setUploadedFiles] = useState([]);
-  const [progress, setProgress] = useState({});
-  const [previewImages, setPreviewImages] = useState([]);
-  const uppyRef = useRef(null); // Reference to store Uppy instance
+const UppyUploader = (props) => {
+  /* const uppy = useMemo(() => {
+    return new Uppy({
+      restrictions: { maxNumberOfFiles: 3 },
+      autoProceed: false,
+      locale: { strings: { dropHereOr: "dfgdfgdfgdfgdfg" } },
+    }).use(Tus, { endpoint: "https://httpbin.org/post" });
+  }, []); */
+
+  const [uppy] = useState(() =>
+    new Uppy({
+      restrictions: { maxNumberOfFiles: 3 },
+      autoProceed: false,
+      defaultLocale: { strings: {  cancel: "ביטול"      } },
+    }).use(Tus, { endpoint: "https://httpbin.org/post" })
+  );
+
+  console.log("uppy: ", uppy);
+
+  const files = useUppyState(uppy, (state) => state.files);
+  console.log("files: ", files);
+  const totalProgress = useUppyState(uppy, (state) => state.totalProgress);
+  console.log("totalProgress: ", totalProgress);
+  // We can also get specific plugin state.
+  // Note that the value on `plugins` depends on the `id` of the plugin.
+  const metaFields = useUppyState(
+    uppy,
+    (state) => state.plugins?.Dashboard?.metaFields
+  );
+  console.log("metaFields: ", metaFields);
 
   useEffect(() => {
-    // Initialize Uppy
-    uppyRef.current = new Uppy({
-      debug: true,
-      autoProceed: false, // Manual upload
-      restrictions: {
-        maxFileSize: 10485760, // 10MB
-        allowedFileTypes: ["image/*", "video/*", "application/pdf"], // Limit file types
-      },
-      locale: Hebrew,
+    uppy.on("complete", (result) => {
+      console.log("Upload complete:", result.successful);
     });
 
-    uppyRef.current.use(Tus, { endpoint: "https://tusd.tusdemo.net/files/" });
-
-    // Generate preview images
-    uppyRef.current.on("file-added", (file) => {
-      const reader = new FileReader();
-      reader.onload = () => {
-        setPreviewImages((prev) => [
-          ...prev,
-          { id: file.id, src: reader.result },
-        ]);
-      };
-      if (file.type.startsWith("image/")) {
-        reader.readAsDataURL(file.data);
-      }
-    });
-
-    // Update progress for each file
-    uppyRef.current.on("upload-progress", (file, progressData) => {
-      setProgress((prev) => ({
-        ...prev,
-        [file.id]: Math.round(
-          (progressData.bytesUploaded / progressData.bytesTotal) * 100
-        ),
-      }));
-    });
-
-    // Handle successful uploads
-    uppyRef.current.on("complete", (result) => {
-      const uploaded = result.successful.map((file) => ({
-        id: file.id,
-        name: file.name,
-        url: file.uploadURL,
-      }));
-      setUploadedFiles(uploaded);
-      setProgress({});
-    });
-
-    return () => {
-      uppyRef.current.reset(); // Cleanup
-    };
-  }, []);
-
-  const handleRemove = (id) => {
-    uppyRef.current.removeFile(id);
-    setPreviewImages((prev) => prev.filter((img) => img.id !== id));
-    setProgress((prev) => {
-      const newProgress = { ...prev };
-      delete newProgress[id];
-      return newProgress;
-    });
-  };
-
-  const handleRetry = (id) => {
-    uppyRef.current.retryUpload(id);
-  };
+    return () => uppy.close();
+  }, [uppy]);
 
   return (
-    <div style={{ direction: "rtl", textAlign: "center" }}>
-      <h3>העלאת קבצים</h3>
-      {uppyRef.current && <DragDrop uppy={uppyRef.current} />}
-      <div style={{ marginTop: "20px" }}>
-        {previewImages.length > 0 && (
-          <div style={{ display: "flex", flexWrap: "wrap", gap: "10px" }}>
-            {previewImages.map((img) => (
-              <div
-                key={img.id}
-                style={{
-                  border: "1px solid #ccc",
-                  padding: "10px",
-                  borderRadius: "5px",
-                  position: "relative",
-                }}
-              >
-                <img
-                  src={img.src}
-                  alt="Preview"
-                  style={{
-                    width: "100px",
-                    height: "100px",
-                    objectFit: "cover",
-                  }}
-                />
-                {progress[img.id] !== undefined && (
-                  <p style={{ fontSize: "12px" }}>
-                    התקדמות: {progress[img.id]}%
-                  </p>
-                )}
-                <div style={{ marginTop: "10px" }}>
-                  <button
-                    onClick={() => handleRemove(img.id)}
-                    style={{ marginRight: "5px", cursor: "pointer" }}
-                  >
-                    ביטול
-                  </button>
-                  <button
-                    onClick={() => handleRetry(img.id)}
-                    style={{ cursor: "pointer" }}
-                  >
-                    העלאה מחדש
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
-      {uploadedFiles.length > 0 && (
-        <div style={{ marginTop: "20px" }}>
-          <h4>קבצים שהועלו:</h4>
-          <ul>
-            {uploadedFiles.map((file) => (
-              <li key={file.id}>
-                <a href={file.url} target="_blank" rel="noopener noreferrer">
-                  {file.name}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
+    <div>
+      <Dashboard uppy={uppy} plugins={["DragDrop"]} {...props} />
+      <ProgressBar uppy={uppy} hideAfterFinish={true} />
     </div>
   );
 };
 
-export default UppyDropzone;
+export default UppyUploader;
