@@ -1,12 +1,13 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import Uploady, {
+import {
   useBatchStartListener,
   useItemProgressListener,
   useAbortItem,
-  useItemRetry,
-  FILE_STATES,
+  createUploader,
+  useBatchCancelledListener,
+  useUploadyContext,
 } from "@rpldy/uploady";
 import retryEnhancer, { useBatchRetry } from "@rpldy/retry-hooks";
 import UploadPreview from "@rpldy/upload-preview";
@@ -79,13 +80,28 @@ const UploadyListeners = ({ setStatus }) => {
 };
 
 // קומפוננטת Preview מותאמת אישית
-const Preview = ({ id, url, name, type, status }) => {
-  const abortItem = useAbortItem();
+const Preview = ({ id, url, name, type, status, removePreview }) => {
+  const uploader = createUploader();
+  console.log("uploader: ", uploader);
 
-  const onAbortItem = () => {
-    console.log("id: ", id);
-    abortItem(id);
+  const uploadyContext = useUploadyContext();
+  console.log('uploadyContext: ', uploadyContext);
+  console.log("Current state: ", uploadyContext?.getState());
+  
+  const abortItem = useAbortItem();
+  const retry = useBatchRetry();
+
+
+  const onAbortAndRemoveItem = () => {
+    // מבטל את ההעלאה
+    //abortItem(id);
+    // מוחק את הפריט מהתצוגה
+    removePreview(id);
   };
+
+  /* const onRetry = () => {
+    uploadyContext.upload(fileObject); // להעלות מחדש את הקובץ
+  } */
 
   return (
     <div
@@ -120,13 +136,15 @@ const Preview = ({ id, url, name, type, status }) => {
 
       {/* actions */}
       <div className="flex items-center gap-2">
-        <ReloadIcon className="size-4 text-slate-400 hover:text-indigo-600" />
-        <Delete02Icon className="size-4 text-slate-400 hover:text-red-600" />
+        <ReloadIcon
+          onClick={() => retry(id)}
+          className="size-4 text-slate-400 hover:text-indigo-600"
+        />
+        <Delete02Icon
+          onClick={() => abortItem(id)}
+          className="size-4 text-slate-400 hover:text-red-600"
+        />
       </div>
-
-      <button onClick={onAbortItem} className="">
-        abort
-      </button>
     </div>
   );
 };

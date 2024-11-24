@@ -7,6 +7,7 @@ import { useSession } from "next-auth/react";
 import React from "react";
 import MyDropzone from "@/app/ui/MyDropzone";
 import MyUploady from "@/app/ui/MyUploady";
+import UppyUploader from "@/app/ui/UppyUploadr";
 
 const SlideUploadImage = ({ setSteps, carouselApi }) => {
   const setInvitationDetails = useSetAtom(invitation_details_Atom);
@@ -34,7 +35,7 @@ const SlideUploadImage = ({ setSteps, carouselApi }) => {
     carouselApi?.scrollNext();
   };
 
-  return <MyUploady onSubmit={onSubmit} />;
+  return <MyDropzone onSubmit={onSubmit} />;
 };
 
 export default SlideUploadImage;
