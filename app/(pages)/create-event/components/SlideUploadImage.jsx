@@ -35,7 +35,7 @@ const SlideUploadImage = ({ setSteps, carouselApi }) => {
     carouselApi?.scrollNext();
   };
 
-  return <MyUploady onSubmit={onSubmit} />;
+  return <MyDropzone onSubmit={onSubmit} />;
 };
 
 export default SlideUploadImage;

@@ -1,187 +1,139 @@
 "use client";
 
+import { cn } from "@/lib/utils";
 import React, { useState } from "react";
+import { Cancel02Icon, UploadCircle01Icon } from "../icons/icons";
+import { AnimatePresence, motion } from "framer-motion";
+import useOnDrop from "../hooks/useOnDrop";
 import { useDropzone } from "react-dropzone";
 
 const MyDropzone = () => {
-  const [files, setFiles] = useState([]); // סטייט לניהול קבצים
-  console.log("files: ", files);
-
-  const onDrop = (acceptedFiles) => {
-    acceptedFiles.forEach((file) => {
-      const reader = new FileReader();
-
-      const fileData = {
-        file,
-        name: file.name,
-        preview: null,
-        progress: 0,
-        status: "pending", // סטטוס ראשוני
-        paused: false, // סטטוס של השהיה
-      };
-
-      setFiles((prevFiles) => [...prevFiles, fileData]);
-
-      reader.onprogress = (event) => {
-        if (event.loaded && event.total) {
-          const progress = Math.round((event.loaded / event.total) * 100);
-          setFiles((prevFiles) =>
-            prevFiles.map((f) => (f.file === file ? { ...f, progress } : f))
-          );
-        }
-      };
-
-      reader.onload = () => {
-        setFiles((prevFiles) =>
-          prevFiles.map((f) =>
-            f.file === file
-              ? { ...f, preview: reader.result, status: "ready" }
-              : f
-          )
-        );
-      };
-
-      reader.readAsDataURL(file);
-    });
-  };
-
-  const startUpload = (file) => {
-    setFiles((prevFiles) =>
-      prevFiles.map((f) =>
-        f.file === file ? { ...f, status: "uploading", paused: false } : f
-      )
-    );
-
-    const formData = new FormData();
-    formData.append("file", file);
-
-    const xhr = new XMLHttpRequest();
-    xhr.open("POST", "https://httpbin.org/post");
-
-    // מעקב אחרי התקדמות העלאה
-    xhr.upload.onprogress = (event) => {
-      if (event.lengthComputable) {
-        const progress = Math.round((event.loaded / event.total) * 100);
-        setFiles((prevFiles) =>
-          prevFiles.map((f) => (f.file === file ? { ...f, progress } : f))
-        );
-      }
-    };
-
-    // תגובה לאחר העלאה מוצלחת
-    xhr.onload = () => {
-      if (xhr.status === 200) {
-        setFiles((prevFiles) =>
-          prevFiles.map((f) =>
-            f.file === file ? { ...f, status: "uploaded" } : f
-          )
-        );
-      }
-    };
-
-    // טיפול בשגיאותס
-    xhr.onerror = () => {
-      alert("שגיאה בהעלאת הקובץ!");
-    };
-
-    xhr.send(formData);
-  };
-
-  const pauseUpload = (file) => {
-    setFiles((prevFiles) =>
-      prevFiles.map((f) => (f.file === file ? { ...f, paused: true } : f))
-    );
-  };
-
-  const resumeUpload = (file) => {
-    setFiles((prevFiles) =>
-      prevFiles.map((f) => (f.file === file ? { ...f, paused: false } : f))
-    );
-    startUpload(file); // ממשיך העלאה
-  };
-
-  const cancelUpload = (file) => {
-    setFiles((prevFiles) => prevFiles.filter((f) => f.file !== file));
-  };
-
-  const { getRootProps, getInputProps, ...rest } = useDropzone({ onDrop });
+  const {
+    files,
+    setFiles,
+    showDropzone,
+    setShowDropzone,
+    acceptedFiles,
+    setAcceptedFiles,
+  } = useOnDrop();
+  
+  console.log('files: ', files);
+  
+  const {
+    getRootProps,
+    getInputProps,
+    isDragActive,
+    isFocused,
+    isFileDialogActive,
+    ...rest
+  } = useDropzone({
+    onDrop: (acceptedFiles) => {
+      setAcceptedFiles(acceptedFiles);
+    },
+  });
   console.log("rest: ", rest);
 
   return (
-    <div>
-      {/* dropzone */}
-      <div {...getRootProps()} className="border-2 border-dashed p-4">
-        <input {...getInputProps()} />
-        <p>גרור ושחרר קבצים כאן, או לחץ כדי לבחור קבצים</p>
+    <div className="relative size-full max-w-[42rem] max-h-[38rem] flex-col-center justify-start gap-4 overflow-hidden">
+      <div className="w-full flex-center">
+        <button
+          onClick={() => setShowDropzone((prev) => !prev)}
+          className="bg-indigo-600 text-white rounded-md p-2"
+        >
+          {showDropzone ? "הסתר קבצים" : "הוסף קבצים"}
+        </button>
       </div>
-
-      {/* files list */}
-      {files.length > 0 && (
-        <div className="">
-          {files.map(({ file, preview, progress, status, paused }) => (
-            <div
-              key={file.name}
-              className="mb-4 p-2 flex-center gap-2 border border-slate-200 rounded-sm"
-            >
-              {preview && (
-                <img
-                  src={preview}
-                  alt={file.name}
-                  className="size-16 object-cover rounded-sm"
-                />
+      {/* dropzone */}
+      <AnimatePresence>
+        {showDropzone && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            {...getRootProps()}
+            className={cn(
+              "z-10 absolute-center",
+              "size-full p-4 transition-all",
+              "flex-col-center gap-2",
+              "border-2 border-dashed rounded-md",
+              isDragActive || isFileDialogActive
+                ? "border-indigo-600 bg-indigo-50"
+                : "border-slate-200 bg-white"
+            )}
+          >
+            <input {...getInputProps()} />
+            <UploadCircle01Icon
+              className={cn(
+                "size-20 transition-all",
+                isDragActive || isFileDialogActive
+                  ? "text-indigo-600"
+                  : "text-slate-300"
               )}
-              <div className="flex-1">
-                <p>{file.name}</p>
-                <div className="h-2 w-full bg-gray-200 rounded mb-2">
-                  <div
-                    className="h-full bg-blue-500 rounded"
-                    style={{
-                      width: `${progress}%`,
-                    }}
-                  />
-                </div>
-                <div className="flex space-x-2">
-                  {status === "pending" && (
-                    <button
-                      onClick={() => startUpload(file)}
-                      className="bg-green-500 text-white px-2 py-1 rounded"
-                    >
-                      העלה
-                    </button>
-                  )}
-                  {status === "uploading" && !paused && (
-                    <button
-                      onClick={() => pauseUpload(file)}
-                      className="bg-yellow-500 text-white px-2 py-1 rounded"
-                    >
-                      השהה
-                    </button>
-                  )}
-                  {paused && (
-                    <button
-                      onClick={() => resumeUpload(file)}
-                      className="bg-green-500 text-white px-2 py-1 rounded"
-                    >
-                      המשך
-                    </button>
-                  )}
-                  <button
-                    onClick={() => cancelUpload(file)}
-                    className="bg-red-500 text-white px-2 py-1 rounded"
-                  >
-                    בטל
-                  </button>
-                </div>
-                {status === "uploaded" && (
-                  <p className="text-green-500">הועלה בהצלחה!</p>
-                )}
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
+            />
+            <p className="text-md text-center">
+              גרור ושחרר קבצים כאן, <br />
+              או לחץ כדי לבחור קבצים
+            </p>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <div className="size-full bg-slate-50 rounded-lg overflow-hidden">
+        {/* files list */}
+        {files.length > 0 && (
+          <div
+            className={cn(
+              "size-full max-h-fit p-4 overflow-auto",
+              "grid grid-cols-3 auto-rows-auto gap-2",
+              "max-md:grid-cols-2 max-sm:grid-cols-1",
+              "place-items-center md:place-items-start",
+              "border-slate-100 border rounded-lg"
+            )}
+          >
+            <Preview files={files} />
+          </div>
+        )}
+      </div>
     </div>
   );
 };
 
 export default MyDropzone;
+
+const Preview = ({ files = [] }) => {
+  return (
+    <>
+      {files.map((item, idx) => {
+        const {
+          id,
+          file,
+          PreviewImage,
+          size,
+          remove,
+          progress,
+          status,
+          paused,
+        } = item;
+
+        return (
+          <div
+            key={idx}
+            className="relative w-52 h-fit shadow-md shadow-slate-200 bg-white flex-col-center border border-slate-200 rounded-sm"
+          >
+            <Cancel02Icon
+              onClick={remove}
+              className="cursor-pointer text-red-600 size-6 absolute -top-2 -right-2"
+            />
+            <PreviewImage />
+            <div className="w-full border-t border-slate-200 p-2">
+              <p className="text-sm truncate w-full overflow-x-hidden">
+                {file.name}
+              </p>
+              <p className="text-xs">{`${size} MB`}</p>
+            </div>
+          </div>
+        );
+      })}
+    </>
+  );
+};
