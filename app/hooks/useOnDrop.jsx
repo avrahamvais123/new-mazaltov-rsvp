@@ -91,8 +91,8 @@ const PreviewImage = ({ fileExtension, url }) => {
         src={preview}
         alt={fileExtension}
         className={cn(
-          "aspect-square",
-          isSpecial ? "size-20 object-contain" : "size-auto object-cover"
+          "aspect-square rounded-t-sm",
+          isSpecial ? "size-28 object-contain" : "size-auto object-cover"
         )}
       />
     </div>

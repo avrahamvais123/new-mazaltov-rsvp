@@ -8,17 +8,11 @@ import useOnDrop from "../hooks/useOnDrop";
 import { useDropzone } from "react-dropzone";
 
 const MyDropzone = () => {
-  const {
-    files,
-    setFiles,
-    showDropzone,
-    setShowDropzone,
-    acceptedFiles,
-    setAcceptedFiles,
-  } = useOnDrop();
-  
-  console.log('files: ', files);
-  
+  const { files, setFiles, showDropzone, setShowDropzone, setAcceptedFiles } =
+    useOnDrop();
+
+  console.log("files: ", files);
+
   const {
     getRootProps,
     getInputProps,
@@ -27,9 +21,7 @@ const MyDropzone = () => {
     isFileDialogActive,
     ...rest
   } = useDropzone({
-    onDrop: (acceptedFiles) => {
-      setAcceptedFiles(acceptedFiles);
-    },
+    onDrop: setAcceptedFiles,
   });
   console.log("rest: ", rest);
 
