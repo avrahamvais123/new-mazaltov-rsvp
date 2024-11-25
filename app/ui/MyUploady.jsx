@@ -8,6 +8,7 @@ import {
   createUploader,
   useBatchCancelledListener,
   useUploadyContext,
+  useBatchAddListener,
 } from "@rpldy/uploady";
 import retryEnhancer, { useBatchRetry } from "@rpldy/retry-hooks";
 import UploadPreview from "@rpldy/upload-preview";
@@ -21,51 +22,18 @@ import {
 } from "@/app/icons/icons";
 import { useCallback, useState } from "react";
 import { Progress } from "@/components/ui/progress";
+import { indigo, slate } from "tailwindcss/colors";
 
-// קומפוננטה הראשית
-const MyUploader = dynamic(
-  () =>
-    import("@rpldy/uploady").then((module) => {
-      const { Uploady } = module;
-
-      return function UploaderWrapper(props) {
-        const [status, setStatus] = useState(0);
-        console.log("status: ", status);
-
-        return (
-          <Uploady
-            destination={{ url: "https://httpbin.org/post" }}
-            multiple
-            accept="image/*,audio/*,video/*"
-            enhancer={retryEnhancer}
-          >
-            <UploadyListeners setStatus={setStatus} />
-            <div className="size-full flex flex-col items-center justify-start gap-4 p-4">
-              <UploadButton
-                className={cn(
-                  "w-full md:w-96",
-                  "bg-indigo-500 text-white px-4 py-2 rounded-md",
-                  "hover:bg-indigo-600 active:bg-indigo-700",
-                  "transition-all duration-200"
-                )}
-              >
-                בחר קבצים
-              </UploadButton>
-              <UploadPreview
-                previewComponentProps={{ status }}
-                PreviewComponent={Preview}
-                className="w-full max-h-[300px] overflow-auto py-2"
-              />
-            </div>
-          </Uploady>
-        );
-      };
-    }),
-  { ssr: false }
-);
+const Uploady = dynamic(() => import("@rpldy/uploady"), { ssr: false });
 
 // מאזינים
-const UploadyListeners = ({ setStatus }) => {
+const UploadyListeners = ({ setStatus, setFiles }) => {
+  // מאזין להוספת קבצים
+  useBatchAddListener((batch) => {
+    console.log("Files added: ", batch.items);
+    setFiles((prev) => [...prev, ...batch.items]);
+  });
+
   useBatchStartListener((batch) => {
     console.log("Batch Started: ", batch);
   });
@@ -85,23 +53,10 @@ const Preview = ({ id, url, name, type, status, removePreview }) => {
   console.log("uploader: ", uploader);
 
   const uploadyContext = useUploadyContext();
-  console.log('uploadyContext: ', uploadyContext);
-  console.log("Current state: ", uploadyContext?.getState());
-  
+  console.log("uploadyContext: ", uploadyContext);
+
   const abortItem = useAbortItem();
   const retry = useBatchRetry();
-
-
-  const onAbortAndRemoveItem = () => {
-    // מבטל את ההעלאה
-    //abortItem(id);
-    // מוחק את הפריט מהתצוגה
-    removePreview(id);
-  };
-
-  /* const onRetry = () => {
-    uploadyContext.upload(fileObject); // להעלות מחדש את הקובץ
-  } */
 
   return (
     <div
@@ -111,7 +66,7 @@ const Preview = ({ id, url, name, type, status, removePreview }) => {
         "flex-center justify-between"
       )}
     >
-      <div className="flex items-center gap-2">
+      <div className="w-full flex items-center gap-2">
         {url && (
           <img
             src={url}
@@ -120,33 +75,73 @@ const Preview = ({ id, url, name, type, status, removePreview }) => {
           />
         )}
 
-        {/* name */}
-        <div className="flex flex-col gap-0.5 overflow-hidden">
-          <span className="text-slate-400 text-sm truncate max-w-[90%]">
-            {name}
-          </span>
+        <div className="w-full flex-col-center">
+          {/* name */}
+          <div className="w-full gap-0.5 overflow-hidden">
+            <span className="text-slate-400 text-sm truncate max-w-[90%]">
+              {name}
+            </span>
+          </div>
+
+          {/* status */}
+          <div className="w-full flex-center gap-2">
+            {`${Math.round(status)}%`}
+
+            <Progress
+              dir="rtl"
+              classNames={{ root: "bg-indigo-100", indicator: "bg-indigo-600" }}
+              value={status}
+            />
+
+            {/* actions */}
+            <ReloadIcon
+              onClick={() => retry(id)}
+              className="size-6 text-slate-400 hover:text-indigo-600"
+            />
+
+            <Delete02Icon
+              onClick={() => removePreview(id)}
+              className="size-6 text-slate-400 hover:text-red-600"
+            />
+          </div>
         </div>
-      </div>
-
-      {/* status */}
-      <div className="w-full flex-center gap-2">
-        {`${Math.round(status)}%`}
-        <Progress dir="rtl" value={status} />
-      </div>
-
-      {/* actions */}
-      <div className="flex items-center gap-2">
-        <ReloadIcon
-          onClick={() => retry(id)}
-          className="size-4 text-slate-400 hover:text-indigo-600"
-        />
-        <Delete02Icon
-          onClick={() => abortItem(id)}
-          className="size-4 text-slate-400 hover:text-red-600"
-        />
       </div>
     </div>
   );
 };
 
+// קומפוננטה הראשית
+const MyUploader = () => {
+  const [files, setFiles] = useState([]);
+  const [status, setStatus] = useState(0);
+  console.log("status: ", status);
+
+  return (
+    <Uploady
+      destination={{ url: "https://httpbin.org/post" }}
+      multiple
+      accept="image/*,audio/*,video/*"
+      enhancer={retryEnhancer}
+    >
+      <UploadyListeners setStatus={setStatus} setFiles={setFiles} />
+      <div className="size-full flex flex-col items-center justify-start gap-4 p-4">
+        <UploadButton
+          className={cn(
+            "w-full md:w-96",
+            "bg-indigo-500 text-white px-4 py-2 rounded-md",
+            "hover:bg-indigo-600 active:bg-indigo-700",
+            "transition-all duration-200"
+          )}
+        >
+          בחר קבצים
+        </UploadButton>
+        <UploadPreview
+          previewComponentProps={{ status }}
+          PreviewComponent={Preview}
+          className="w-full max-h-[300px] overflow-auto py-2"
+        />
+      </div>
+    </Uploady>
+  );
+};
 export default MyUploader;
