@@ -28,7 +28,6 @@ const Preview = ({ files = [] }) => {
           status,
           paused,
         } = item;
-        console.log("type: ", type);
 
         const { color, shadowcolor } = generateBowColor(type);
 
@@ -68,7 +67,7 @@ const Preview = ({ files = [] }) => {
                 </motion.div>
               )}
             </AnimatePresence>
-            
+
             {/* bow */}
             <div className="absolute z-10 top-3 left-[-0.9rem] flex-col-center">
               <BowIcon

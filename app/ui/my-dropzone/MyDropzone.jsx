@@ -11,15 +11,13 @@ const MyDropzone = () => {
   const { files, showDropzone, setShowDropzone, setAcceptedFiles } =
     useOptions();
 
-  console.log("files: ", files);
-
   const update = async () => {
     try {
       const res = await axios.patch("/api/upload-image", {
         oldFolder: "old-folder",
         newFolder: "new-folder",
       });
-      console.log('res: ', res);
+      console.log("res: ", res);
     } catch (error) {
       console.log("error: ", error);
     }
@@ -71,8 +69,8 @@ const MyDropzone = () => {
       </div>
 
       {/* footer */}
-      <div className="w-full bg-white p-4 -mt-1 border border-slate-200 rounded-b-lg">
-        footer
+      <div className="w-full text-end text-sm text-slate-300 bg-white p-4 -mt-1 border border-slate-200 rounded-b-lg">
+        נוצר ע׳׳י זוהר מערכות
       </div>
     </div>
   );

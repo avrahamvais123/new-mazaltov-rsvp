@@ -1,12 +1,13 @@
-import { v2 as cloudinary } from "cloudinary";
+//import { v2 as cloudinary } from "cloudinary";
+import cloudinary from "@/lib/cloudinary";
 import { NextResponse } from "next/server";
 
-// Configuration
+/* // Configuration
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
   api_secret: process.env.CLOUDINARY_SECRET,
-});
+}); */
 
 export const POST = async (req) => {
   console.log("req: ", req);
@@ -56,8 +57,8 @@ export async function PATCH(req) {
   try {
     // קבלת נתוני הבקשה
     const body = await req.json();
-    console.log('body: ', body);
-    
+    console.log("body: ", body);
+
     const { oldFolder, newFolder } = body;
 
     if (!oldFolder || !newFolder) {
@@ -66,48 +67,13 @@ export async function PATCH(req) {
         { status: 400 }
       );
     }
-
     // שליפת כל הקבצים בתיקיה הישנה
-    const response = await cloudinary.api.resources({
-      type: "upload",
-      prefix: `${oldFolder}/`,
-    });
+    const response = await cloudinary.api.rename_folder("old-folder", "new-folder");
 
-    const files = response.resources;
-
-    if (!files.length) {
-      return NextResponse.json(
-        { message: "No files found in the old folder" },
-        { status: 404 }
-      );
-    }
-
-    // העברת כל קובץ לתיקיה החדשה
-    for (const file of files) {
-      await cloudinary.api.update(file.public_id, { folder: newFolder });
-      console.log(`Moved ${file.public_id} to ${newFolder}`);
-    }
-
-    // בדיקת קבצים נוספים בתיקיה הישנה
-    const remainingFiles = await cloudinary.api.resources({
-      type: "upload",
-      prefix: `${oldFolder}/`,
-    });
-
-    if (remainingFiles.resources.length > 0) {
-      // מחיקת כל הקבצים שנותרו בתיקיה הישנה
-      for (const file of remainingFiles.resources) {
-        await cloudinary.uploader.destroy(file.public_id);
-        console.log(`Deleted leftover file: ${file.public_id}`);
-      }
-    }
-
-    // מחיקת התיקיה הישנה
-    await cloudinary.api.delete_folder(oldFolder);
+    console.log("response: ", response);
 
     return NextResponse.json({
       message: "Folder moved successfully",
-      movedFiles: files.length,
     });
   } catch (error) {
     console.error("Error moving folder:", error);
