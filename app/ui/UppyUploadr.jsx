@@ -3,28 +3,25 @@
 import React from "react";
 import Uppy from "@uppy/core";
 import Tus from "@uppy/tus";
-import {
-  DragDrop,
-  Dashboard,
-  ProgressBar,
-  StatusBar,
-  useUppyState,
-} from "@uppy/react";
+import ProgressBar from "@uppy/progress-bar";
+import StatusBar from "@uppy/status-bar";
+import { DragDrop, Dashboard, useUppyState } from "@uppy/react";
 import "@uppy/core/dist/style.css";
 import "@uppy/dashboard/dist/style.css";
 import "@uppy/drag-drop/dist/style.css";
 import "@uppy/progress-bar/dist/style.css";
 import "@uppy/status-bar/dist/style.min.css";
-import { useEffect, useState } from "react";
-import Hebrew from "@uppy/locales/lib/he_IL";
-import { indigo, red } from "tailwindcss/colors";
+import { useMemo } from "react";
+import { useEffect } from "react";
+import { useState } from "react";
 
 const UppyUploader = (props) => {
+
   const [uppy] = useState(() =>
     new Uppy({
       restrictions: { maxNumberOfFiles: 3 },
       autoProceed: false,
-      locale: Hebrew,
+      defaultLocale: { strings: {  cancel: "ביטול"      } },
     }).use(Tus, { endpoint: "https://httpbin.org/post" })
   );
 
@@ -43,6 +40,7 @@ const UppyUploader = (props) => {
   console.log("metaFields: ", metaFields);
 
   useEffect(() => {
+
     uppy.on("complete", (result) => {
       console.log("Upload complete:", result.successful);
     });

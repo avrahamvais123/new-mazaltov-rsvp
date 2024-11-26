@@ -5,7 +5,7 @@ import {  invitation_details_Atom } from "@/lib/jotai";
 import { useSetAtom } from "jotai";
 import { useSession } from "next-auth/react";
 import React from "react";
-import MyDropzone from "@/app/ui/MyDropzone";
+import MyDropzone from "@/app/ui/my-dropzone/MyDropzone";
 import MyUploady from "@/app/ui/MyUploady";
 import UppyUploader from "@/app/ui/UppyUploadr";
 
@@ -35,7 +35,7 @@ const SlideUploadImage = ({ setSteps, carouselApi }) => {
     carouselApi?.scrollNext();
   };
 
-  return <UppyUploader onSubmit={onSubmit} />;
+  return <MyDropzone onSubmit={onSubmit} />;
 };
 
 export default SlideUploadImage;
