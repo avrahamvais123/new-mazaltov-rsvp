@@ -2,9 +2,7 @@
 
 import { cn } from "@/lib/utils";
 import React, { useState } from "react";
-import { InboxUploadIcon } from "../../icons/icons";
 import useOnDrop from "./useOnDrop";
-import Preview from "./Preview";
 import Uploader from "./Uploader";
 import Files from "./Files";
 
@@ -15,7 +13,7 @@ const MyDropzone = () => {
   console.log("files: ", files);
 
   return (
-    <div className="relative size-full max-w-[42rem] max-h-[38rem] flex-col-center justify-start overflow-hidden">
+    <div className="relative size-full max-w-[45rem] max-h-[38rem] flex-col-center justify-start overflow-hidden">
       {/* header */}
       <div className="w-full p-4 -mb-1 flex-center justify-start rounded-t-lg bg-white border border-slate-200">
         <button
@@ -42,7 +40,7 @@ const MyDropzone = () => {
 
       {/* footer */}
       <div className="w-full bg-white p-4 -mt-1 border border-slate-200 rounded-b-lg">
-        sdfdf
+        footer
       </div>
     </div>
   );

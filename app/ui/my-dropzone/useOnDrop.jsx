@@ -4,8 +4,7 @@ import { cn } from "@/lib/utils";
 import { useState, useEffect } from "react";
 import { v4 as uuid } from "uuid";
 
-const getType = (fileName) =>
-  fileName.substring(fileName.lastIndexOf(".") + 1);
+const getType = (fileName) => fileName.substring(fileName.lastIndexOf(".") + 1);
 
 const useOnDrop = () => {
   const [acceptedFiles, setAcceptedFiles] = useState([]);
@@ -74,28 +73,34 @@ const useOnDrop = () => {
 export default useOnDrop;
 
 const PreviewImage = ({ fileType, url }) => {
-  const allowedExtensions = ["jpg", "jpeg", "png", "gif"];
+  const allowedExtensions = ["jpg", "jpeg", "png", "gif", "svg"]; // הוספת svg
   const specialExtensions = ["pdf", "doc", "docx", "xls", "xlsx"];
   const isImage = allowedExtensions.includes(fileType);
   const isSpecial = specialExtensions.includes(fileType);
   const isPDF = fileType === "pdf";
 
   const preview = isImage
-    ? url // כאן תוכל להכניס את התמונה אם היא תמונה תקינה
+    ? url // תומך גם ב-SVG דרך ה-URL
     : isPDF
     ? "/images/pdf.png"
     : "";
 
   return (
     <div className="size-full aspect-square flex-center">
-      <img
-        src={preview}
-        alt={fileType}
-        className={cn(
-          "aspect-square rounded-t-sm",
-          isSpecial ? "size-24 object-contain" : "size-auto object-cover"
-        )}
-      />
+      {isImage ? (
+        <img
+          src={preview}
+          alt={fileType}
+          className={cn(
+            "aspect-square rounded-t-sm",
+            fileType === "svg"
+              ? "size-auto object-contain"
+              : "size-auto object-cover" // התנהגות שונה ל-SVG
+          )}
+        />
+      ) : (
+        <div className="text-center">Unsupported file type</div>
+      )}
     </div>
   );
 };

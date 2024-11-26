@@ -7,9 +7,13 @@ export function middleware(req) {
   // חריגים
   const isExcluded = () => {
     // בדיקת סוג הקובץ כדי לנטרל בקשות לקבצים סטטיים
-    const isAsset = /\.(png|jpg|jpeg|gif|svg|css|js|ico|woff|woff2|ttf|eot|otf|json)$/.test(
-      url.pathname
-    );
+    const isAsset =
+      /\.(png|jpg|jpeg|gif|svg|css|js|ico|woff|woff2|ttf|eot|otf|json)$/.test(
+        url.pathname
+      );
+
+    // בדיקה אם הבקשה היא ל-Data URL (למשל תמונה ב־Base64)
+    const isDataUrl = req.headers.get("accept")?.includes("image");
 
     // בדיקה אם הבקשה היא ל-API (למשל NextAuth API)
     const isApi = url.pathname.startsWith("/api");
@@ -17,7 +21,7 @@ export function middleware(req) {
     // בדיקה אם הבקשה היא ל-'/not-found' כדי למנוע לולאה אין סופית
     const isNotFoundPage = url.pathname === "/not-found";
 
-    return isAsset || isApi || isNotFoundPage;
+    return isAsset || isApi || isNotFoundPage || isDataUrl;
   };
 
   // אם זו בקשה לקובץ סטטי, ל-API, או לעמוד /not-found, אפשר להמשיך
