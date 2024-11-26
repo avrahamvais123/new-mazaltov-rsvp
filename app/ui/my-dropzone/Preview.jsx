@@ -56,7 +56,7 @@ const Preview = ({ files = [] }) => {
             <div className="w-full py-2 px-4 flex-center -space-x-1 border-t border-slate-200">
               <div className="w-full overflow-x-hidden">
                 <p className="text-sm text-slate-600 truncate">{file.name}</p>
-                <p className="text-xs text-slate-400">{`${size} MB`}</p>
+                <p className="text-xs text-slate-400">{size}</p>
               </div>
 
               <div className="h-full w-2 mx-2 bg-slate-400" />

@@ -3,6 +3,7 @@
 import { cn } from "@/lib/utils";
 import { useState, useEffect } from "react";
 import { v4 as uuid } from "uuid";
+import prettyBytes from 'pretty-bytes';
 
 const getType = (fileName) => fileName.substring(fileName.lastIndexOf(".") + 1);
 
@@ -27,7 +28,8 @@ const useOnDrop = () => {
         progress: 0,
         status: "pending",
         paused: false,
-        size: (file.size / (1024 * 1024)).toFixed(2),
+        size: prettyBytes(file.size),
+        //size: (file.size / (1024 * 1024)).toFixed(2),
         remove: () =>
           setFiles((prevFiles) => prevFiles.filter((f) => f.id !== id)),
       };
