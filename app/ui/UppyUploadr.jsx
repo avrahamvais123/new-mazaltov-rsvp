@@ -15,24 +15,16 @@ import "@uppy/dashboard/dist/style.css";
 import "@uppy/drag-drop/dist/style.css";
 import "@uppy/progress-bar/dist/style.css";
 import "@uppy/status-bar/dist/style.min.css";
-import { useMemo } from "react";
-import { useEffect } from "react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import Hebrew from "@uppy/locales/lib/he_IL";
+import { indigo, red } from "tailwindcss/colors";
 
 const UppyUploader = (props) => {
-  /* const uppy = useMemo(() => {
-    return new Uppy({
-      restrictions: { maxNumberOfFiles: 3 },
-      autoProceed: false,
-      locale: { strings: { dropHereOr: "dfgdfgdfgdfgdfg" } },
-    }).use(Tus, { endpoint: "https://httpbin.org/post" });
-  }, []); */
-
   const [uppy] = useState(() =>
     new Uppy({
       restrictions: { maxNumberOfFiles: 3 },
       autoProceed: false,
-      defaultLocale: { strings: {  cancel: "ביטול"      } },
+      locale: Hebrew,
     }).use(Tus, { endpoint: "https://httpbin.org/post" })
   );
 
@@ -59,9 +51,33 @@ const UppyUploader = (props) => {
   }, [uppy]);
 
   return (
-    <div>
-      <Dashboard uppy={uppy} plugins={["DragDrop"]} {...props} />
-      <ProgressBar uppy={uppy} hideAfterFinish={true} />
+    <div className="h-full p-4">
+      <Dashboard id="dashboard" uppy={uppy} plugins={["DragDrop"]} {...props} />
+      <style jsx global>{`
+        .uppy-Dashboard-AddFiles, .uppy-Dashboard-inner, .uppy-Dashboard-innerWrap, .uppy-Container, .uppy-Root, .uppy-Dashboard {
+          height: 100% !important;
+        }
+        .uppy-StatusBar-actions{
+          justify-content: flex-end;
+        }
+        .uppy-DashboardContent-back{
+          background-color: ${red[600]};
+          color: white;
+          padding: 8px 12px;
+          font-size: 16px !important;
+          &:hover{
+            background-color: ${red[700]};
+            color: white;
+          }
+          &:active{
+            background-color: ${red[800]};
+            color: white;
+          }
+          .uppy-Dashboard-browse{
+            color: ${indigo[600]} !important;
+          }
+        }
+      `}</style>
     </div>
   );
 };
