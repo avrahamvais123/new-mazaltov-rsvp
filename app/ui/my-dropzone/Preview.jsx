@@ -4,8 +4,15 @@ import { Cancel02Icon } from "@/app/icons/icons";
 import { cn } from "@/lib/utils";
 import { BowIcon } from "@/app/icons/icons";
 import { green, purple, red, slate, yellow } from "tailwindcss/colors";
+import { AnimatePresence, motion } from "framer-motion";
+import { useRef, useState } from "react";
+import { useClickAway } from "react-use";
 
 const Preview = ({ files = [] }) => {
+  const [showActions, setShowActions] = useState(null);
+  const previewRfer = useRef(null);
+  useClickAway(previewRfer, () => setShowActions(false));
+
   return (
     <div
       className={cn(
@@ -34,10 +41,39 @@ const Preview = ({ files = [] }) => {
         return (
           <div
             key={idx}
+            onMouseEnter={() => setShowActions(idx)}
+            onMouseLeave={() => setShowActions(null)}
             className="relative w-52 h-fit shadow-md shadow-slate-200 bg-white flex-col-center border border-slate-200 rounded-sm"
           >
+            {/* <div className="absolute top-0 right-0 w-16 h-16 bg-red-600 clip-triangle"></div> */}
+
+            {/* actions modal */}
+            <AnimatePresence>
+              {showActions === idx && (
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 10 }}
+                  className="absolute inset-0 z-10 p-4 size-full backdrop-blur-sm bg-white bg-opacity-60 flex-col-center gap-2 rounded-sm"
+                >
+                  <button
+                    onClick={remove}
+                    className="bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white w-full py-2"
+                  >
+                    העלאה
+                  </button>
+                  <button
+                    onClick={remove}
+                    className="bg-red-600 hover:bg-red-700 active:bg-red-800 text-white w-full py-2"
+                  >
+                    ביטול
+                  </button>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
             {/* bow */}
-            <div className="absolute top-3 left-[-0.9rem] flex-col-center">
+            <div className="absolute z-10 top-3 left-[-0.9rem] flex-col-center">
               <BowIcon
                 color={color}
                 shadowcolor={shadowcolor}

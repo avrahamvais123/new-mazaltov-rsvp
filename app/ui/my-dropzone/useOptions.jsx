@@ -1,13 +1,13 @@
 "use client";
 
-import { cn } from "@/lib/utils";
 import { useState, useEffect } from "react";
 import { v4 as uuid } from "uuid";
-import prettyBytes from 'pretty-bytes';
+import prettyBytes from "pretty-bytes";
+import FileImage from "./FileImage";
 
 const getType = (fileName) => fileName.substring(fileName.lastIndexOf(".") + 1);
 
-const useOnDrop = () => {
+const useOptions = () => {
   const [acceptedFiles, setAcceptedFiles] = useState([]);
   const [showDropzone, setShowDropzone] = useState(false);
   const [files, setFiles] = useState([]);
@@ -23,7 +23,7 @@ const useOnDrop = () => {
         type: fileType,
         name: file.name,
         PreviewImage: () => (
-          <PreviewImage fileType={fileType} url={reader.result} />
+          <FileImage fileType={fileType} url={reader.result} />
         ),
         progress: 0,
         status: "pending",
@@ -72,37 +72,5 @@ const useOnDrop = () => {
   };
 };
 
-export default useOnDrop;
+export default useOptions;
 
-const PreviewImage = ({ fileType, url }) => {
-  const allowedExtensions = ["jpg", "jpeg", "png", "gif", "svg"]; // הוספת svg
-  const specialExtensions = ["pdf", "doc", "docx", "xls", "xlsx"];
-  const isImage = allowedExtensions.includes(fileType);
-  const isSpecial = specialExtensions.includes(fileType);
-  const isPDF = fileType === "pdf";
-
-  const preview = isImage
-    ? url // תומך גם ב-SVG דרך ה-URL
-    : isPDF
-    ? "/images/pdf.png"
-    : "";
-
-  return (
-    <div className="size-full aspect-square flex-center">
-      {isImage ? (
-        <img
-          src={preview}
-          alt={fileType}
-          className={cn(
-            "aspect-square rounded-t-sm",
-            fileType === "svg"
-              ? "size-auto object-contain"
-              : "size-auto object-cover" // התנהגות שונה ל-SVG
-          )}
-        />
-      ) : (
-        <div className="text-center">Unsupported file type</div>
-      )}
-    </div>
-  );
-};
