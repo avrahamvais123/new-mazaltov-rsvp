@@ -2,29 +2,17 @@
 
 import { cn } from "@/lib/utils";
 import React, { useState } from "react";
-import { Cancel02Icon, UploadCircle01Icon } from "../../icons/icons";
-import { AnimatePresence, motion } from "framer-motion";
+import { InboxUploadIcon } from "../../icons/icons";
 import useOnDrop from "./useOnDrop";
-import { useDropzone } from "react-dropzone";
 import Preview from "./Preview";
+import Uploader from "./Uploader";
+import Files from "./Files";
 
 const MyDropzone = () => {
   const { files, showDropzone, setShowDropzone, setAcceptedFiles } =
     useOnDrop();
 
   console.log("files: ", files);
-
-  const {
-    getRootProps,
-    getInputProps,
-    isDragActive,
-    isFocused,
-    isFileDialogActive,
-    ...rest
-  } = useDropzone({
-    onDrop: setAcceptedFiles,
-  });
-  console.log("rest: ", rest);
 
   return (
     <div className="relative size-full max-w-[42rem] max-h-[38rem] flex-col-center justify-start overflow-hidden">
@@ -45,55 +33,11 @@ const MyDropzone = () => {
 
       {/* body */}
       <div className="relative size-full bg-slate-50 border border-slate-200 overflow-hidden">
-        {/* dropzone */}
-        <AnimatePresence>
-          {showDropzone && (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              {...getRootProps()}
-              className={cn(
-                "z-10 absolute inset-0",
-                "size-full p-4 transition-all",
-                "flex-col-center gap-2",
-                "border-2 border-dashed",
-                "hover:bg-slate-100",
-                isDragActive || isFileDialogActive
-                  ? "border-indigo-600 bg-indigo-50"
-                  : "border-slate-200 bg-white"
-              )}
-            >
-              <input {...getInputProps()} />
-              <UploadCircle01Icon
-                className={cn(
-                  "size-20 transition-all",
-                  isDragActive || isFileDialogActive
-                    ? "text-indigo-600"
-                    : "text-slate-300"
-                )}
-              />
-              <p className="text-md text-center">
-                גרור ושחרר קבצים כאן, <br />
-                או לחץ כדי לבחור קבצים
-              </p>
-            </motion.div>
-          )}
-        </AnimatePresence>
-
-        {/* files list */}
-        {files.length > 0 && (
-          <div
-            className={cn(
-              "size-full max-h-fit p-4 overflow-auto",
-              "grid grid-cols-3 auto-rows-auto gap-2",
-              "max-md:grid-cols-2 max-sm:grid-cols-1",
-              "place-items-center md:place-items-start"
-            )}
-          >
-            <Preview files={files} />
-          </div>
-        )}
+        <Uploader
+          setAcceptedFiles={setAcceptedFiles}
+          showDropzone={showDropzone}
+        />
+        <Files files={files} />
       </div>
 
       {/* footer */}
@@ -105,5 +49,3 @@ const MyDropzone = () => {
 };
 
 export default MyDropzone;
-
-

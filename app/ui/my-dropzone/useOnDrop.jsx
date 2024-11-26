@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 import { useState, useEffect } from "react";
 import { v4 as uuid } from "uuid";
 
-const getFileExtension = (fileName) =>
+const getType = (fileName) =>
   fileName.substring(fileName.lastIndexOf(".") + 1);
 
 const useOnDrop = () => {
@@ -15,14 +15,15 @@ const useOnDrop = () => {
   useEffect(() => {
     const newFiles = acceptedFiles.map((file) => {
       const id = uuid();
-      const fileExtension = getFileExtension(file.name);
+      const fileType = getType(file.name);
 
       const fileData = {
         id,
         file,
+        type: fileType,
         name: file.name,
         PreviewImage: () => (
-          <PreviewImage fileExtension={fileExtension} url={reader.result} />
+          <PreviewImage fileType={fileType} url={reader.result} />
         ),
         progress: 0,
         status: "pending",
@@ -72,12 +73,12 @@ const useOnDrop = () => {
 
 export default useOnDrop;
 
-const PreviewImage = ({ fileExtension, url }) => {
+const PreviewImage = ({ fileType, url }) => {
   const allowedExtensions = ["jpg", "jpeg", "png", "gif"];
   const specialExtensions = ["pdf", "doc", "docx", "xls", "xlsx"];
-  const isImage = allowedExtensions.includes(fileExtension);
-  const isSpecial = specialExtensions.includes(fileExtension);
-  const isPDF = fileExtension === "pdf";
+  const isImage = allowedExtensions.includes(fileType);
+  const isSpecial = specialExtensions.includes(fileType);
+  const isPDF = fileType === "pdf";
 
   const preview = isImage
     ? url // כאן תוכל להכניס את התמונה אם היא תמונה תקינה
@@ -89,7 +90,7 @@ const PreviewImage = ({ fileExtension, url }) => {
     <div className="size-full aspect-square flex-center">
       <img
         src={preview}
-        alt={fileExtension}
+        alt={fileType}
         className={cn(
           "aspect-square rounded-t-sm",
           isSpecial ? "size-24 object-contain" : "size-auto object-cover"
