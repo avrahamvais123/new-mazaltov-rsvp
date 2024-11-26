@@ -10,18 +10,11 @@ import { useClickAway } from "react-use";
 
 const Preview = ({ files = [] }) => {
   const [showActions, setShowActions] = useState(null);
-  const previewRfer = useRef(null);
-  useClickAway(previewRfer, () => setShowActions(false));
+  const previewRef = useRef(null);
+  useClickAway(previewRef, () => setShowActions(false));
 
   return (
-    <div
-      className={cn(
-        "relative size-full max-h-fit p-4 overflow-y-auto overflow-x-visible",
-        "grid grid-cols-3 auto-rows-auto gap-6",
-        "max-md:grid-cols-2 max-sm:grid-cols-1",
-        "place-items-center md:place-items-start"
-      )}
-    >
+    <AnimatePresence>
       {files.map((item, idx) => {
         const {
           id,
@@ -30,6 +23,7 @@ const Preview = ({ files = [] }) => {
           PreviewImage,
           size,
           remove,
+          upload,
           progress,
           status,
           paused,
@@ -39,14 +33,17 @@ const Preview = ({ files = [] }) => {
         const { color, shadowcolor } = generateBowColor(type);
 
         return (
-          <div
-            key={idx}
+          /* item */
+          <motion.div
+            layout
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 10 }}
+            key={id}
             onMouseEnter={() => setShowActions(idx)}
             onMouseLeave={() => setShowActions(null)}
             className="relative w-52 h-fit shadow-md shadow-slate-200 bg-white flex-col-center border border-slate-200 rounded-sm"
           >
-            {/* <div className="absolute top-0 right-0 w-16 h-16 bg-red-600 clip-triangle"></div> */}
-
             {/* actions modal */}
             <AnimatePresence>
               {showActions === idx && (
@@ -57,7 +54,7 @@ const Preview = ({ files = [] }) => {
                   className="absolute inset-0 z-10 p-4 size-full backdrop-blur-sm bg-white bg-opacity-60 flex-col-center gap-2 rounded-sm"
                 >
                   <button
-                    onClick={remove}
+                    onClick={() => upload(file)}
                     className="bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white w-full py-2"
                   >
                     העלאה
@@ -71,7 +68,7 @@ const Preview = ({ files = [] }) => {
                 </motion.div>
               )}
             </AnimatePresence>
-
+            
             {/* bow */}
             <div className="absolute z-10 top-3 left-[-0.9rem] flex-col-center">
               <BowIcon
@@ -99,10 +96,10 @@ const Preview = ({ files = [] }) => {
 
               {/* <img src={generateTypeImage()} className="w-6 h-7 object-cover" /> */}
             </div>
-          </div>
+          </motion.div>
         );
       })}
-    </div>
+    </AnimatePresence>
   );
 };
 

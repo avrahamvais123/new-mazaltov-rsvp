@@ -7,7 +7,14 @@ import { InboxUploadIcon } from "@/app/icons/icons";
 
 const Files = ({ files }) => {
   return (
-    <>
+    <div
+      className={cn(
+        "relative size-full max-h-fit p-4 overflow-y-auto overflow-x-visible",
+        "grid grid-cols-3 auto-rows-auto gap-6",
+        "max-md:grid-cols-2 max-sm:grid-cols-1",
+        "place-items-center md:place-items-start"
+      )}
+    >
       {files.length > 0 ? (
         <Preview files={files} />
       ) : (
@@ -16,7 +23,7 @@ const Files = ({ files }) => {
           <h4 className="text-center text-slate-200">אין קבצים</h4>
         </div>
       )}
-    </>
+    </div>
   );
 };
 

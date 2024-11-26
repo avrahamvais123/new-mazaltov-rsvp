@@ -5,19 +5,32 @@ import React, { useState } from "react";
 import useOptions from "./useOptions";
 import Uploader from "./Uploader";
 import Files from "./Files";
+import axios from "axios";
 
 const MyDropzone = () => {
-  const {
-    files,
-    showDropzone,
-    setShowDropzone,
-    setAcceptedFiles,
-  } = useOptions();
+  const { files, showDropzone, setShowDropzone, setAcceptedFiles } =
+    useOptions();
 
   console.log("files: ", files);
 
+  const update = async () => {
+    try {
+      const res = await axios.patch("/api/upload-image", {
+        oldFolder: "old-folder",
+        newFolder: "new-folder",
+      });
+      console.log('res: ', res);
+    } catch (error) {
+      console.log("error: ", error);
+    }
+  };
+
   return (
     <div className="relative size-full max-w-[45rem] max-h-[38rem] flex-col-center justify-start overflow-hidden">
+      <button onClick={update} className="">
+        update assets
+      </button>
+
       {/* header */}
       <div className="w-full p-4 -mb-1 flex-center justify-between rounded-t-lg bg-white border border-slate-200">
         {/* add file */}
@@ -38,10 +51,10 @@ const MyDropzone = () => {
 
         {/* upload */}
         <button
-        disabled={files.length < 1}
+          disabled={files.length < 1}
           onClick={() => setShowDropzone((prev) => !prev)}
           className={cn(
-            "text-white px-3 py-1 rounded-sm transition-all bg-lime-600 hover:bg-lime-700 active:bg-lime-800 disabled:bg-slate-200",
+            "text-white px-3 py-1 rounded-sm transition-all bg-lime-600 hover:bg-lime-700 active:bg-lime-800 disabled:bg-slate-200"
           )}
         >
           העלאה
