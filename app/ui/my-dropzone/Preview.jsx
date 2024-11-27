@@ -32,8 +32,12 @@ const Preview = ({ files = [] }) => {
 
         return (
           /* wrapper */
-          <div
+          <motion.div
             key={id}
+            layout
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 10 }}
             className="relative overflow-visible size-fit rounded-sm"
           >
             {/* bow */}
@@ -120,7 +124,7 @@ const Preview = ({ files = [] }) => {
                 {/* <img src={generateTypeImage()} className="w-6 h-7 object-cover" /> */}
               </div>
             </motion.div>
-          </div>
+          </motion.div>
         );
       })}
     </AnimatePresence>

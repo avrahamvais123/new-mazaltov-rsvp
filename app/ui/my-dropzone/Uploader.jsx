@@ -32,7 +32,7 @@ const Uploader = ({ setAcceptedFiles, showDropzone }) => {
           transition={{ duration: 0.3, ease: "easeInOut" }}
           {...getRootProps()}
           className={cn(
-            "z-20 absolute inset-0",
+            "z-30 absolute inset-0",
             "size-full p-4 transition-colors",
             "flex-col-center gap-2",
             "border-2 border-dashed",
