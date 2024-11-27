@@ -4,9 +4,9 @@ import { cn } from "@/lib/utils";
 import React, { useState } from "react";
 import useOptions from "./useOptions";
 import Uploader from "./Uploader";
-import Files from "./Files";
-import MyDropdown from "../MyDropdown";
+import GridFiles from "./GridFiles";
 import ActionsButton from "../ActionsButton";
+import { Add01Icon, Add02Icon, FileAddIcon } from "@/app/icons/huge-icons";
 
 const MyDropzone = () => {
   const {
@@ -21,7 +21,7 @@ const MyDropzone = () => {
     <div className="relative size-full max-w-[52rem] max-h-[28rem] 2xl:max-h-[38rem] flex-col-center justify-start overflow-hidden">
       {/* header */}
       <div className="w-full p-4 -mb-1 flex-center justify-between rounded-t-lg bg-white border border-slate-200">
-        <ActionsButton
+        {/* <ActionsButton
           content={({ setOpen }) => {
             const onAdd = () => {
               setOpen(false);
@@ -49,7 +49,25 @@ const MyDropzone = () => {
               </>
             );
           }}
-        />
+        /> */}
+
+        <button
+          onClick={() => setShowDropzone((prev) => !prev)}
+          className={cn(
+            "h-8 py-1 px-2 text-white flex-center gap-1 rounded-sm transition-all",
+            showDropzone
+              ? "bg-red-600 hover:bg-red-700 active:bg-red-800"
+              : "bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800"
+          )}
+        >
+          <Add01Icon
+            className={cn(
+              "size-4 text-white transition-all",
+              showDropzone ? "rotate-45" : ""
+            )}
+          />
+          {showDropzone ? null : <p>הוסף קבצים</p>}
+        </button>
 
         {/* files length */}
         <p className="">{`${files?.length} קבצים נבחרו`}</p>
@@ -61,7 +79,7 @@ const MyDropzone = () => {
           setAcceptedFiles={setAcceptedFiles}
           showDropzone={showDropzone}
         />
-        <Files files={files} setFiles={setFiles} />
+        <GridFiles files={files} setFiles={setFiles} />
       </div>
 
       {/* footer */}

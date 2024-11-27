@@ -5,7 +5,7 @@ import React from "react";
 import Preview from "./Preview";
 import { InboxUploadIcon } from "@/app/icons/huge-icons";
 
-const Files = ({ files, setFiles }) => {
+const GridFiles = ({ files, setFiles }) => {
   return (
     <>
       {files.length > 0 ? (
@@ -30,4 +30,4 @@ const Files = ({ files, setFiles }) => {
   );
 };
 
-export default Files;
+export default GridFiles;
