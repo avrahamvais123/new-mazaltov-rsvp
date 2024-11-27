@@ -1,24 +1,19 @@
-//import { v2 as cloudinary } from "cloudinary";
 import cloudinary from "@/lib/cloudinary";
 import { NextResponse } from "next/server";
 
-/* // Configuration
-cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_SECRET,
-}); */
-
 export const POST = async (req) => {
-  console.log("req: ", req);
   try {
     const formData = await req.formData();
     const file = formData.get("file");
-    const public_id = formData.get("public_id");
-    const folder = formData.get("folder");
+    const options = JSON.parse(decodeURIComponent(formData.get("options")));
     console.log("file: ", file);
-    console.log("public_id: ", public_id);
-    console.log("folder: ", folder);
+
+    /* const { public_id, folder, unique_filename, overwrite, resource_type } = options;
+    console.log('resource_type: ', resource_type);
+    console.log('overwrite: ', overwrite);
+    console.log('unique_filename: ', unique_filename);
+    console.log('folder: ', folder);
+    console.log('public_id: ', public_id); */
 
     // Convert file to a Base64 string
     const buffer = await file.arrayBuffer();
@@ -28,11 +23,7 @@ export const POST = async (req) => {
     // Upload to Cloudinary
     const uploadResponse = await cloudinary.uploader.upload(base64Image, {
       upload_preset: "my_upload_preset",
-      folder: folder,
-      unique_filename: true,
-      public_id: public_id,
-      resource_type: "auto",
-      overwrite: true,
+      ...options
     });
 
     return NextResponse.json(
@@ -68,7 +59,10 @@ export async function PATCH(req) {
       );
     }
     // שליפת כל הקבצים בתיקיה הישנה
-    const response = await cloudinary.api.rename_folder("old-folder", "new-folder");
+    const response = await cloudinary.api.rename_folder(
+      "old-folder",
+      "new-folder"
+    );
 
     console.log("response: ", response);
 

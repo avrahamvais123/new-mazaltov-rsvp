@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { v4 as uuid } from "uuid";
 import prettyBytes from "pretty-bytes";
 import FileImage from "./FileImage";
+import { Upload } from "tus-js-client";
 
 const getType = (fileName) => fileName.substring(fileName.lastIndexOf(".") + 1);
 
@@ -22,9 +23,7 @@ const useOptions = () => {
         file,
         type: fileType,
         name: file.name,
-        FileImage: () => (
-          <FileImage fileType={fileType} url={reader.result} />
-        ),
+        FileImage: () => <FileImage fileType={fileType} url={reader.result} />,
         progress: 0,
         status: "pending",
         paused: false,
@@ -35,7 +34,7 @@ const useOptions = () => {
 
       const reader = new FileReader();
 
-      reader.onprogress = (event) => {
+      /* reader.onprogress = (event) => {
         if (event.loaded && event.total) {
           const progress = Math.round((event.loaded / event.total) * 100);
           setFiles((prevFiles) =>
@@ -50,7 +49,7 @@ const useOptions = () => {
             f.file === file ? { ...f, status: "ready" } : f
           )
         );
-      };
+      }; */
 
       reader.readAsDataURL(file);
 

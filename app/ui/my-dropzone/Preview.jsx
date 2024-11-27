@@ -6,8 +6,9 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useRef, useState } from "react";
 import { useClickAway } from "react-use";
 import { cn } from "@/lib/utils";
+import axios from "axios";
 
-const Preview = ({ files = [] }) => {
+const Preview = ({ files = [], setFiles }) => {
   const [showActions, setShowActions] = useState(null);
   const previewRef = useRef(null);
   useClickAway(previewRef, () => setShowActions(false));
@@ -15,20 +16,47 @@ const Preview = ({ files = [] }) => {
   return (
     <AnimatePresence>
       {files.map((item, idx) => {
-        const {
-          id,
-          type,
-          file,
-          FileImage,
-          size,
-          remove,
-          upload,
-          progress,
-          status,
-          paused,
-        } = item;
+        const { id, type, file, FileImage, size, remove } = item;
 
         const { color, shadowcolor } = generateBowColor(type);
+        const [status, setStatus] = useState("מוכן");
+        const [progress, setProgress] = useState(0);
+
+        const upload = async () => {
+          console.log("ההעלאה התחילה");
+          try {
+            const options = {
+              public_id: "new-image",
+              folder: "/assets",
+              unique_filename: true,
+              resource_type: "auto",
+              overwrite: true,        
+            };
+            const encodedOptions = encodeURIComponent(JSON.stringify(options));
+            formData.append('options', JSON.stringify(options));
+
+
+            const formData = new FormData();
+            formData.append("file", file);
+            formData.append("new-options", file);
+            formData.append("options", options);
+            const res = await axios.post("/api/upload-image", formData, {
+              headers: {
+                "Content-Type": "multipart/form-data",
+              },
+              onUploadProgress: (progressEvent) => {
+                const progress = Math.round(
+                  (progressEvent.loaded / progressEvent.total) * 100
+                );
+                setProgress(progress);
+                console.log("progress: ", progress);
+              },
+            });
+            console.log("res: ", res);
+          } catch (error) {
+            console.log("error: ", error);
+          }
+        };
 
         return (
           /* wrapper */
@@ -38,7 +66,8 @@ const Preview = ({ files = [] }) => {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 10 }}
-            className="relative overflow-visible size-fit rounded-sm"
+            style={{ filter: `drop-shadow(0 2px 2px ${slate[200]})` }}
+            className="relative bg-transparent overflow-visible size-fit rounded-sm"
           >
             {/* bow */}
             <div className="absolute z-10 top-5 left-[-.9rem] overflow-visible flex-col-center">
@@ -93,7 +122,7 @@ const Preview = ({ files = [] }) => {
                       className="absolute inset-0 p-4 size-full backdrop-blur-sm bg-white bg-opacity-60 flex-col-center gap-2 rounded-sm"
                     >
                       <button
-                        onClick={() => upload(file)}
+                        onClick={upload}
                         className="bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white w-full py-2"
                       >
                         העלאה
@@ -119,9 +148,9 @@ const Preview = ({ files = [] }) => {
                   <p className="text-xs text-slate-400">{size}</p>
                 </div>
 
-                <div className="h-full w-2 mx-2 bg-slate-400" />
+                <p className="">{`הושלמו ${progress}%`}</p>
 
-                {/* <img src={generateTypeImage()} className="w-6 h-7 object-cover" /> */}
+                <div className="h-full w-2 mx-2 bg-slate-400" />
               </div>
             </motion.div>
           </motion.div>

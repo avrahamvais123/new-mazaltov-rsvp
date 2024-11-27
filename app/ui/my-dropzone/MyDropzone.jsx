@@ -11,6 +11,7 @@ import ActionsButton from "../ActionsButton";
 const MyDropzone = () => {
   const {
     files,
+    setFiles,
     showDropzone,
     setShowDropzone,
     setAcceptedFiles,
@@ -61,7 +62,7 @@ const MyDropzone = () => {
           setAcceptedFiles={setAcceptedFiles}
           showDropzone={showDropzone}
         />
-        <Files files={files} />
+        <Files files={files} setFiles={setFiles} />
       </div>
 
       {/* footer */}

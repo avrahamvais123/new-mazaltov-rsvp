@@ -5,7 +5,7 @@ import React from "react";
 import Preview from "./Preview";
 import { InboxUploadIcon } from "@/app/icons/huge-icons";
 
-const Files = ({ files }) => {
+const Files = ({ files, setFiles }) => {
   return (
     <>
       {files.length > 0 ? (
@@ -18,7 +18,7 @@ const Files = ({ files }) => {
             "place-items-center md:place-items-start"
           )}
         >
-          <Preview files={files} />
+          <Preview files={files} setFiles={setFiles} />
         </div>
       ) : (
         <div className="absolute inset-0 flex-col-center gap-1">
