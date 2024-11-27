@@ -3,17 +3,13 @@ import { NextResponse } from "next/server";
 
 export const POST = async (req) => {
   try {
+
     const formData = await req.formData();
+    console.log('formData: ', formData);
     const file = formData.get("file");
     const options = JSON.parse(decodeURIComponent(formData.get("options")));
+    console.log('options: ', options);
     console.log("file: ", file);
-
-    /* const { public_id, folder, unique_filename, overwrite, resource_type } = options;
-    console.log('resource_type: ', resource_type);
-    console.log('overwrite: ', overwrite);
-    console.log('unique_filename: ', unique_filename);
-    console.log('folder: ', folder);
-    console.log('public_id: ', public_id); */
 
     // Convert file to a Base64 string
     const buffer = await file.arrayBuffer();
@@ -23,7 +19,7 @@ export const POST = async (req) => {
     // Upload to Cloudinary
     const uploadResponse = await cloudinary.uploader.upload(base64Image, {
       upload_preset: "my_upload_preset",
-      ...options
+      ...options,
     });
 
     return NextResponse.json(

@@ -21,7 +21,6 @@ const MyDropzone = () => {
     <div className="relative size-full max-w-[52rem] max-h-[28rem] 2xl:max-h-[38rem] flex-col-center justify-start overflow-hidden">
       {/* header */}
       <div className="w-full p-4 -mb-1 flex-center justify-between rounded-t-lg bg-white border border-slate-200">
-
         <ActionsButton
           content={({ setOpen }) => {
             const onAdd = () => {

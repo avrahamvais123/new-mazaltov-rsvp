@@ -25,7 +25,7 @@ const useOptions = () => {
         name: file.name,
         FileImage: () => <FileImage fileType={fileType} url={reader.result} />,
         progress: 0,
-        status: "pending",
+        status: "",
         paused: false,
         size: prettyBytes(file.size),
         remove: () =>

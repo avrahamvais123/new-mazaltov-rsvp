@@ -7,6 +7,7 @@ import { useRef, useState } from "react";
 import { useClickAway } from "react-use";
 import { cn } from "@/lib/utils";
 import axios from "axios";
+import { Progress } from "rsuite";
 
 const Preview = ({ files = [], setFiles }) => {
   const [showActions, setShowActions] = useState(null);
@@ -16,11 +17,19 @@ const Preview = ({ files = [], setFiles }) => {
   return (
     <AnimatePresence>
       {files.map((item, idx) => {
-        const { id, type, file, FileImage, size, remove } = item;
-
+        const {
+          id,
+          type,
+          file,
+          FileImage,
+          size,
+          remove,
+          progress,
+          status,
+        } = item;
         const { color, shadowcolor } = generateBowColor(type);
-        const [status, setStatus] = useState("מוכן");
-        const [progress, setProgress] = useState(0);
+        //const [status, setStatus] = useState("מוכן");
+        //const [progress, setProgress] = useState(0);
 
         const upload = async () => {
           console.log("ההעלאה התחילה");
@@ -30,16 +39,14 @@ const Preview = ({ files = [], setFiles }) => {
               folder: "/assets",
               unique_filename: true,
               resource_type: "auto",
-              overwrite: true,        
+              overwrite: true,
             };
             const encodedOptions = encodeURIComponent(JSON.stringify(options));
-            formData.append('options', JSON.stringify(options));
-
 
             const formData = new FormData();
             formData.append("file", file);
             formData.append("new-options", file);
-            formData.append("options", options);
+            formData.append("options", encodedOptions);
             const res = await axios.post("/api/upload-image", formData, {
               headers: {
                 "Content-Type": "multipart/form-data",
@@ -48,7 +55,19 @@ const Preview = ({ files = [], setFiles }) => {
                 const progress = Math.round(
                   (progressEvent.loaded / progressEvent.total) * 100
                 );
-                setProgress(progress);
+                if (progress === 100) {
+                  setFiles((prevFiles) =>
+                    prevFiles.map((f) =>
+                      f.id === id ? { ...f, progress, status: "complete" } : f
+                    )
+                  );
+                } else {
+                  setFiles((prevFiles) =>
+                    prevFiles.map((f) =>
+                      f.id === id ? { ...f, progress, status: "pending" } : f
+                    )
+                  );
+                }
                 console.log("progress: ", progress);
               },
             });
@@ -114,7 +133,7 @@ const Preview = ({ files = [], setFiles }) => {
               {/* actions modal */}
               <AnimatePresence>
                 {showActions === idx && (
-                  <div className="absolute inset-0 p-4 size-full border border-slate-200 rounded-sm">
+                  <div className="z-20 absolute inset-0 p-4 size-full border border-slate-200 rounded-sm">
                     <motion.div
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
@@ -122,10 +141,26 @@ const Preview = ({ files = [], setFiles }) => {
                       className="absolute inset-0 p-4 size-full backdrop-blur-sm bg-white bg-opacity-60 flex-col-center gap-2 rounded-sm"
                     >
                       <button
+                        disabled={status === "complete"}
                         onClick={upload}
-                        className="bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white w-full py-2"
+                        className="relative h-10 bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white w-full py-2 disabled:cursor-not-allowed"
                       >
-                        העלאה
+                        <p className="z-10 absolute-center w-full">
+                          {status === "idle"
+                            ? "ממתין"
+                            : status === "pending"
+                            ? `מעלה קבצים... ${progress}%`
+                            : status === "complete"
+                            ? `ההעלאה הושלמה`
+                            : "העלאה"}
+                        </p>
+                        <div
+                          style={{ width: `${progress}%` }}
+                          className={cn(
+                            "absolute inset-0 h-full bg-indigo-900 transition-all",
+                            status === "complete" && "bg-green-600"
+                          )}
+                        />
                       </button>
                       <button
                         onClick={remove}
@@ -142,15 +177,11 @@ const Preview = ({ files = [], setFiles }) => {
               <FileImage />
 
               {/* text */}
-              <div className="z-10 w-full py-2 px-4 bg-white flex-center -space-x-1 border-t border-slate-200 rounded-b-sm">
+              <div className="z-10 w-full py-2 px-4 bg-white flex-col-center -space-x-1 border-t border-slate-200 rounded-b-sm">
                 <div className="w-full overflow-x-hidden">
                   <p className="text-sm text-slate-600 truncate">{file.name}</p>
                   <p className="text-xs text-slate-400">{size}</p>
                 </div>
-
-                <p className="">{`הושלמו ${progress}%`}</p>
-
-                <div className="h-full w-2 mx-2 bg-slate-400" />
               </div>
             </motion.div>
           </motion.div>
