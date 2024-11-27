@@ -2304,29 +2304,41 @@ export const InboxUploadIcon = (props) => (
   </svg>
 );
 
-export const BowIcon = (props) => {
-  return (
-    <svg
-      {...props}
-      id="Layer_2"
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 506 317.39"
-    >
-      <g id="Layer_1-2" data-name="Layer 1">
-        <g>
-          <polygon
-            points="11.19 244.14 112.85 317.39 112.3 232.87 11.19 244.14"
-            fill={props?.shadowcolor || "#70164a"}
-          />
-          <rect
-            width="506"
-            height="246.3"
-            rx="20.29"
-            ry="20.29"
-            fill={props?.color || "#c93281"}
-          />
-        </g>
-      </g>
-    </svg>
-  );
-};
+export const ArrowDown01Icon = (props) => (
+  <svg
+    {...props}
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+    width={24}
+    height={24}
+    color={"#000000"}
+    fill={"none"}
+  >
+    <path
+      d="M18 9.00005C18 9.00005 13.5811 15 12 15C10.4188 15 6 9 6 9"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+);
+
+export const ArrowUp01Icon = (props) => (
+  <svg
+    {...props}
+    xmlns="http://www.w3.org/2000/svg"
+    viewBox="0 0 24 24"
+    width={24}
+    height={24}
+    color={"#000000"}
+    fill={"none"}
+  >
+    <path
+      fillRule="evenodd"
+      clipRule="evenodd"
+      d="M11.4697 8.46967C11.7626 8.17678 12.2374 8.17678 12.5303 8.46967L18.5303 14.4697C18.7448 14.6842 18.809 15.0068 18.6929 15.287C18.5768 15.5673 18.3033 15.75 18 15.75H6C5.69665 15.75 5.42318 15.5673 5.30709 15.287C5.191 15.0068 5.25517 14.6842 5.46967 14.4697L11.4697 8.46967Z"
+      fill="currentColor"
+    />
+  </svg>
+);

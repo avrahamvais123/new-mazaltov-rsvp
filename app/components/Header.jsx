@@ -14,7 +14,7 @@ import {
 import Menu from "./Menu";
 import { usePathname, useRouter } from "next/navigation";
 import Avatar from "../ui/Avatar";
-import { Login03Icon, Settings04Icon } from "../icons/icons";
+import { Login03Icon, Settings04Icon } from "../icons/huge-icons";
 import axios from "axios";
 import { cn } from "@/lib/utils";
 import Link from "next/link";

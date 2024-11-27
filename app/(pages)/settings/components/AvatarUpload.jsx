@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 import { useState, useRef } from "react";
 import axios from "axios"; // ייבוא axios
 import Avatar from "@/app/ui/Avatar";
-import { Cancel02Icon, Tick04Icon } from "@/app/icons/icons";
+import { Cancel02Icon, Tick04Icon } from "@/app/icons/huge-icons";
 import LoadingButton from "@mui/lab/LoadingButton";
 import { useSession } from "next-auth/react";
 

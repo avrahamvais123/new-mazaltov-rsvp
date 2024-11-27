@@ -20,7 +20,7 @@ import {
   Settings04Icon,
   UserCircleIcon,
   UserLock01Icon,
-} from "../icons/icons";
+} from "../icons/huge-icons";
 import { cn } from "@/lib/utils";
 
 const ADMIN_EMAIL = process.env.NEXT_PUBLIC_ADMIN_EMAIL;

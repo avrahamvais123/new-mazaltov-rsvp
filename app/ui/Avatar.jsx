@@ -1,5 +1,5 @@
 import React from "react";
-import { UserCircleIcon } from "../icons/icons";
+import { UserCircleIcon } from "../icons/huge-icons";
 import { useSession } from "next-auth/react";
 import { cn } from "@/lib/utils";
 import Image from "next/image";

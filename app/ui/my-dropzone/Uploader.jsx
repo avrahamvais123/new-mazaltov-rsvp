@@ -1,6 +1,6 @@
 "use client";
 
-import { UploadCircle01Icon } from "@/app/icons/icons";
+import { UploadCircle01Icon } from "@/app/icons/huge-icons";
 import { cn } from "@/lib/utils";
 import { AnimatePresence, motion } from "framer-motion";
 import React from "react";

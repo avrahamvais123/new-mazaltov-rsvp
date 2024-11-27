@@ -1,6 +1,6 @@
 "use client";
 
-import { CancelCircleIcon } from "@/app/icons/icons";
+import { CancelCircleIcon } from "@/app/icons/huge-icons";
 import { canvas_Atom } from "@/lib/jotai";
 import { useAtomValue } from "jotai";
 import React, { useRef } from "react";

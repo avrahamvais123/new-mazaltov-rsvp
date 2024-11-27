@@ -32,6 +32,7 @@ const DropdownMenuSubTrigger = React.forwardRef(({ className, inset, children, .
     )}
     {...props}>
     {children}
+    jfjgjhg
     <ChevronRightIcon className="mr-auto size-4 rotate-180" />
   </DropdownMenuPrimitive.SubTrigger>
 ))
@@ -51,7 +52,7 @@ DropdownMenuSubContent.displayName =
   DropdownMenuPrimitive.SubContent.displayName
 
 const DropdownMenuContent = React.forwardRef(({ className, sideOffset = 4, ...props }, ref) => (
-  <DropdownMenuPrimitive.Portal>
+  <DropdownMenuPrimitive.Portal className="border-8">
     <DropdownMenuPrimitive.Content
       ref={ref}
       sideOffset={sideOffset}

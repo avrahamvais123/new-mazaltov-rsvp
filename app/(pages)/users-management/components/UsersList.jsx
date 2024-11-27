@@ -1,6 +1,6 @@
 "use client";
 
-import { MoreVerticalIcon } from "@/app/icons/icons";
+import { MoreVerticalIcon } from "@/app/icons/huge-icons";
 import React, { useState } from "react";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
@@ -66,13 +66,13 @@ const LIstUsers = ({
             </div>
 
             <MyDropdown
-              open={openDropdown}
-              setOpen={setOpenDropdown}
+              //open={openDropdown}
+              //setOpen={setOpenDropdown}
               title="פעולות"
               items={actions({ user, setOpenDialog, setDialogDetails })}
             >
               <button
-                onClick={() => setOpenDropdown(!openDropdown)}
+                //onClick={() => setOpenDropdown(!openDropdown)}
                 className=""
               >
                 <MoreVerticalIcon />

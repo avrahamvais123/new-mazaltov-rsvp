@@ -1,6 +1,6 @@
 "use client";
 
-import { AlertCircleIcon } from "@/app/icons/icons";
+import { AlertCircleIcon } from "@/app/icons/huge-icons";
 import { cn } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";

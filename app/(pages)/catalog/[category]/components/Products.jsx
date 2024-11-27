@@ -1,6 +1,6 @@
 "use client";
 
-import { FavouriteIcon } from "@/app/icons/icons";
+import { FavouriteIcon } from "@/app/icons/huge-icons";
 import Image from "next/image";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";

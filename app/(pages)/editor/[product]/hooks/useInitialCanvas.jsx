@@ -12,7 +12,7 @@ import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import { useEffect, useRef, useState } from "react";
 import * as fabricModule from "fabric";
 import { indigo, red, slate } from "tailwindcss/colors";
-import { Cancel02Icon, Copy02Icon } from "@/app/icons/icons";
+import { Cancel02Icon, Copy02Icon } from "@/app/icons/huge-icons";
 import ReactDOMServer from "react-dom/server";
 import { varelaRound } from "@/app/fonts/fonts";
 

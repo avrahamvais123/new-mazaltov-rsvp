@@ -1,4 +1,4 @@
-import { Delete02Icon, Edit02Icon, PaintBoardIcon, PartyIcon } from "@/app/icons/icons";
+import { Delete02Icon, Edit02Icon, PaintBoardIcon, PartyIcon } from "@/app/icons/huge-icons";
 
 export const actions = ({ user, setDialogDetails, setOpenDialog }) => [
     /* אירועים */

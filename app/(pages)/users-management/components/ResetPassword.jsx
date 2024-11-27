@@ -1,6 +1,6 @@
 "use client";
 
-import { Cancel02Icon, Tick04Icon } from "@/app/icons/icons";
+import { Cancel02Icon, Tick04Icon } from "@/app/icons/huge-icons";
 import InputPassword from "@/app/mui/InputPassword";
 import Loader, { PulseLoader } from "@/app/ui/Loader";
 import { successToast } from "@/app/ui/toasts";

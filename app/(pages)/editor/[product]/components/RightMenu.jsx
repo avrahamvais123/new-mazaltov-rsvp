@@ -9,7 +9,7 @@ import {
   PaintBoardIcon,
   StarIcon,
   TextIcon,
-} from "@/app/icons/icons";
+} from "@/app/icons/huge-icons";
 import ExtendedMenu from "./ExtendedMenu";
 import EditorButton from "./EditorButton";
 import TextDesignOption from "./TextDesignOption";

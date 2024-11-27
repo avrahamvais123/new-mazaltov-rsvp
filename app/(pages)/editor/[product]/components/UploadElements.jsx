@@ -4,7 +4,7 @@ import React, { useRef } from "react";
 import fabricModule from "fabric";
 import { useAtomValue } from "jotai";
 import { canvas_Atom } from "@/lib/jotai";
-import { FileUploadIcon } from "@/app/icons/icons";
+import { FileUploadIcon } from "@/app/icons/huge-icons";
 import { cn } from "@/lib/utils";
 import { v4 as uuidv4 } from "uuid"; // ייבוא של uuid
 

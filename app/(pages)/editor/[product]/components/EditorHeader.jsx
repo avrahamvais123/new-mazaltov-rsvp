@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowTurnBackwardIcon, ArrowTurnForwardIcon } from "@/app/icons/icons";
+import { ArrowTurnBackwardIcon, ArrowTurnForwardIcon } from "@/app/icons/huge-icons";
 import { canvas_Atom } from "@/lib/jotai";
 import { useAtomValue } from "jotai";
 import Image from "next/image";

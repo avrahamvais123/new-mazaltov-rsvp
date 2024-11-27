@@ -1,6 +1,6 @@
 "use client";
 
-import { Delete02Icon } from "@/app/icons/icons";
+import { Delete02Icon } from "@/app/icons/huge-icons";
 import { cn } from "@/lib/utils";
 import React from "react";
 import AddGuest from "./AddGuest";

@@ -8,7 +8,7 @@ import {
   CancelCircleFillIcon as CancelIcon,
   Delete02Icon,
   ReloadIcon,
-} from "@/app/icons/icons";
+} from "@/app/icons/huge-icons";
 
 const NextDropzone = () => {
   const [files, setFiles] = useState([]);

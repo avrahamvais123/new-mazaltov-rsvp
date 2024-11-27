@@ -2,7 +2,7 @@
 
 import { cn } from "@/lib/utils";
 import React, { useState } from "react";
-import { ViewIcon, ViewOffSlashIcon } from "../icons/icons";
+import { ViewIcon, ViewOffSlashIcon } from "../icons/huge-icons";
 
 const Input = ({
   value,

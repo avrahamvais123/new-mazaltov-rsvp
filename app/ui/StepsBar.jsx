@@ -2,7 +2,7 @@
 
 import { cn } from "@/lib/utils";
 import { useEffect } from "react";
-import { Tick02Icon } from "@/app/icons/icons";
+import { Tick02Icon } from "@/app/icons/huge-icons";
 
 const Text = ({ step }) => {
   return (

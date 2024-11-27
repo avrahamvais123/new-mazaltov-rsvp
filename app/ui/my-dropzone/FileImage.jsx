@@ -1,6 +1,7 @@
 "use client";
 
-import { ViewOffSlashIcon } from "@/app/icons/icons";
+import { AdobePdfIcon } from "@/app/icons/my-icons";
+import { ViewOffSlashIcon } from "@/app/icons/huge-icons";
 import { cn } from "@/lib/utils";
 import React from "react";
 
@@ -11,11 +12,7 @@ const FileImage = ({ fileType, url }) => {
   const isSpecial = specialExtensions.includes(fileType);
   const isPDF = fileType === "pdf";
 
-  const preview = isImage
-    ? url // תומך גם ב-SVG דרך ה-URL
-    : isPDF
-    ? "/images/pdf.png"
-    : "";
+  const preview = isImage ? url : "";
 
   return (
     <div className="size-full aspect-square flex-center">
@@ -30,6 +27,10 @@ const FileImage = ({ fileType, url }) => {
               : "size-auto object-cover" // התנהגות שונה ל-SVG
           )}
         />
+      ) : isPDF ? (
+        <div className="size-full flex-center bg-red-600 rounded-t-sm">
+          <AdobePdfIcon color="white" className="size-10 text-white" />
+        </div>
       ) : (
         <div className="text-center flex-col-center gap-1 text-slate-400">
           <ViewOffSlashIcon className="size-10 text-slate-400" />

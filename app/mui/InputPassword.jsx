@@ -3,7 +3,7 @@
 import { IconButton, InputAdornment, TextField } from "@mui/material";
 import React, { useState } from "react";
 import { Controller } from "react-hook-form";
-import { ViewIcon, ViewOffSlashIcon } from "../icons/icons";
+import { ViewIcon, ViewOffSlashIcon } from "../icons/huge-icons";
 
 const InputPassword = ({
   classNames,

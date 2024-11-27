@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Pusher from "pusher-js";
-import { UserCircleIcon } from "@/app/icons/icons";
+import { UserCircleIcon } from "@/app/icons/huge-icons";
 import { cn } from "@/lib/utils";
 
 const VisitorEventListener = () => {

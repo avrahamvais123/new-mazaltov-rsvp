@@ -1,5 +1,5 @@
 "use client";
-import { CreditCardIcon, ProfileIcon } from "@/app/icons/icons";
+import { CreditCardIcon, ProfileIcon } from "@/app/icons/huge-icons";
 import { cn } from "@/lib/utils";
 import React, { useEffect, useState } from "react";
 import DetailsOption from "./DetailsOption";

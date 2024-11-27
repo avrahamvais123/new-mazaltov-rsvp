@@ -1,4 +1,4 @@
-import { Delete02Icon, Edit02Icon } from "@/app/icons/icons";
+import { Delete02Icon, Edit02Icon } from "@/app/icons/huge-icons";
 import Checkbox from "@/app/ui/Checkbox";
 import { cn } from "@/lib/utils";
 import RemoveGuests from "./RemoveGuests";

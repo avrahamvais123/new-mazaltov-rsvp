@@ -2,7 +2,7 @@
 
 import React, { useCallback, useState } from "react";
 import { useDropzone } from "react-dropzone";
-import { CancelCircleIcon, FileUploadIcon } from "../icons/icons";
+import { CancelCircleIcon, FileUploadIcon } from "../icons/huge-icons";
 import { cn } from "@/lib/utils";
 import { Reorder } from "framer-motion";
 

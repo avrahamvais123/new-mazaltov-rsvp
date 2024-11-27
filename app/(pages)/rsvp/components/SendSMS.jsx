@@ -2,7 +2,7 @@
 
 import React, { useEffect } from "react";
 import MyDialog from "@/app/ui/MyDialog";
-import { Message01Icon } from "@/app/icons/icons";
+import { Message01Icon } from "@/app/icons/huge-icons";
 import { cn } from "@/lib/utils";
 import axios from "axios";
 import { useMutation } from "@tanstack/react-query";

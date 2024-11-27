@@ -3,7 +3,7 @@
 import React, { useEffect } from "react";
 import MyForm from "@/app/ui/MyForm";
 import MyDialog from "@/app/ui/MyDialog";
-import { Add01Icon } from "@/app/icons/icons";
+import { Add01Icon } from "@/app/icons/huge-icons";
 import { cn } from "@/lib/utils";
 import axios from "axios";
 import { useForm } from "react-hook-form";

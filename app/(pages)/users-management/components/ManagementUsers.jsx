@@ -6,7 +6,7 @@ import MyDialog from "@/app/ui/MyDialog";
 import { actions } from "./usersListActions";
 import LIstUsers from "./UsersList";
 import { cn } from "@/lib/utils";
-import { UserAdd01Icon } from "@/app/icons/icons";
+import { UserAdd01Icon } from "@/app/icons/huge-icons";
 import axios from "axios";
 import { useQuery } from "@tanstack/react-query";
 

@@ -4,7 +4,7 @@ import {
   LockPasswordIcon,
   SecurityLockIcon,
   UserLock01Icon,
-} from "@/app/icons/icons";
+} from "@/app/icons/huge-icons";
 import Loader from "@/app/ui/Loader";
 import MyForm from "@/app/ui/MyForm";
 import { errorToast, successToast } from "@/app/ui/toasts";

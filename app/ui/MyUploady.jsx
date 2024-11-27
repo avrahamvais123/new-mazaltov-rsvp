@@ -20,7 +20,7 @@ import {
   CancelCircleFillIcon,
   Delete02Icon,
   ReloadIcon,
-} from "@/app/icons/icons";
+} from "@/app/icons/huge-icons";
 import { useCallback, useState } from "react";
 import { Progress } from "@/components/ui/progress";
 

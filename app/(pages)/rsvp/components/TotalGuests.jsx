@@ -4,7 +4,7 @@ import {
   CancelCircleFillIcon as CancelIcon,
   CheckmarkCircle02Icon as CheckmarkIcon,
   HelpCircleIcon as QuestionmarkIcon,
-} from "@/app/icons/icons";
+} from "@/app/icons/huge-icons";
 import { cn } from "@/lib/utils";
 
 const TotalGuests = ({ status }) => {

@@ -7,7 +7,7 @@ import {
   AlignRightIcon,
   AlignTopIcon,
   AlignVerticalCenterIcon,
-} from "@/app/icons/icons";
+} from "@/app/icons/huge-icons";
 import React from "react";
 import EditorButton from "./EditorButton";
 import { useAtomValue } from "jotai";

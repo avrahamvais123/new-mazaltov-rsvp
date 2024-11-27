@@ -1,6 +1,6 @@
 "use client";
 
-import { ColorPickerIcon } from "@/app/icons/icons";
+import { ColorPickerIcon } from "@/app/icons/huge-icons";
 import { cn } from "@/lib/utils";
 import React, { useState, useCallback } from "react";
 import useEyeDropper from "use-eye-dropper";

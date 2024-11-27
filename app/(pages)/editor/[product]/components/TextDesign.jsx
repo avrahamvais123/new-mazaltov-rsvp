@@ -4,7 +4,7 @@ import {
   TextBoldIcon,
   TextItalicIcon,
   TextUnderlineIcon,
-} from "@/app/icons/icons";
+} from "@/app/icons/huge-icons";
 import { canvas_Atom } from "@/lib/jotai";
 import { useAtomValue } from "jotai";
 import React from "react";

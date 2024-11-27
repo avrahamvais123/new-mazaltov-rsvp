@@ -2,7 +2,7 @@
 
 import "react-dropzone-uploader/dist/styles.css";
 import Dropzone from "react-dropzone-uploader";
-import { FileUploadIcon } from "../icons/icons";
+import { FileUploadIcon } from "../icons/huge-icons";
 import { cn } from "@/lib/utils";
 import { getDroppedOrSelectedFiles } from "html5-file-selector";
 import {
@@ -10,7 +10,7 @@ import {
   CancelCircleFillIcon as CancelIcon,
   Delete02Icon,
   ReloadIcon,
-} from "@/app/icons/icons";
+} from "@/app/icons/huge-icons";
 import { useUpdate } from "react-use";
 
 const greenColor = "#05C851";

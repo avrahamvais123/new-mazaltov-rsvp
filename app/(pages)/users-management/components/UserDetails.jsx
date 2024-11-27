@@ -1,6 +1,6 @@
 "use client";
 
-import { UserCircleIcon } from "@/app/icons/icons";
+import { UserCircleIcon } from "@/app/icons/huge-icons";
 import { cn } from "@/lib/utils";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";

@@ -2,7 +2,7 @@
 
 import { cn } from "@/lib/utils";
 import React, { useEffect, useRef } from "react";
-import { Tick04Icon as CheckIcon } from "../icons/icons";
+import { Tick04Icon as CheckIcon } from "../icons/huge-icons";
 
 const Checkbox = ({ checked, indeterminate, ...props }) => {
   const ref = useRef();

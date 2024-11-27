@@ -4,7 +4,7 @@ import React from "react";
 import UploadElements from "./UploadElements";
 import { useAtomValue } from "jotai";
 import { canvas_Atom } from "@/lib/jotai";
-import { CircleIcon, SquareIcon } from "@/app/icons/icons";
+import { CircleIcon, SquareIcon } from "@/app/icons/huge-icons";
 import { cn } from "@/lib/utils";
 import { addCircle, addRect } from "./actions";
 
