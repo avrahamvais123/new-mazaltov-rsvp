@@ -74,7 +74,7 @@ export const POST = async (req) => {
   }
 };
 
-export async function PATCH(req) {
+export const PATCH = async (req) => {
   try {
     // קבלת נתוני הבקשה
     const body = await req.json();
@@ -106,4 +106,4 @@ export async function PATCH(req) {
       { status: 500 }
     );
   }
-}
+};

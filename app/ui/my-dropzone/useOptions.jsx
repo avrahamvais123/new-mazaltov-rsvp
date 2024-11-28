@@ -34,23 +34,13 @@ const useOptions = () => {
 
       const reader = new FileReader();
 
-      /* reader.onprogress = (event) => {
-        if (event.loaded && event.total) {
-          const progress = Math.round((event.loaded / event.total) * 100);
-          setFiles((prevFiles) =>
-            prevFiles.map((f) => (f.file === file ? { ...f, progress } : f))
-          );
-        }
-      };
-
       reader.onload = () => {
         setFiles((prevFiles) =>
           prevFiles.map((f) =>
-            f.file === file ? { ...f, status: "ready" } : f
+            f.file === file ? { ...f, isLoaded: true } : f
           )
         );
-      }; */
-
+      };
       reader.readAsDataURL(file);
 
       return fileData;
