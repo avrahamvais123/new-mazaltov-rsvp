@@ -15,9 +15,7 @@ import Menu from "./Menu";
 import { usePathname, useRouter } from "next/navigation";
 import Avatar from "../ui/Avatar";
 import { Login03Icon, Settings04Icon } from "../icons/huge-icons";
-import axios from "axios";
 import { cn } from "@/lib/utils";
-import Link from "next/link";
 
 const Header = () => {
   /* מסתיר את ההידר בעמוד הבית */
@@ -25,6 +23,7 @@ const Header = () => {
   const hiddenHeaderPaths = [
     "/pricing",
     "/editor",
+    "/animated-invitation",
     "/not-found",
     "/invitation",
     "/auth/signin",
