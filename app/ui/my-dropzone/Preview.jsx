@@ -7,7 +7,6 @@ import { useRef, useState } from "react";
 import { useClickAway } from "react-use";
 import { cn } from "@/lib/utils";
 import axios from "axios";
-import { Progress } from "rsuite";
 
 const Preview = ({ files = [], setFiles }) => {
   const [showActions, setShowActions] = useState(null);
@@ -17,63 +16,84 @@ const Preview = ({ files = [], setFiles }) => {
   return (
     <AnimatePresence>
       {files.map((item, idx) => {
-        const {
-          id,
-          type,
-          file,
-          FileImage,
-          size,
-          remove,
-          progress,
-          status,
-        } = item;
+        const { id, type, file, FileImage, size, remove, progress, status } =
+          item;
         const { color, shadowcolor } = generateBowColor(type);
-        //const [status, setStatus] = useState("מוכן");
-        //const [progress, setProgress] = useState(0);
 
-        const upload = async () => {
-          console.log("ההעלאה התחילה");
+        const addParamsToFormData = (params) => {
+          const formData = new FormData();
+          Object.entries(params).forEach(([key, value]) => {
+            if (value !== undefined && value !== null) {
+              formData.append(key, value);
+            }
+          });
+          return formData;
+        };
+
+        const uploadToCloudinary = async () => {
           try {
-            const options = {
-              public_id: "new-image",
-              folder: "/assets",
-              unique_filename: true,
-              resource_type: "auto",
-              overwrite: true,
-            };
-            const encodedOptions = encodeURIComponent(JSON.stringify(options));
+            // הגדרות env
+            const uploadPresets =
+              process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET;
+            const api_key = process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY;
+            const cloudName = process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME;
 
-            const formData = new FormData();
-            formData.append("file", file);
-            formData.append("new-options", file);
-            formData.append("options", encodedOptions);
-            const res = await axios.post("/api/upload-image", formData, {
-              headers: {
-                "Content-Type": "multipart/form-data",
-              },
-              onUploadProgress: (progressEvent) => {
-                const progress = Math.round(
-                  (progressEvent.loaded / progressEvent.total) * 100
-                );
-                if (progress === 100) {
-                  setFiles((prevFiles) =>
-                    prevFiles.map((f) =>
-                      f.id === id ? { ...f, progress, status: "complete" } : f
-                    )
-                  );
-                } else {
-                  setFiles((prevFiles) =>
-                    prevFiles.map((f) =>
-                      f.id === id ? { ...f, progress, status: "pending" } : f
-                    )
-                  );
-                }
-                console.log("progress: ", progress);
-              },
+            // פרמטרים לשליחה
+            const parametersToSign = {
+              folder: "mazaltov-rsvp/invitations",
+              public_id: "new-image-2",
+              overwrite: true,
+              upload_preset: uploadPresets,
+            };
+
+            // יצירת מחרוזת כתובת חתומה
+            const queryString = new URLSearchParams(
+              parametersToSign
+            ).toString();
+
+            // קבלת כתובת חתומה מראש
+            const { data } = await axios.get(
+              `/api/upload-image?${queryString}`
+            );
+
+            const formData = addParamsToFormData({
+              ...data,
+              file,
+              api_key,
             });
-            console.log("res: ", res);
+
+            console.log("formData: ", formData);
+
+            // מעקב אחרי ההעלאה
+            const response = await axios.post(
+              `https://api.cloudinary.com/v1_1/${cloudName}/auto/upload`,
+              formData,
+              {
+                onUploadProgress: (progressEvent) => {
+                  const progress = Math.round(
+                    (progressEvent.loaded / progressEvent.total) * 100
+                  );
+                  if (progress == 100) {
+                    setFiles((prevFiles) =>
+                      prevFiles.map((f) =>
+                        f.id === id ? { ...f, progress, status: "complete" } : f
+                      )
+                    );
+                  } else {
+                    setFiles((prevFiles) =>
+                      prevFiles.map((f) =>
+                        f.id === id ? { ...f, progress, status: "pending" } : f
+                      )
+                    );
+                  }
+                  console.log("Cloudinary Upload Progress: ", progress);
+                },
+              }
+            );
+            console.log("Upload success: ", response.data);
+            return response.data;
           } catch (error) {
-            console.log("error: ", error);
+            console.error("Upload error: ", error);
           }
         };
 
@@ -142,7 +162,7 @@ const Preview = ({ files = [], setFiles }) => {
                     >
                       <button
                         disabled={status === "complete"}
-                        onClick={upload}
+                        onClick={uploadToCloudinary}
                         className="relative h-10 bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800 text-white w-full py-2 disabled:cursor-not-allowed"
                       >
                         <p className="z-10 absolute-center w-full">
