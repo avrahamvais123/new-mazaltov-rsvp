@@ -4,7 +4,6 @@ import { useState, useEffect } from "react";
 import { v4 as uuid } from "uuid";
 import prettyBytes from "pretty-bytes";
 import FileImage from "./FileImage";
-import { Upload } from "tus-js-client";
 
 const getType = (fileName) => fileName.substring(fileName.lastIndexOf(".") + 1);
 
@@ -30,6 +29,7 @@ const useOptions = () => {
         size: prettyBytes(file.size),
         remove: () =>
           setFiles((prevFiles) => prevFiles.filter((f) => f.id !== id)),
+        showModal: false,
       };
 
       const reader = new FileReader();
