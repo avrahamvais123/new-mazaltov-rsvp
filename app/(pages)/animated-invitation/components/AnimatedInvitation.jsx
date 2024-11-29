@@ -28,17 +28,19 @@ const AnimatedInvitation = () => {
   return (
     <motion.div
       animate={{ justifyContent: wrapperAnimate?.justifyContent }}
-      className="size-full p-8 flex-col-center"
+      className="size-full py-8 px-4 md:p-8 flex-col-center"
     >
       <motion.div
         animate={{ height: wrapperAnimate?.height }}
         className="flex-col-center justify-between"
       >
-        <motion.h1 className="text-4xl md:text-6xl w-full text-center">
-          הזמנה לברית
-        </motion.h1>
+        <div className="flex-col-center gap-8">
+          <motion.h1 className="text-4xl md:text-6xl w-full text-center">
+            הזמנה לברית
+          </motion.h1>
 
-        {showText && <AnimationText text={text} />}
+          {showText && <AnimationText text={text} />}
+        </div>
 
         <AnimatePresence>
           {showBabyStroller && (

@@ -1,76 +1,69 @@
 "use client";
 
-import React, { useEffect, useRef } from "react";
-import gsap from "gsap";
-import { useGSAP } from "@gsap/react";
+import React, { useRef } from "react";
+import { gsap } from "gsap";
+import SplitText from "@/gsap/SplitText"; // ייבוא הפלאגין
 
-gsap.registerPlugin(useGSAP);
+gsap.registerPlugin(SplitText);
 
 const AnimatedText = ({ text }) => {
   const textRef = useRef(null);
-  //const container = useRef();
 
-  useGSAP(
-    () => {
-      const words = textRef.current.querySelectorAll("span");
-      gsap.fromTo(
-        words,
-        { opacity: 0, y: 20 },
-        {
-          opacity: 1,
-          y: 0,
-          stagger: 0.2, // מרווח בין מילים
-          duration: 0.5,
-          ease: "power2.out",
-        }
-      );
-    }
-    //{ scope: container }
-  ); // <-- scope is for selector text (optional)
+  React.useLayoutEffect(() => {
+    const ctx = gsap.context(() => {
+      const lines = textRef.current.querySelectorAll(".line");
+      const timeline = gsap.timeline(); // יוצר Timeline
 
-  /* useEffect(() => {
-    const words = textRef.current.querySelectorAll("span");
-    gsap.fromTo(
-      words,
-      { opacity: 0, y: 20 },
-      {
-        opacity: 1,
-        y: 0,
-        stagger: 0.2, // מרווח בין מילים
-        duration: 0.5,
-        ease: "power2.out",
-      }
-    );
-  }, []); */
+      lines.forEach((line) => {
+        // מחלק את השורה הנוכחית למילים ואותיות
+        const split = new SplitText(line, {
+          type: "words,chars", // מחלק למילים ואותיות
+        });
 
-  const splitTextToWords = (text) => {
-    return text.split(" ").map((word, index) => (
-      <span key={index} className="inline-block ml-1.5">
-        {word}
-      </span>
+        // מוסיף את האנימציה של השורה הנוכחית ל-Timeline
+        timeline.fromTo(
+          split.chars,
+          { opacity: 0, y: 50 },
+          {
+            opacity: 1,
+            y: 0,
+            stagger: 0.05, // מרווח בין אותיות
+            duration: 0.5, // משך זמן האנימציה של כל אות
+            ease: "power2.out",
+          }
+        );
+
+        // מנקה את החלוקה לאחר סיום
+        return () => split.revert();
+      });
+    }, textRef);
+
+    return () => ctx.revert(); // מנקה את ה-GSAP context
+  }, []);
+
+  // פונקציה לפיצול הטקסט לשורות
+  const splitTextToLines = (text) => {
+    return text.split("\n").map((line, index) => (
+      <div key={index} className="line" style={{ overflow: "hidden" }}>
+        {line}
+      </div>
     ));
   };
 
   return (
     <div
-      dir="rtl"
       ref={textRef}
-      className="text-center text-xl leading-4 inline-block"
+      style={{
+        lineHeight: "1.5em", // גובה שורה
+        textAlign: "center", // יישור למרכז
+        direction: "rtl", // תמיכה בעברית
+        fontSize: "2rem", // גודל טקסט
+        display: "inline-block", // שמירה על פורמט אחיד
+      }}
     >
-      {text.split("\n").map((line, index) => (
-        <div key={index} style={{ marginBottom: "10px" }}>
-          {splitTextToWords(line)}
-        </div>
-      ))}
+      {splitTextToLines(text)}
     </div>
   );
 };
 
 export default AnimatedText;
-
-/* style={{
-        lineHeight: "0.5rem", // גובה שורה
-        textAlign: "center", // יישור לאמצע
-        direction: "rtl", // כיוון RTL
-        display: "inline-block", // שמירה על רוחב אוטומטי
-      }} */
