@@ -1,11 +1,11 @@
 "use client";
 
-import Lottie from "lottie-react";
 import React, { useEffect, useState } from "react";
 import BabyStroller from "@/public/lottie-animations/Baby-Stroller.json";
 import { AnimatePresence, motion } from "framer-motion";
-import WordPullUp from "@/components/ui/word-pull-up";
-import AnimationText from "./AnimationText";
+import AnimationText from "./AnimeText";
+import dynamic from "next/dynamic";
+const Lottie = dynamic(() => import("lottie-react"), { ssr: false });
 
 const AnimatedInvitation = () => {
   const [showText, setShowText] = useState(false);
@@ -14,7 +14,7 @@ const AnimatedInvitation = () => {
   const [titleStyles, setTitleStyles] = useState({});
 
   const text = `בשבח והודיה לה׳ יתברך
-  אנו שמשחים להודיעכם על הכנסת בננו
+  אנו שמחים להודיעכם על הכנסת בננו
   בבריתו של אברהם אבינו ע׳׳ה`;
 
   useEffect(() => {

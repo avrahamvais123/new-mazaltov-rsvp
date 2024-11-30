@@ -9,7 +9,7 @@ gsap.registerPlugin(SplitText);
 const AnimatedText = ({ text }) => {
   const textRef = useRef(null);
 
-  React.useLayoutEffect(() => {
+  React.useEffect(() => {
     const ctx = gsap.context(() => {
       const lines = textRef.current.querySelectorAll(".line");
       const timeline = gsap.timeline(); // יוצר Timeline
@@ -22,12 +22,12 @@ const AnimatedText = ({ text }) => {
 
         // מוסיף את האנימציה של השורה הנוכחית ל-Timeline
         timeline.fromTo(
-          split.chars,
+          split.words,
           { opacity: 0, y: 50 },
           {
             opacity: 1,
             y: 0,
-            stagger: 0.05, // מרווח בין אותיות
+            stagger: 0.2, // מרווח בין אותיות
             duration: 0.5, // משך זמן האנימציה של כל אות
             ease: "power2.out",
           }
@@ -53,13 +53,14 @@ const AnimatedText = ({ text }) => {
   return (
     <div
       ref={textRef}
-      style={{
+      className="text-center md:text-4xl"
+      /* style={{
         lineHeight: "1.5em", // גובה שורה
         textAlign: "center", // יישור למרכז
         direction: "rtl", // תמיכה בעברית
         fontSize: "2rem", // גודל טקסט
         display: "inline-block", // שמירה על פורמט אחיד
-      }}
+      }} */
     >
       {splitTextToLines(text)}
     </div>
