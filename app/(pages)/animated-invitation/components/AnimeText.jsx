@@ -31,7 +31,7 @@ const AnimatedText = ({ text }) => {
     // ניתן להוסיף פעולות נוספות לטיים ליין כאן
   }, []);
 
-  // פונקציה לפיצול הטקסט למילים
+  // פונקציה לפיצול הטקסט לשורות
   const splitTextToWords = (line) => {
     const words = line.split(" ");
     return words
@@ -45,7 +45,7 @@ const AnimatedText = ({ text }) => {
   // פונקציה לפיצול הטקסט לשורות
   const splitTextToLines = (text) => {
     return text.split("\n").map((line, index) => (
-      <div key={index} className="line overflow-hidden">
+      <div key={index} className="line" style={{ overflow: "hidden" }}>
         {line}
       </div>
     ));

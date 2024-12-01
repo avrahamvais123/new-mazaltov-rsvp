@@ -5,7 +5,7 @@ import { cn } from "@/lib/utils";
 
 export default function WordPullUp({
   words,
-
+  
   wrapperFramerProps = {
     hidden: { opacity: 0 },
     show: {
@@ -15,14 +15,15 @@ export default function WordPullUp({
       },
     },
   },
-
+  
   framerProps = {
     hidden: { y: 20, opacity: 0 },
     show: { y: 0, opacity: 1 },
   },
-
+  
   className
 }) {
+  console.log('words: ', words);
   return (
     (<motion.h1
       variants={wrapperFramerProps}
