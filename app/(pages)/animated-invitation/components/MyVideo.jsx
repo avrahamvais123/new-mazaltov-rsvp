@@ -20,6 +20,7 @@ const MyVideo = () => {
   return (
     <AbsoluteFill
       style={{
+        direction: "rtl", // כיוון טקסט מימין לשמאל
         width: width, // התאמה מלאה לרוחב ה-Player
         height: height, // התאמה מלאה לגובה ה-Player
         background: "linear-gradient(90deg, #ff7eb3, #ff758c)",
@@ -35,7 +36,7 @@ const MyVideo = () => {
           transform: `translateY(${translateY}px)`,
         }}
       >
-        שלום, Remotion!
+        ברוכים הבאים!
       </h1>
     </AbsoluteFill>
   );
