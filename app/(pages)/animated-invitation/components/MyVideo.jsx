@@ -28,6 +28,7 @@ const MyVideo = () => {
         justifyContent: "center",
         alignItems: "center",
       }}
+      className=""
     >
       <h1
         style={{
