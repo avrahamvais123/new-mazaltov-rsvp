@@ -3,8 +3,8 @@
 import React, { useEffect, useState } from "react";
 import BabyStroller from "@/public/lottie-animations/Baby-Stroller.json";
 import { AnimatePresence, motion } from "framer-motion";
-//import AnimationText from "./AnimeText";
-import AnimationText from "./TestAnimation";
+import AnimationText from "./AnimeText";
+//import AnimationText from "./TestAnimation";
 import dynamic from "next/dynamic";
 const Lottie = dynamic(() => import("lottie-react"), { ssr: false });
 

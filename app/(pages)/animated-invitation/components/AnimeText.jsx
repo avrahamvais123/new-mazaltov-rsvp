@@ -2,9 +2,10 @@
 
 import React, { useRef } from "react";
 import anime from "animejs";
+import WordPullUp from "@/components/ui/word-pull-up";
 
 const AnimatedText = ({ text }) => {
-  const textRef = useRef(null);
+  /* const textRef = useRef(null);
 
   React.useEffect(() => {
     // פיצול הטקסט למילים
@@ -49,12 +50,31 @@ const AnimatedText = ({ text }) => {
         {line}
       </div>
     ));
-  };
+  }; */
 
-  return (
+  /* return (
     <div ref={textRef} className="text-center md:text-4xl">
       {splitTextToLines(text)}
     </div>
+  ); */
+
+  const words = "שורה שלישית ואחרונה מספר 3";
+  return (
+    <>
+      <WordPullUp
+        className="text-xl font-bold tracking-[-0.02em] text-black dark:text-white md:text-7xl md:leading-[5rem]"
+        words="שורה ראשונה"
+        wrapperFramerProps={{}}
+      />
+      <WordPullUp
+        className="text-xl font-bold tracking-[-0.02em] text-black dark:text-white md:text-7xl md:leading-[5rem]"
+        words="שורה שניה מספר 2"
+      />
+      <WordPullUp
+        className="text-xl font-bold tracking-[-0.02em] text-black dark:text-white md:text-7xl md:leading-[5rem]"
+        words="שורה שלישית ואחרונה מספר 3"
+      />
+    </>
   );
 };
 

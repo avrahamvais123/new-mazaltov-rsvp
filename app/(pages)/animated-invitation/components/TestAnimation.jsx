@@ -3,7 +3,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 
-const TestAnimation = ({ text, duration = 0.3, lineGap = 0.5, delay = 0 }) => {
+const TestAnimation = ({ text, duration = 0.2, lineGap = 0, delay = 0 }) => {
   const splitedToLines = () => {
     return text.split("\n").map((line) => {
       const lineTrimmed = line.trim();
@@ -48,7 +48,7 @@ const TestAnimation = ({ text, duration = 0.3, lineGap = 0.5, delay = 0 }) => {
                   key={wordIndex}
                   initial={{ opacity: 0, y: 50 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: wordDelay, duration }}
+                  transition={{ delay: wordDelay, duration, type: "spring" }}
                   className="text-xl md:text-4xl"
                 >
                   {word}
