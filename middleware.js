@@ -6,7 +6,7 @@ export function middleware(req) {
   // חריגים
   const isExcluded = () => {
     const isAsset =
-      /\.(png|jpg|jpeg|gif|svg|css|js|ico|woff|woff2|ttf|eot|otf|json)$/.test(
+      /\.(png|jpg|jpeg|gif|svg|css|js|ico|woff|woff2|ttf|eot|otf|json|mp3|wav|ogg|mp4|webm|avi)$/.test(
         url.pathname
       );
 
@@ -26,6 +26,7 @@ export function middleware(req) {
     "/invitation",
     "/visitor-tracking",
     "/animated-invitation",
+    "/video-invitation",
     "/test",
     "/katzav",
     "/berenshtein",
@@ -46,6 +47,7 @@ export function middleware(req) {
     "/editor",
     "/catalog",
     "/product",
+    "/video-invitations",
   ];
 
   function isPageExists(pathname) {
