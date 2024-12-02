@@ -1,6 +1,5 @@
 "use client";
 
-import { delay } from "framer-motion";
 import React from "react";
 import {
   useCurrentFrame,
@@ -33,8 +32,6 @@ const Slide1 = () => {
 
   const opacity = (inputRange) => interpolate(frame, inputRange, [0, 1]);
 
-  //const opacity = interpolate(frame, [45, 90], [0, 1]);
-
   // חישוב זווית הסיבוב
   const rotation = interpolate(frame, [0, 360], [0, 360], {
     extrapolateRight: "loop", // חזרה על האנימציה כל הזמן
@@ -44,12 +41,6 @@ const Slide1 = () => {
   const reverseRotation = interpolate(frame, [0, 360], [0, -360], {
     extrapolateRight: "loop", // ממשיך בלולאה
   });
-
-  const text1 = `
-      בשבח והודיה לה׳ יתברך\n
-      אנו שמחים להודיעכם על\n
-      הכנסת בננו בבריתו של אברהם אע׳׳ה
-    `;
 
   const name = "אליהו";
 
@@ -173,9 +164,9 @@ const Slide1 = () => {
       </AbsoluteFill>
 
       {/* כיתוב */}
-      <AbsoluteFill className="flex-col-center gap-10 justify-end pb-[400px]">
+      <AbsoluteFill className="flex-col-center justify-end">
         {/* שם הילד */}
-        <div className="h-20 flex-center gap-2 test">
+        <span className="absolute bottom-[42rem] flex-center gap-2">
           {name.split("").map((letter, index) => {
             return (
               <p
@@ -194,13 +185,13 @@ const Slide1 = () => {
               </p>
             );
           })}
-        </div>
+        </span>
 
         {/* בר מצווה */}
         <p
-          className="text-8xl"
+          className="text-[5.5rem] absolute bottom-[24rem] text-white"
           style={{
-            opacity: opacity([45, 90]),
+            opacity: opacity([70, 90]),
           }}
         >
           בר מצווה
