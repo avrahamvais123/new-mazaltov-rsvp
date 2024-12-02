@@ -14,14 +14,17 @@ const Slide1 = () => {
   const { fps, height, width } = useVideoConfig();
 
   // אנימציה לטקסט במסך הראשון
-  const bounce = spring({
-    frame,
-    fps,
-    config: { damping: 10 },
-  });
+  const bounce = (props) =>
+    spring({
+      frame,
+      fps,
+      config: { damping: 10 },
+      ...props,
+    });
 
-  const translateY = interpolate(bounce, [0, 1], [300, 0]);
-  const opacity = interpolate(frame, [0, 100], [0, 1]);
+  const translateY = interpolate(bounce(), [0, 1], [300, 0]);
+
+  const opacity = interpolate(frame, [45, 90], [0, 1]);
 
   // חישוב זווית הסיבוב
   const rotation = interpolate(frame, [0, 360], [0, 360], {
@@ -32,6 +35,9 @@ const Slide1 = () => {
   const reverseRotation = interpolate(frame, [0, 360], [0, -360], {
     extrapolateRight: "loop", // ממשיך בלולאה
   });
+
+  const scale = ({ input, inputRange, outputRange }) =>
+    interpolate(input, inputRange, outputRange);
 
   const text1 = `
       בשבח והודיה לה׳ יתברך\n
@@ -44,7 +50,7 @@ const Slide1 = () => {
       style={{ height, width, direction: "rtl" }}
       className="flex-col-center bg-gradient-to-t to-[#293647] from-[#0A1528]"
     >
-        {/* רקע מנדלה שקופה */}
+      {/* רקע מנדלה שקופה */}
       <AbsoluteFill className="flex-center">
         <img
           src="/video-assets/opacity-mandala.png"
@@ -59,7 +65,11 @@ const Slide1 = () => {
           style={{
             animationDuration: "5s",
             filter: "drop-shadow(0 0 50px black)",
-            transform: `rotate(${rotation}deg)`, // סיבוב
+            transform: `rotate(${rotation}deg) scale(${scale({
+              input: bounce(),
+              inputRange: [0, 1],
+              outputRange: [0, 1],
+            })})`, // סיבוב
           }}
           src="/video-assets/big-mandala.png"
           alt="big mandala"
@@ -84,13 +94,24 @@ const Slide1 = () => {
             src="/video-assets/ornament.png"
             alt="big mandala"
             className="w-fit h-full object-cover"
+            style={{
+              transform: `scale(${scale({
+                input: bounce({ delay: 12 }),
+                inputRange: [0, 1],
+                outputRange: [0, 1],
+              })})`,
+            }}
           />
           <img
             src="/video-assets/ornament.png"
             alt="big mandala"
             className="w-fit h-full object-cover"
             style={{
-                transform: "rotateY(180deg)",
+              transform: `rotateY(180deg) scale(${scale({
+                input: bounce({ delay: 6 }),
+                inputRange: [0, 1],
+                outputRange: [0, 1],
+              })})`,
             }}
           />
         </div>
@@ -102,7 +123,11 @@ const Slide1 = () => {
           style={{
             animationDuration: "5s",
             filter: "drop-shadow(0 0 50px black)",
-            transform: `rotate(${reverseRotation}deg)`, // סיבוב ברוורס
+            transform: `rotate(${reverseRotation}deg) scale(${scale({
+              input: bounce({ delay: 6 }),
+              inputRange: [0, 1],
+              outputRange: [0, 1],
+            })})`, // סיבוב ברוורס
           }}
           src="/video-assets/small-mandala.png"
           alt="big mandala"
@@ -115,7 +140,11 @@ const Slide1 = () => {
         <p
           className="text-center text-[60px] whitespace-pre-line leading-[30px] text-white"
           style={{
-            transform: `translateY(${translateY}px)`,
+            /* transform: `scale(${scale({
+              input: bounce({ delay: 18 }),
+              inputRange: [0, 1],
+              outputRange: [0, 1],
+            })})`, */
             opacity: opacity,
           }}
         >
