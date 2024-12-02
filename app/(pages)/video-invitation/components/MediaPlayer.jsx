@@ -17,6 +17,7 @@ const MediaPlayer = () => {
         compositionHeight={1800}
         controls
         style={{
+          borderRadius: 10,
           width: 300, // רוחב מלא
           height: 450, // גובה מלא
         }}

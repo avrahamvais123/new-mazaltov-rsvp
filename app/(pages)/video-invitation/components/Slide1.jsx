@@ -44,6 +44,14 @@ const Slide1 = () => {
       style={{ height, width, direction: "rtl" }}
       className="flex-col-center bg-gradient-to-t to-[#293647] from-[#0A1528]"
     >
+      <AbsoluteFill className="flex-center">
+        <img
+          src="/video-assets/opacity-mandala.png"
+          alt="big mandala"
+          className="size-full object-cover mix-blend-overlay opacity-75"
+        />
+      </AbsoluteFill>
+
       {/* מנדלה גדולה */}
       <AbsoluteFill className="flex-center">
         <img

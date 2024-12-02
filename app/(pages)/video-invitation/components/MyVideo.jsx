@@ -1,7 +1,17 @@
 "use client";
 
 import React from "react";
-import { useCurrentFrame, OffthreadVideo, Audio, staticFile } from "remotion";
+import { useCurrentFrame, Audio, staticFile, interpolate } from "remotion";
+
+import {
+  linearTiming,
+  springTiming,
+  TransitionSeries,
+} from "@remotion/transitions";
+
+import { fade } from "@remotion/transitions/fade";
+import { wipe } from "@remotion/transitions/wipe";
+
 import Slide1 from "./Slide1";
 import Slide2 from "./Slide2";
 import Slide3 from "./Slide3";
@@ -9,15 +19,29 @@ import Slide3 from "./Slide3";
 const MyVideo = () => {
   const frame = useCurrentFrame();
 
-  // שליטה על המסכים
   return (
     <>
       <Audio src={staticFile("wedding1.mp3")} />
-      {/* <OffthreadVideo src="" /> */}
-      {frame < 150 && <Slide1 />} {/* מסך ראשון עד פריים 150 */}
-      {frame >= 150 && frame < 300 && <Slide2 />}{" "}
-      {/* מסך שני בין פריים 150-300 */}
-      {frame >= 300 && <Slide3 />} {/* מסך שלישי אחרי פריים 300 */}
+
+      <TransitionSeries>
+        <TransitionSeries.Sequence durationInFrames={180}>
+          <Slide1 />
+        </TransitionSeries.Sequence>
+        <TransitionSeries.Transition
+          timing={springTiming({ config: { damping: 200 } })}
+          presentation={fade()}
+        />
+        <TransitionSeries.Sequence durationInFrames={120}>
+          <Slide2 />
+        </TransitionSeries.Sequence>
+        <TransitionSeries.Transition
+          timing={linearTiming({ durationInFrames: 30 })}
+          presentation={wipe()}
+        />
+        <TransitionSeries.Sequence durationInFrames={120}>
+          <Slide3 />
+        </TransitionSeries.Sequence>
+      </TransitionSeries>
     </>
   );
 };

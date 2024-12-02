@@ -28,6 +28,7 @@ const Header = () => {
     "/invitation",
     "/auth/signin",
     "/auth/signup",
+    "/video-invitation",
   ];
   const [isOpen, setOpen] = useState(false);
   const { data: session, status } = useSession();
@@ -35,7 +36,7 @@ const Header = () => {
   const isHomePage = pathname === "/";
 
   // if (hiddenHeaderPaths.includes(pathname)) return null;
-  
+
   // בדיקה אם הנתיב הנוכחי מתחיל באחד מהנתיבים ברשימה
   if (hiddenHeaderPaths.some((path) => pathname.startsWith(path))) return null;
 
