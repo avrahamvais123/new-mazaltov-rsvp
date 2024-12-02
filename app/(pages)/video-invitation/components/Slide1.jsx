@@ -44,6 +44,7 @@ const Slide1 = () => {
       style={{ height, width, direction: "rtl" }}
       className="flex-col-center bg-gradient-to-t to-[#293647] from-[#0A1528]"
     >
+        {/* רקע מנדלה שקופה */}
       <AbsoluteFill className="flex-center">
         <img
           src="/video-assets/opacity-mandala.png"
@@ -76,6 +77,25 @@ const Slide1 = () => {
         />
       </AbsoluteFill>
 
+      {/* עיטורים */}
+      <AbsoluteFill className="size-full flex justify-end">
+        <div className="h-64 flex justify-between items-center p-10 m-10">
+          <img
+            src="/video-assets/ornament.png"
+            alt="big mandala"
+            className="w-fit h-full object-cover"
+          />
+          <img
+            src="/video-assets/ornament.png"
+            alt="big mandala"
+            className="w-fit h-full object-cover"
+            style={{
+                transform: "rotateY(180deg)",
+            }}
+          />
+        </div>
+      </AbsoluteFill>
+
       {/* מנדלה קטנה */}
       <AbsoluteFill className="flex-center">
         <img
@@ -90,6 +110,7 @@ const Slide1 = () => {
         />
       </AbsoluteFill>
 
+      {/* כיתוב */}
       <AbsoluteFill className="flex-center justify-end pb-[500px]">
         <p
           className="text-center text-[60px] whitespace-pre-line leading-[30px] text-white"

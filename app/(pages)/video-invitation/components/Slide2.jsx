@@ -15,24 +15,10 @@ const Slide2 = () => {
   // אנימציה למסך השני
   const opacity = interpolate(frame, [150, 180], [0, 1]); // Fade In
   return (
-    <AbsoluteFill
-      style={{
-        direction: "rtl",
-        background: "linear-gradient(90deg, #7ee8fa, #80ff72)",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
-      <h1
-        style={{
-          fontSize: "70px",
-          color: "black",
-          opacity,
-        }}
-      >
-        זהו המסך השני!
-      </h1>
+    <AbsoluteFill dir="rtl" className="flex-center">
+      <AbsoluteFill>
+        <img src="/video-assets/background.png" className="size-full object-cover" alt="" />
+      </AbsoluteFill>
     </AbsoluteFill>
   );
 };

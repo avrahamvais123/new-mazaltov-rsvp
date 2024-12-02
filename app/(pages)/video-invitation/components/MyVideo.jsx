@@ -24,14 +24,14 @@ const MyVideo = () => {
       <Audio src={staticFile("wedding1.mp3")} />
 
       <TransitionSeries>
-        <TransitionSeries.Sequence durationInFrames={180}>
+        <TransitionSeries.Sequence durationInFrames={120}>
           <Slide1 />
         </TransitionSeries.Sequence>
         <TransitionSeries.Transition
           timing={springTiming({ config: { damping: 200 } })}
           presentation={fade()}
         />
-        <TransitionSeries.Sequence durationInFrames={120}>
+        <TransitionSeries.Sequence durationInFrames={180}>
           <Slide2 />
         </TransitionSeries.Sequence>
         <TransitionSeries.Transition
