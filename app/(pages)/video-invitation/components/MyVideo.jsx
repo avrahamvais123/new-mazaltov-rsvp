@@ -7,6 +7,7 @@ import {
   linearTiming,
   springTiming,
   TransitionSeries,
+  useTransitionProgress,
 } from "@remotion/transitions";
 
 import { fade } from "@remotion/transitions/fade";
@@ -21,24 +22,33 @@ const MyVideo = () => {
 
   return (
     <>
-      <Audio src={staticFile("wedding1.mp3")} />
+      <Audio src={staticFile("/audio/wedding1.mp3")} />
 
       <TransitionSeries>
-        <TransitionSeries.Sequence durationInFrames={120}>
+        {/* slide 1 */}
+        <TransitionSeries.Sequence durationInFrames={240}>
           <Slide1 />
         </TransitionSeries.Sequence>
+
+        {/* transition 1 */}
         <TransitionSeries.Transition
           timing={springTiming({ config: { damping: 200 } })}
           presentation={fade()}
         />
-        <TransitionSeries.Sequence durationInFrames={180}>
+
+        {/* slide 2 */}
+        <TransitionSeries.Sequence durationInFrames={240}>
           <Slide2 />
         </TransitionSeries.Sequence>
+
+        {/* transition 2 */}
         <TransitionSeries.Transition
           timing={linearTiming({ durationInFrames: 30 })}
           presentation={wipe()}
         />
-        <TransitionSeries.Sequence durationInFrames={120}>
+
+        {/* slide 3 */}
+        <TransitionSeries.Sequence durationInFrames={240}>
           <Slide3 />
         </TransitionSeries.Sequence>
       </TransitionSeries>

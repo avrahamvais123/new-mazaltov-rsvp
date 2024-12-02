@@ -1,5 +1,6 @@
 "use client";
 
+import { delay } from "framer-motion";
 import React from "react";
 import {
   useCurrentFrame,
@@ -7,6 +8,8 @@ import {
   spring,
   useVideoConfig,
   AbsoluteFill,
+  Img,
+  staticFile,
 } from "remotion";
 
 const Slide1 = () => {
@@ -52,46 +55,75 @@ const Slide1 = () => {
     >
       {/* רקע מנדלה שקופה */}
       <AbsoluteFill className="flex-center">
-        <img
-          src="/video-assets/opacity-mandala.png"
+        <Img
+          src={staticFile("/video-assets/opacity-mandala.png")}
           alt="big mandala"
           className="size-full object-cover mix-blend-overlay opacity-75"
+          style={{
+            transform: `scale(${scale({
+              input: bounce({ delay: 6 }),
+              inputRange: [0, 1],
+              outputRange: [0, 1],
+            })})`,
+          }}
+        />
+      </AbsoluteFill>
+
+      {/* מסגרת זהב */}
+      <AbsoluteFill className="flex-center p-16">
+        <Img
+          src={staticFile("/video-assets/gold-frame.png")}
+          style={{
+            transform: `scale(${scale({
+              input: bounce({ delay: 3 }),
+              inputRange: [0, 1],
+              outputRange: [0, 1],
+            })})`,
+          }}
+          className="size-full"
         />
       </AbsoluteFill>
 
       {/* מנדלה גדולה */}
       <AbsoluteFill className="flex-center">
-        <img
+        <Img
+          src={staticFile("/video-assets/big-mandala.png")}
+          alt="big mandala"
+          className="size-[700px] object-contain"
           style={{
             animationDuration: "5s",
             filter: "drop-shadow(0 0 50px black)",
             transform: `rotate(${rotation}deg) scale(${scale({
-              input: bounce(),
+              input: bounce({ delay: 9 }),
               inputRange: [0, 1],
               outputRange: [0, 1],
-            })})`, // סיבוב
+            })})`,
           }}
-          src="/video-assets/big-mandala.png"
-          alt="big mandala"
-          className="size-[700px] object-contain"
         />
       </AbsoluteFill>
 
       {/* חצי רקע */}
       <AbsoluteFill className="size-full flex justify-end">
-        <img
-          style={{ filter: "drop-shadow(0 0 50px black)" }}
-          src="/video-assets/sub-background.png"
+        <Img
+          src={staticFile("/video-assets/sub-background.png")}
           alt="big mandala"
-          className="w-full h-[50%] object-cover"
+          className="w-full h-[55%] object-cover"
+          style={{
+            filter: "drop-shadow(0 0 50px black)",
+            transform: `scale(${scale({
+              input: bounce({ delay: 9 }),
+              inputRange: [0, 1],
+              outputRange: [0, 1],
+            })})`,
+          }}
         />
       </AbsoluteFill>
 
       {/* עיטורים */}
       <AbsoluteFill className="size-full flex justify-end">
         <div className="h-64 flex justify-between items-center p-10 m-10">
-          <img
-            src="/video-assets/ornament.png"
+          <Img
+            src={staticFile("/video-assets/ornament.png")}
             alt="big mandala"
             className="w-fit h-full object-cover"
             style={{
@@ -102,8 +134,8 @@ const Slide1 = () => {
               })})`,
             }}
           />
-          <img
-            src="/video-assets/ornament.png"
+          <Img
+            src={staticFile("/video-assets/ornament.png")}
             alt="big mandala"
             className="w-fit h-full object-cover"
             style={{
@@ -119,7 +151,8 @@ const Slide1 = () => {
 
       {/* מנדלה קטנה */}
       <AbsoluteFill className="flex-center">
-        <img
+        <Img
+          src={staticFile("/video-assets/small-mandala.png")}
           style={{
             animationDuration: "5s",
             filter: "drop-shadow(0 0 50px black)",
@@ -129,7 +162,6 @@ const Slide1 = () => {
               outputRange: [0, 1],
             })})`, // סיבוב ברוורס
           }}
-          src="/video-assets/small-mandala.png"
           alt="big mandala"
           className="size-[250px] object-contain"
         />
