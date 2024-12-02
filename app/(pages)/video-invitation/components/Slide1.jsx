@@ -25,9 +25,15 @@ const Slide1 = () => {
       ...props,
     });
 
-  const translateY = interpolate(bounce(), [0, 1], [300, 0]);
+  const translateY = ({ input, inputRange, outputRange }) =>
+    interpolate(input, inputRange, outputRange);
 
-  const opacity = interpolate(frame, [45, 90], [0, 1]);
+  const scale = ({ input, inputRange, outputRange }) =>
+    interpolate(input, inputRange, outputRange);
+
+  const opacity = (inputRange) => interpolate(frame, inputRange, [0, 1]);
+
+  //const opacity = interpolate(frame, [45, 90], [0, 1]);
 
   // חישוב זווית הסיבוב
   const rotation = interpolate(frame, [0, 360], [0, 360], {
@@ -39,14 +45,13 @@ const Slide1 = () => {
     extrapolateRight: "loop", // ממשיך בלולאה
   });
 
-  const scale = ({ input, inputRange, outputRange }) =>
-    interpolate(input, inputRange, outputRange);
-
   const text1 = `
       בשבח והודיה לה׳ יתברך\n
       אנו שמחים להודיעכם על\n
       הכנסת בננו בבריתו של אברהם אע׳׳ה
     `;
+
+  const name = "אליהו";
 
   return (
     <AbsoluteFill
@@ -168,19 +173,37 @@ const Slide1 = () => {
       </AbsoluteFill>
 
       {/* כיתוב */}
-      <AbsoluteFill className="flex-center justify-end pb-[500px]">
+      <AbsoluteFill className="flex-col-center gap-10 justify-end pb-[400px]">
+        {/* שם הילד */}
+        <div className="h-20 flex-center gap-2 test">
+          {name.split("").map((letter, index) => {
+            return (
+              <p
+                key={index}
+                className="text-[10rem] text-white"
+                style={{
+                  transform: `translateY(${translateY({
+                    input: bounce({ delay: 40 + index * 5 }),
+                    inputRange: [0, 2],
+                    outputRange: [300, 0],
+                  })}px)`,
+                  opacity: opacity([45, 90]),
+                }}
+              >
+                {letter}
+              </p>
+            );
+          })}
+        </div>
+
+        {/* בר מצווה */}
         <p
-          className="text-center text-[60px] whitespace-pre-line leading-[30px] text-white"
+          className="text-8xl"
           style={{
-            /* transform: `scale(${scale({
-              input: bounce({ delay: 18 }),
-              inputRange: [0, 1],
-              outputRange: [0, 1],
-            })})`, */
-            opacity: opacity,
+            opacity: opacity([45, 90]),
           }}
         >
-          {text1.trim()}
+          בר מצווה
         </p>
       </AbsoluteFill>
     </AbsoluteFill>
