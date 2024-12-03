@@ -12,6 +12,8 @@ import {
   Easing,
 } from "remotion";
 
+import { interpolateStyles, makeTransform } from "@remotion/animation-utils";
+
 /* האותיות בצורה הפוכה */
 const paths = [
   "M256.88,58.56c0,6.13-4.35,12.82-13.04,20.05-1.02.97-1.68,1.46-1.98,1.46-.93,0-1.61-.26-2.05-.79-1.1-1.1-1.65-2.09-1.65-2.98,0-.79.6-1.37,1.79-1.72,4.1-1.5,7.21-3.57,9.33-6.22,2.65-3.18,3.97-6.31,3.97-9.4,0-4.24-2.27-6.35-6.82-6.35-4.1,0-9.62,1.5-16.54,4.5-8.12,3.35-13.21,6.77-15.29,10.26-.22.35-.53.53-.93.53-1.1,0-1.65-.35-1.65-1.06,0-.31.22-.62.66-.93,3.48-2.6,8.82-5.65,16.01-9.13,7.59-3.71,13.63-5.56,18.13-5.56,3.53,0,6.33.86,8.4,2.58,1.1.93,1.65,2.51,1.65,4.76ZM228.02,69.81c0,2.56-2.1,5.8-6.29,9.73-.35.31-.57.35-.66.13-.04-.26.04-.49.26-.66,2.38-1.76,3.57-3.62,3.57-5.56,0-1.68-.6-3.02-1.79-4.04-.44-.44-.66-.95-.66-1.52,0-1.5.82-2.25,2.45-2.25.31,0,.65.07,1.03.2.37.13.72.35,1.03.66.31.31.56.74.76,1.29.2.55.3,1.22.3,2.02Z",
@@ -29,6 +31,19 @@ const totalFramesPerPath = 10; // מספר פריימים לכל נתיב
 const delayPerPath = 5; // עיכוב בפריימים בין כל נתיב
 
 const textColor = "#c49c5c"; // צבע הטקסט
+
+const delayConfig = {
+  opacityMandala: 6,
+  goldFrame: 3,
+  bigMandala: 12,
+  subBackground: 9,
+  ornaments: {
+    right: 15,
+    left: 18,
+  },
+  smallMandala: 18,
+  globalName: 40,
+};
 
 const Slide1 = () => {
   const frame = useCurrentFrame();
@@ -50,6 +65,8 @@ const Slide1 = () => {
     options,
   } = {}) => interpolate(input, inputRange, outputRange, options);
 
+  const stylesConfig = ({ input = frame, ...rest } = {}) =>
+    interpolateStyles({ input, ...rest });
 
   return (
     <AbsoluteFill
@@ -64,7 +81,7 @@ const Slide1 = () => {
           className="size-full object-cover mix-blend-overlay opacity-75"
           style={{
             transform: `scale(${animConfig({
-              input: bounce({ delay: 6 }),
+              input: bounce({ delay: delayConfig.opacityMandala }),
             })})`,
           }}
         />
@@ -77,7 +94,7 @@ const Slide1 = () => {
           className="size-full"
           style={{
             transform: `scale(${animConfig({
-              input: bounce({ delay: 3 }),
+              input: bounce({ delay: delayConfig.goldFrame }),
             })})`,
           }}
         />
@@ -96,7 +113,12 @@ const Slide1 = () => {
             rotate(${animConfig({ options: { extrapolateRight: "loop" } })}deg)
             scale(${animConfig({
               inputRange: [0, 1, durationInFrames - 100, durationInFrames], // טווחים חדשים
-              outputRange: [0, bounce({ delay: 12 }), 1, 30], // טווחי הסקייל
+              outputRange: [
+                0,
+                bounce({ delay: delayConfig.bigMandala }),
+                1,
+                30,
+              ], // טווחי הסקייל
             })})`,
             zIndex: animConfig({
               inputRange: [0, durationInFrames - 100, durationInFrames],
@@ -116,7 +138,7 @@ const Slide1 = () => {
           style={{
             filter: "drop-shadow(0 0 50px black)",
             height: `${animConfig({
-              input: bounce({ delay: 9 }),
+              input: bounce({ delay: delayConfig.subBackground }),
               inputRange: [0, 1],
               outputRange: [0, 55],
               options: { extrapolateRight: "clamp" },
@@ -134,7 +156,7 @@ const Slide1 = () => {
             className="w-fit h-full object-cover"
             style={{
               transform: `scale(${animConfig({
-                input: bounce({ delay: 12 }),
+                input: bounce({ delay: delayConfig.ornaments.right }),
               })})`,
             }}
           />
@@ -144,7 +166,7 @@ const Slide1 = () => {
             className="w-fit h-full object-cover"
             style={{
               transform: `rotateY(180deg) scale(${animConfig({
-                input: bounce({ delay: 6 }),
+                input: bounce({ delay: delayConfig.ornaments.left }),
               })})`,
             }}
           />
@@ -185,7 +207,9 @@ const Slide1 = () => {
             className="w-[55rem] absolute bottom-full"
           >
             {paths.map((d, index) => {
-              const startFrame = index * (totalFramesPerPath + delayPerPath);
+              const startFrame =
+                delayConfig.globalName +
+                index * (totalFramesPerPath + delayPerPath);
               const endFrame = startFrame + totalFramesPerPath;
 
               // חישוב המילוי (fill-opacity)
