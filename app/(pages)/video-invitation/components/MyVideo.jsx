@@ -24,15 +24,15 @@ const MyVideo = () => {
 
       <TransitionSeries>
         {/* slide 1 */}
-        <TransitionSeries.Sequence durationInFrames={240}>
+        <TransitionSeries.Sequence durationInFrames={480}>
           <Slide1 />
         </TransitionSeries.Sequence>
 
         {/* transition 1 */}
-        <TransitionSeries.Transition
+        {/* <TransitionSeries.Transition
           timing={springTiming({ config: { damping: 200 } })}
           presentation={wipe()}
-        />
+        /> */}
 
         {/* slide 2 */}
         <TransitionSeries.Sequence durationInFrames={240}>

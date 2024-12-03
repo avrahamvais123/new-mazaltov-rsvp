@@ -1,7 +1,6 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import React, { useEffect, useState } from "react";
 import {
   useCurrentFrame,
   interpolate,
@@ -12,12 +11,6 @@ import {
   staticFile,
   Easing,
 } from "remotion";
-
-import {
-  interpolateStyles,
-  makeTransform,
-  translateY,
-} from "@remotion/animation-utils";
 
 /* האותיות בצורה הפוכה */
 const paths = [
@@ -50,23 +43,13 @@ const Slide1 = () => {
       ...props,
     });
 
-  const translateY_anim = ({ input, inputRange, outputRange }) =>
-    interpolate(input, inputRange, outputRange);
+  const animConfig = ({
+    input = frame,
+    inputRange = [0, 1],
+    outputRange = [0, 1],
+    options,
+  } = {}) => interpolate(input, inputRange, outputRange, options);
 
-  const scale_anim = ({ input, inputRange, outputRange }) =>
-    interpolate(input, inputRange, outputRange);
-
-  const opacity_anim = (inputRange) => interpolate(frame, inputRange, [0, 1]);
-
-  // חישוב זווית הסיבוב
-  const rotation_anim = interpolate(frame, [0, 360], [0, 360], {
-    extrapolateRight: "loop", // חזרה על האנימציה כל הזמן
-  });
-
-  // סיבוב ברוורס
-  const reverseRotation_anim = interpolate(frame, [0, 360], [0, -360], {
-    extrapolateRight: "loop", // ממשיך בלולאה
-  });
 
   return (
     <AbsoluteFill
@@ -80,10 +63,8 @@ const Slide1 = () => {
           alt="big mandala"
           className="size-full object-cover mix-blend-overlay opacity-75"
           style={{
-            transform: `scale(${scale_anim({
+            transform: `scale(${animConfig({
               input: bounce({ delay: 6 }),
-              inputRange: [0, 1],
-              outputRange: [0, 1],
             })})`,
           }}
         />
@@ -93,14 +74,12 @@ const Slide1 = () => {
       <AbsoluteFill className="flex-center p-16">
         <Img
           src={staticFile("/video-assets/gold-frame.png")}
+          className="size-full"
           style={{
-            transform: `scale(${scale_anim({
+            transform: `scale(${animConfig({
               input: bounce({ delay: 3 }),
-              inputRange: [0, 1],
-              outputRange: [0, 1],
             })})`,
           }}
-          className="size-full"
         />
       </AbsoluteFill>
 
@@ -113,11 +92,17 @@ const Slide1 = () => {
           style={{
             animationDuration: "5s",
             filter: "drop-shadow(0 0 50px black)",
-            transform: `rotate(${rotation_anim}deg) scale(${scale_anim({
-              input: bounce({ delay: 9 }),
-              inputRange: [0, 1],
-              outputRange: [0, 1],
+            transform: `
+            rotate(${animConfig({ options: { extrapolateRight: "loop" } })}deg)
+            scale(${animConfig({
+              inputRange: [0, 1, durationInFrames - 100, durationInFrames], // טווחים חדשים
+              outputRange: [0, bounce({ delay: 12 }), 1, 30], // טווחי הסקייל
             })})`,
+            zIndex: animConfig({
+              inputRange: [0, durationInFrames - 100, durationInFrames],
+              outputRange: [0, 0, 20],
+              options: { extrapolateRight: "clamp" },
+            }),
           }}
         />
       </AbsoluteFill>
@@ -130,11 +115,12 @@ const Slide1 = () => {
           className="w-full h-[55%] object-cover"
           style={{
             filter: "drop-shadow(0 0 50px black)",
-            transform: `scale(${scale_anim({
+            height: `${animConfig({
               input: bounce({ delay: 9 }),
               inputRange: [0, 1],
-              outputRange: [0, 1],
-            })})`,
+              outputRange: [0, 55],
+              options: { extrapolateRight: "clamp" },
+            })}%`,
           }}
         />
       </AbsoluteFill>
@@ -147,10 +133,8 @@ const Slide1 = () => {
             alt="big mandala"
             className="w-fit h-full object-cover"
             style={{
-              transform: `scale(${scale_anim({
+              transform: `scale(${animConfig({
                 input: bounce({ delay: 12 }),
-                inputRange: [0, 1],
-                outputRange: [0, 1],
               })})`,
             }}
           />
@@ -159,10 +143,8 @@ const Slide1 = () => {
             alt="big mandala"
             className="w-fit h-full object-cover"
             style={{
-              transform: `rotateY(180deg) scale(${scale_anim({
+              transform: `rotateY(180deg) scale(${animConfig({
                 input: bounce({ delay: 6 }),
-                inputRange: [0, 1],
-                outputRange: [0, 1],
               })})`,
             }}
           />
@@ -176,11 +158,17 @@ const Slide1 = () => {
           style={{
             animationDuration: "5s",
             filter: "drop-shadow(0 0 50px black)",
-            transform: `rotate(${reverseRotation_anim}deg) scale(${scale_anim({
-              input: bounce({ delay: 6 }),
-              inputRange: [0, 1],
-              outputRange: [0, 1],
+            transform: `
+            rotate(${animConfig({ outputRange: [0, -360] })}deg)
+            scale(${animConfig({
+              inputRange: [0, 1, durationInFrames - 100, durationInFrames], // טווחים חדשים
+              outputRange: [0, bounce({ delay: 18 }), 1, 30], // טווחי הסקייל
             })})`, // סיבוב ברוורס
+            zIndex: animConfig({
+              inputRange: [0, durationInFrames - 100, durationInFrames],
+              outputRange: [0, 0, 20],
+              options: { extrapolateRight: "clamp" },
+            }),
           }}
           alt="big mandala"
           className="size-[250px] object-contain"
@@ -201,15 +189,14 @@ const Slide1 = () => {
               const endFrame = startFrame + totalFramesPerPath;
 
               // חישוב המילוי (fill-opacity)
-              const fillOpacity = interpolate(
-                frame,
-                [startFrame, endFrame],
-                [0, 1],
-                {
+              const fillOpacity = animConfig({
+                inputRange: [startFrame, endFrame],
+                outputRange: [0, 1],
+                options: {
                   extrapolateRight: "clamp",
                   easing: Easing.easeInOut,
-                }
-              );
+                },
+              });
 
               return (
                 <path
@@ -226,8 +213,8 @@ const Slide1 = () => {
           <div className="absolute top-0 flex-center gap-2">
             {"בר מצווה".split("").map((letter, index) => {
               const nameTotalFrames =
-              (paths.length - 1) * (totalFramesPerPath + delayPerPath) +
-              totalFramesPerPath;
+                (paths.length - 1) * (totalFramesPerPath + delayPerPath) +
+                totalFramesPerPath;
 
               return (
                 <span key={index} className="relative pt-10 overflow-hidden">
@@ -235,7 +222,7 @@ const Slide1 = () => {
                     className={cn("text-8xl", letter === " " && "mx-2")}
                     style={{
                       color: textColor,
-                      transform: `translateY(${translateY_anim({
+                      transform: `translateY(${animConfig({
                         input: bounce({ delay: nameTotalFrames + index * 5 }),
                         inputRange: [0, 1],
                         outputRange: [300, 0],
