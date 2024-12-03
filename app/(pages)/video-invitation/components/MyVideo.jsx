@@ -31,7 +31,7 @@ const MyVideo = () => {
         {/* transition 1 */}
         <TransitionSeries.Transition
           timing={springTiming({ config: { damping: 200 } })}
-          presentation={fade()}
+          presentation={wipe()}
         />
 
         {/* slide 2 */}

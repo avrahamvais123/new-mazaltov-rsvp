@@ -13,6 +13,12 @@ import {
   Easing,
 } from "remotion";
 
+import {
+  interpolateStyles,
+  makeTransform,
+  translateY,
+} from "@remotion/animation-utils";
+
 /* האותיות בצורה הפוכה */
 const paths = [
   "M256.88,58.56c0,6.13-4.35,12.82-13.04,20.05-1.02.97-1.68,1.46-1.98,1.46-.93,0-1.61-.26-2.05-.79-1.1-1.1-1.65-2.09-1.65-2.98,0-.79.6-1.37,1.79-1.72,4.1-1.5,7.21-3.57,9.33-6.22,2.65-3.18,3.97-6.31,3.97-9.4,0-4.24-2.27-6.35-6.82-6.35-4.1,0-9.62,1.5-16.54,4.5-8.12,3.35-13.21,6.77-15.29,10.26-.22.35-.53.53-.93.53-1.1,0-1.65-.35-1.65-1.06,0-.31.22-.62.66-.93,3.48-2.6,8.82-5.65,16.01-9.13,7.59-3.71,13.63-5.56,18.13-5.56,3.53,0,6.33.86,8.4,2.58,1.1.93,1.65,2.51,1.65,4.76ZM228.02,69.81c0,2.56-2.1,5.8-6.29,9.73-.35.31-.57.35-.66.13-.04-.26.04-.49.26-.66,2.38-1.76,3.57-3.62,3.57-5.56,0-1.68-.6-3.02-1.79-4.04-.44-.44-.66-.95-.66-1.52,0-1.5.82-2.25,2.45-2.25.31,0,.65.07,1.03.2.37.13.72.35,1.03.66.31.31.56.74.76,1.29.2.55.3,1.22.3,2.02Z",
@@ -44,21 +50,21 @@ const Slide1 = () => {
       ...props,
     });
 
-  const translateY = ({ input, inputRange, outputRange }) =>
+  const translateY_anim = ({ input, inputRange, outputRange }) =>
     interpolate(input, inputRange, outputRange);
 
-  const scale = ({ input, inputRange, outputRange }) =>
+  const scale_anim = ({ input, inputRange, outputRange }) =>
     interpolate(input, inputRange, outputRange);
 
-  const opacity = (inputRange) => interpolate(frame, inputRange, [0, 1]);
+  const opacity_anim = (inputRange) => interpolate(frame, inputRange, [0, 1]);
 
   // חישוב זווית הסיבוב
-  const rotation = interpolate(frame, [0, 360], [0, 360], {
+  const rotation_anim = interpolate(frame, [0, 360], [0, 360], {
     extrapolateRight: "loop", // חזרה על האנימציה כל הזמן
   });
 
   // סיבוב ברוורס
-  const reverseRotation = interpolate(frame, [0, 360], [0, -360], {
+  const reverseRotation_anim = interpolate(frame, [0, 360], [0, -360], {
     extrapolateRight: "loop", // ממשיך בלולאה
   });
 
@@ -74,7 +80,7 @@ const Slide1 = () => {
           alt="big mandala"
           className="size-full object-cover mix-blend-overlay opacity-75"
           style={{
-            transform: `scale(${scale({
+            transform: `scale(${scale_anim({
               input: bounce({ delay: 6 }),
               inputRange: [0, 1],
               outputRange: [0, 1],
@@ -88,7 +94,7 @@ const Slide1 = () => {
         <Img
           src={staticFile("/video-assets/gold-frame.png")}
           style={{
-            transform: `scale(${scale({
+            transform: `scale(${scale_anim({
               input: bounce({ delay: 3 }),
               inputRange: [0, 1],
               outputRange: [0, 1],
@@ -107,7 +113,7 @@ const Slide1 = () => {
           style={{
             animationDuration: "5s",
             filter: "drop-shadow(0 0 50px black)",
-            transform: `rotate(${rotation}deg) scale(${scale({
+            transform: `rotate(${rotation_anim}deg) scale(${scale_anim({
               input: bounce({ delay: 9 }),
               inputRange: [0, 1],
               outputRange: [0, 1],
@@ -124,7 +130,7 @@ const Slide1 = () => {
           className="w-full h-[55%] object-cover"
           style={{
             filter: "drop-shadow(0 0 50px black)",
-            transform: `scale(${scale({
+            transform: `scale(${scale_anim({
               input: bounce({ delay: 9 }),
               inputRange: [0, 1],
               outputRange: [0, 1],
@@ -141,7 +147,7 @@ const Slide1 = () => {
             alt="big mandala"
             className="w-fit h-full object-cover"
             style={{
-              transform: `scale(${scale({
+              transform: `scale(${scale_anim({
                 input: bounce({ delay: 12 }),
                 inputRange: [0, 1],
                 outputRange: [0, 1],
@@ -153,7 +159,7 @@ const Slide1 = () => {
             alt="big mandala"
             className="w-fit h-full object-cover"
             style={{
-              transform: `rotateY(180deg) scale(${scale({
+              transform: `rotateY(180deg) scale(${scale_anim({
                 input: bounce({ delay: 6 }),
                 inputRange: [0, 1],
                 outputRange: [0, 1],
@@ -170,7 +176,7 @@ const Slide1 = () => {
           style={{
             animationDuration: "5s",
             filter: "drop-shadow(0 0 50px black)",
-            transform: `rotate(${reverseRotation}deg) scale(${scale({
+            transform: `rotate(${reverseRotation_anim}deg) scale(${scale_anim({
               input: bounce({ delay: 6 }),
               inputRange: [0, 1],
               outputRange: [0, 1],
@@ -183,12 +189,12 @@ const Slide1 = () => {
 
       {/* כיתוב */}
       <AbsoluteFill className="flex-col-center justify-end">
-        <div className="flex-col-center mb-[23rem] gap-8">
+        <div className="relative flex-col-center mb-[28rem] gap-8">
           {/* שם הילד */}
           <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 256.88 89.99"
-            className="w-[55rem]"
+            className="w-[55rem] absolute bottom-full"
           >
             {paths.map((d, index) => {
               const startFrame = index * (totalFramesPerPath + delayPerPath);
@@ -217,26 +223,28 @@ const Slide1 = () => {
           </svg>
 
           {/* בר מצווה */}
-          <div className="flex-center gap-2">
+          <div className="absolute top-0 flex-center gap-2">
             {"בר מצווה".split("").map((letter, index) => {
               const nameTotalFrames =
-              (paths.length - 2) * (totalFramesPerPath + delayPerPath) +
+              (paths.length - 1) * (totalFramesPerPath + delayPerPath) +
               totalFramesPerPath;
-              
+
               return (
-                <p
-                  key={index}
-                  className={cn("text-7xl", letter === " " && "mx-2")}
-                  style={{
-                    color: textColor,
-                    opacity: opacity([
-                      nameTotalFrames + index,
-                      durationInFrames - 20,
-                    ]),
-                  }}
-                >
-                  {letter}
-                </p>
+                <span key={index} className="relative pt-10 overflow-hidden">
+                  <p
+                    className={cn("text-8xl", letter === " " && "mx-2")}
+                    style={{
+                      color: textColor,
+                      transform: `translateY(${translateY_anim({
+                        input: bounce({ delay: nameTotalFrames + index * 5 }),
+                        inputRange: [0, 1],
+                        outputRange: [300, 0],
+                      })}px)`,
+                    }}
+                  >
+                    {letter}
+                  </p>
+                </span>
               );
             })}
           </div>
