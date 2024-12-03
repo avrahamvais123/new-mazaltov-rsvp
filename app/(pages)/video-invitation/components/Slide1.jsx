@@ -1,5 +1,6 @@
 "use client";
 
+import { cn } from "@/lib/utils";
 import React, { useEffect, useState } from "react";
 import {
   useCurrentFrame,
@@ -28,9 +29,11 @@ const paths = [
 const totalFramesPerPath = 10; // מספר פריימים לכל נתיב
 const delayPerPath = 5; // עיכוב בפריימים בין כל נתיב
 
+const textColor = "#c49c5c"; // צבע הטקסט
+
 const Slide1 = () => {
   const frame = useCurrentFrame();
-  const { fps, height, width } = useVideoConfig();
+  const { fps, height, width, durationInFrames } = useVideoConfig();
 
   // אנימציה לטקסט במסך הראשון
   const bounce = (props) =>
@@ -180,36 +183,64 @@ const Slide1 = () => {
 
       {/* כיתוב */}
       <AbsoluteFill className="flex-col-center justify-end">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 256.88 89.99"
-          className="size-[55rem] mb-[13rem]"
-        >
-          {paths.map((d, index) => {
-            const startFrame = index * (totalFramesPerPath + delayPerPath);
-            const endFrame = startFrame + totalFramesPerPath;
+        <div className="flex-col-center mb-[23rem] gap-8">
+          {/* שם הילד */}
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 256.88 89.99"
+            className="w-[55rem]"
+          >
+            {paths.map((d, index) => {
+              const startFrame = index * (totalFramesPerPath + delayPerPath);
+              const endFrame = startFrame + totalFramesPerPath;
 
-            // חישוב המילוי (fill-opacity)
-            const fillOpacity = interpolate(
-              frame,
-              [startFrame, endFrame],
-              [0, 1],
-              {
-                extrapolateRight: "clamp",
-                easing: Easing.easeInOut,
-              }
-            );
+              // חישוב המילוי (fill-opacity)
+              const fillOpacity = interpolate(
+                frame,
+                [startFrame, endFrame],
+                [0, 1],
+                {
+                  extrapolateRight: "clamp",
+                  easing: Easing.easeInOut,
+                }
+              );
 
-            return (
-              <path
-                key={index}
-                d={d}
-                fill="#c49c5c"
-                fillOpacity={fillOpacity} // אנימציה על המילוי
-              />
-            );
-          })}
-        </svg>
+              return (
+                <path
+                  key={index}
+                  d={d}
+                  fill={textColor}
+                  fillOpacity={fillOpacity} // אנימציה על המילוי
+                />
+              );
+            })}
+          </svg>
+
+          {/* בר מצווה */}
+          <div className="flex-center gap-2">
+            {"בר מצווה".split("").map((letter, index) => {
+              const nameTotalFrames =
+              (paths.length - 2) * (totalFramesPerPath + delayPerPath) +
+              totalFramesPerPath;
+              
+              return (
+                <p
+                  key={index}
+                  className={cn("text-7xl", letter === " " && "mx-2")}
+                  style={{
+                    color: textColor,
+                    opacity: opacity([
+                      nameTotalFrames + index,
+                      durationInFrames - 20,
+                    ]),
+                  }}
+                >
+                  {letter}
+                </p>
+              );
+            })}
+          </div>
+        </div>
       </AbsoluteFill>
     </AbsoluteFill>
   );

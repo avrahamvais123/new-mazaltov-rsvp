@@ -42,7 +42,7 @@ export const handleVisibilityChange = () => {
       visitorId,
       isVisible,
     })
-    .then((response) => console.log("Visibility updated:", response.data))
+    .then((response) => {/* console.log("Visibility updated:", response.data) */})
     .catch((error) => console.error("Error updating visibility:", error));
 };
 
