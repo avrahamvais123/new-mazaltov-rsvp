@@ -18,8 +18,6 @@ import Slide2 from "./Slide2";
 import Slide3 from "./Slide3";
 
 const MyVideo = () => {
-  const frame = useCurrentFrame();
-
   return (
     <>
       <Audio src={staticFile("/audio/wedding1.mp3")} />
