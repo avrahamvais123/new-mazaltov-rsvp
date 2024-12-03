@@ -1,13 +1,10 @@
 "use client";
 
-import MyUploader from "@/app/ui/MyUploader";
 import {  invitation_details_Atom } from "@/lib/jotai";
 import { useSetAtom } from "jotai";
 import { useSession } from "next-auth/react";
 import React from "react";
 import MyDropzone from "@/app/ui/my-dropzone/MyDropzone";
-import MyUploady from "@/app/ui/MyUploady";
-import UppyUploader from "@/app/ui/UppyUploadr";
 
 const SlideUploadImage = ({ setSteps, carouselApi }) => {
   const setInvitationDetails = useSetAtom(invitation_details_Atom);
