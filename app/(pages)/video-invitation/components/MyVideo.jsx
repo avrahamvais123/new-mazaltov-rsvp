@@ -43,7 +43,10 @@ const delayConfig = {
       bl: 20,
       tl: 25,
     },
-    text: {},
+    text: {
+      letterDelay: 5, // השהיה בין כל אות לאות
+      baseDelay: 15, // השהיה לפני תחילת כל שורה
+    },
   },
 };
 
@@ -65,7 +68,7 @@ const MyVideo = () => {
         />
 
         {/* slide 2 */}
-        <TransitionSeries.Sequence durationInFrames={240}>
+        <TransitionSeries.Sequence durationInFrames={360}>
           <Slide2 delayConfig={delayConfig.slide2} />
         </TransitionSeries.Sequence>
 

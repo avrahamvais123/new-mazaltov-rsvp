@@ -13,24 +13,23 @@ import {
   Easing,
 } from "remotion";
 
-import {
-  interpolateStyles,
-  makeTransform,
-  translateY,
-} from "@remotion/animation-utils";
-
 const textColor = "#c49c5c"; // צבע הטקסט
 
-const Slide2 = ({delayConfig}) => {
-  const frame = useCurrentFrame();
-  const { fps, height, width, durationInFrames } = useVideoConfig();
+const text1 = `בשבח והודיה לה׳ יתברך
+  אנו שמחים להזמינכם להשתתף
+  בשמחת בר המצווה של בננו היקר`;
 
-  // אנימציה לטקסט במסך הראשון
+const Slide2 = ({ delayConfig }) => {
+  const frame = useCurrentFrame();
+  const { fps, height, width } = useVideoConfig();
+
+  let accumulatedDelay = 0; // מצטבר השהיה לכל שורה
+
   const bounce = (props) =>
     spring({
       frame,
       fps,
-      config: { damping: 10 },
+      config: { damping: 13 },
       ...props,
     });
 
@@ -40,9 +39,6 @@ const Slide2 = ({delayConfig}) => {
     outputRange = [0, 1],
     options,
   } = {}) => interpolate(input, inputRange, outputRange, options);
-
-  const stylesConfig = ({ input = frame, ...rest } = {}) =>
-    interpolateStyles({ input, ...rest });
 
   return (
     <AbsoluteFill
@@ -131,43 +127,51 @@ const Slide2 = ({delayConfig}) => {
       </AbsoluteFill>
 
       {/* כיתוב */}
-      <AbsoluteFill className="flex-col-center justify-start">
-        <p className="text-8xl text-white">סלייד שני</p>
+      <AbsoluteFill className="flex-col-center justify-start p-48">
+        {text1.split("\n").map((line, lineIndex) => {
+          const lineLength = line.split("").length;
+          const { baseDelay, letterDelay } = delayConfig.text;
+
+          // חישוב ההשהיה עבור השורה הנוכחית
+          const lineStartDelay = accumulatedDelay;
+          accumulatedDelay += baseDelay + lineLength * letterDelay;
+
+          return (
+            <span
+              key={lineIndex}
+              className="text-center flex-center text-white"
+              style={{
+                opacity: animConfig({
+                  inputRange: [lineStartDelay, lineStartDelay + 20],
+                }),
+              }}
+            >
+              {line.split("").map((letter, letterIndex) => {
+                return (
+                  <span key={letterIndex} className="pt-4 overflow-hidden">
+                    <p
+                      className={cn("text-5xl", letter === " " && "mx-2")}
+                      style={{
+                        color: textColor,
+                        transform: `translateY(${animConfig({
+                          input: bounce({
+                            delay: lineStartDelay + letterIndex * letterDelay,
+                          }),
+                          outputRange: [300, 0],
+                        })}px)`,
+                      }}
+                    >
+                      {letter}
+                    </p>
+                  </span>
+                );
+              })}
+            </span>
+          );
+        })}
       </AbsoluteFill>
     </AbsoluteFill>
   );
 };
 
 export default Slide2;
-
-{
-  /* <span className="absolute bottom-[42rem] flex-center gap-2">
-{name.split("").map((letter, index) => {
-  return (
-    <p
-      key={index}
-      className="text-[10rem] text-white"
-      style={{
-        transform: `translateY(${translateY({
-          input: bounce({ delay: 40 + index * 5 }),
-          inputRange: [0, 2],
-          outputRange: [300, 0],
-        })}px)`,
-        opacity: opacity([45, 90]),
-      }}
-    >
-      {letter}
-    </p>
-  );
-})}
-</span>
-
-<p
-className="text-[5.5rem] absolute bottom-[24rem] text-white"
-style={{
-  opacity: opacity([70, 90]),
-}}
->
-בר מצווה
-</p> */
-}

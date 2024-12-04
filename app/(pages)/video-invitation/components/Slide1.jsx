@@ -229,7 +229,7 @@ const Slide1 = ({ delayConfig }) => {
                 totalFramesPerPath;
 
               return (
-                <span key={index} className="relative pt-10 overflow-hidden">
+                <span key={index} className="pt-10 overflow-hidden">
                   <p
                     className={cn("text-8xl", letter === " " && "mx-2")}
                     style={{
