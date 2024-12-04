@@ -12,7 +12,7 @@ import {
   Easing,
 } from "remotion";
 
-import { interpolateStyles, makeTransform } from "@remotion/animation-utils";
+import { interpolateStyles } from "@remotion/animation-utils";
 
 /* האותיות בצורה הפוכה */
 const paths = [
@@ -27,25 +27,9 @@ const paths = [
   "M51.81,3.31c-.09.09-.62-.02-1.59-.33-2.07-.62-3.53-.93-4.37-.93-3.62,0-7.08,1.59-10.39,4.76-5.16,5.03-10.06,15.46-14.69,31.3-1.1,3.97-2.18,7.91-3.24,11.81-1.06,3.9-2.1,7.86-3.11,11.88-3,10.01-5.85,16.56-8.54,19.65-.62.79-2.05,1.19-4.3,1.19-1.06,0-1.59-.57-1.59-1.72,0-.62.22-1.3.66-2.05,3.31-1.37,7.08-7.59,11.32-18.66,1.46-3.88,3.9-11.29,7.35-22.23.97-3.18,1.89-6.01,2.75-8.5.86-2.49,1.71-4.69,2.55-6.58,3.18-7.19,6.66-12.68,10.46-16.48,4.23-4.28,8.47-6.42,12.7-6.42,1.5,0,2.76.29,3.77.86,1.41.71,1.5,1.52.26,2.45Z",
 ];
 
-const totalFramesPerPath = 10; // מספר פריימים לכל נתיב
-const delayPerPath = 5; // עיכוב בפריימים בין כל נתיב
-
 const textColor = "#c49c5c"; // צבע הטקסט
 
-const delayConfig = {
-  opacityMandala: 6,
-  goldFrame: 3,
-  bigMandala: 12,
-  subBackground: 9,
-  ornaments: {
-    right: 15,
-    left: 18,
-  },
-  smallMandala: 18,
-  globalName: 40,
-};
-
-const Slide1 = () => {
+const Slide1 = ({ delayConfig }) => {
   const frame = useCurrentFrame();
   const { fps, height, width, durationInFrames } = useVideoConfig();
 
@@ -207,9 +191,11 @@ const Slide1 = () => {
             className="w-[55rem] absolute bottom-full"
           >
             {paths.map((d, index) => {
+              const { text } = delayConfig;
+              const { totalFramesPerPath, delayPerPath, globalDelay } = text;
+
               const startFrame =
-                delayConfig.globalName +
-                index * (totalFramesPerPath + delayPerPath);
+                globalDelay + index * (totalFramesPerPath + delayPerPath);
               const endFrame = startFrame + totalFramesPerPath;
 
               // חישוב המילוי (fill-opacity)
@@ -236,6 +222,9 @@ const Slide1 = () => {
           {/* בר מצווה */}
           <div className="absolute top-0 flex-center gap-2">
             {"בר מצווה".split("").map((letter, index) => {
+              const { text } = delayConfig;
+              const { totalFramesPerPath, delayPerPath } = text;
+
               const nameTotalFrames =
                 (paths.length - 1) * (totalFramesPerPath + delayPerPath) +
                 totalFramesPerPath;
