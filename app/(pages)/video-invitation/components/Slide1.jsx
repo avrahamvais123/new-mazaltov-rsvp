@@ -198,8 +198,6 @@ const Slide1 = ({ delayConfig }) => {
                 globalDelay + index * (totalFramesPerPath + delayPerPath);
               const endFrame = startFrame + totalFramesPerPath;
 
-              console.log("endFrame: ", endFrame);
-
               // חישוב המילוי (fill-opacity)
               const fillOpacity = animConfig({
                 inputRange: [startFrame, endFrame],
@@ -231,8 +229,6 @@ const Slide1 = ({ delayConfig }) => {
                 (paths.length - 1) * (totalFramesPerPath + delayPerPath) +
                 globalDelay +
                 totalFramesPerPath;
-
-              console.log("nameTotalFrames: ", nameTotalFrames);
 
               return (
                 <span key={index} className="relative pt-10 overflow-hidden">
