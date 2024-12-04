@@ -19,6 +19,10 @@ const text1 = `בשבח והודיה לה׳ יתברך
   אנו שמחים להזמינכם להשתתף
   בשמחת בר המצווה של בננו היקר`;
 
+const text2 = `בשבח והודיה לה׳ יתברך
+  אנו שמחים להזמינכם להשתתף
+  בשמחת בר המצווה של בננו היקר`;
+
 const Slide2 = ({ delayConfig }) => {
   const frame = useCurrentFrame();
   const { fps, height, width } = useVideoConfig();
@@ -126,51 +130,57 @@ const Slide2 = ({ delayConfig }) => {
         </div>
       </AbsoluteFill>
 
-      {/* כיתוב */}
+      {/* כיתוב 1 */}
       <AbsoluteFill className="flex-col-center justify-start p-48">
-        {text1.split("\n").map((line, lineIndex) => {
-          const { letterDelay } = delayConfig.text;
+        {text1
+          .split("\n")
+          .map((line) => line.trim()) // הסרת רווחים מיותרים מכל שורה
+          .map((line, lineIndex) => {
+            const lineLength = line.length;
+            const { letterDelay } = delayConfig.text;
 
-          // אם זו השורה הראשונה, השהיה בסיסית נוספת
-          const currentLineStartDelay =
-            lineIndex === 0 ? accumulatedDelay : accumulatedDelay;
+            const currentLineStartDelay =
+              lineIndex === 0 ? accumulatedDelay : accumulatedDelay;
 
-          return (
-            <span
-              key={lineIndex}
-              className="text-center flex-center text-white"
-              style={{
-                opacity: animConfig({
-                  inputRange: [currentLineStartDelay, currentLineStartDelay + 20],
-                }),
-              }}
-            >
-              {line.split("").map((letter, letterIndex) => {
-                const currentLetterDelay = accumulatedDelay;
-                accumulatedDelay += letterDelay;
+            return (
+              <span
+                key={lineIndex}
+                className="text-center flex-center text-white"
+                style={{
+                  opacity: animConfig({
+                    inputRange: [
+                      currentLineStartDelay,
+                      currentLineStartDelay + 20,
+                    ],
+                  }),
+                }}
+              >
+                {line.split("").map((letter, letterIndex) => {
+                  const currentLetterDelay = accumulatedDelay;
+                  accumulatedDelay += letterDelay;
 
-                return (
-                  <span key={letterIndex} className="pt-4 overflow-hidden">
-                    <p
-                      className={cn("text-5xl", letter === " " && "mx-2")}
-                      style={{
-                        color: textColor,
-                        transform: `translateY(${animConfig({
-                          input: bounce({
-                            delay: currentLetterDelay,
-                          }),
-                          outputRange: [300, 0],
-                        })}px)`,
-                      }}
-                    >
-                      {letter}
-                    </p>
-                  </span>
-                );
-              })}
-            </span>
-          );
-        })}
+                  return (
+                    <span key={letterIndex} className="pt-4 overflow-hidden">
+                      <p
+                        className={cn("text-5xl", letter === " " && "mx-2")}
+                        style={{
+                          color: textColor,
+                          transform: `translateY(${animConfig({
+                            input: bounce({
+                              delay: currentLetterDelay,
+                            }),
+                            outputRange: [300, 0],
+                          })}px)`,
+                        }}
+                      >
+                        {letter}
+                      </p>
+                    </span>
+                  );
+                })}
+              </span>
+            );
+          })}
       </AbsoluteFill>
     </AbsoluteFill>
   );
