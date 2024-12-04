@@ -23,7 +23,7 @@ const Slide2 = ({ delayConfig }) => {
   const frame = useCurrentFrame();
   const { fps, height, width } = useVideoConfig();
 
-  let accumulatedDelay = 0; // מצטבר השהיה לכל שורה
+  let accumulatedDelay = delayConfig.text.startDelay || 0; // דיליי התחלה לשורה הראשונה בלבד
 
   const bounce = (props) =>
     spring({
@@ -129,12 +129,11 @@ const Slide2 = ({ delayConfig }) => {
       {/* כיתוב */}
       <AbsoluteFill className="flex-col-center justify-start p-48">
         {text1.split("\n").map((line, lineIndex) => {
-          const lineLength = line.split("").length;
-          const { baseDelay, letterDelay } = delayConfig.text;
+          const { letterDelay } = delayConfig.text;
 
-          // חישוב ההשהיה עבור השורה הנוכחית
-          const lineStartDelay = accumulatedDelay;
-          accumulatedDelay += baseDelay + lineLength * letterDelay;
+          // אם זו השורה הראשונה, השהיה בסיסית נוספת
+          const currentLineStartDelay =
+            lineIndex === 0 ? accumulatedDelay : accumulatedDelay;
 
           return (
             <span
@@ -142,11 +141,14 @@ const Slide2 = ({ delayConfig }) => {
               className="text-center flex-center text-white"
               style={{
                 opacity: animConfig({
-                  inputRange: [lineStartDelay, lineStartDelay + 20],
+                  inputRange: [currentLineStartDelay, currentLineStartDelay + 20],
                 }),
               }}
             >
               {line.split("").map((letter, letterIndex) => {
+                const currentLetterDelay = accumulatedDelay;
+                accumulatedDelay += letterDelay;
+
                 return (
                   <span key={letterIndex} className="pt-4 overflow-hidden">
                     <p
@@ -155,7 +157,7 @@ const Slide2 = ({ delayConfig }) => {
                         color: textColor,
                         transform: `translateY(${animConfig({
                           input: bounce({
-                            delay: lineStartDelay + letterIndex * letterDelay,
+                            delay: currentLetterDelay,
                           }),
                           outputRange: [300, 0],
                         })}px)`,

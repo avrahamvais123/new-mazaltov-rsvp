@@ -9,7 +9,7 @@ const MediaPlayer = () => {
     <div dir="ltr" className="size-full flex-center">
       <Player
         component={MyVideo}
-        durationInFrames={900}
+        durationInFrames={1800}
         fps={30}
         //compositionWidth={1080}
         //compositionHeight={1920}
