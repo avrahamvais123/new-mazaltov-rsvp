@@ -198,6 +198,8 @@ const Slide1 = ({ delayConfig }) => {
                 globalDelay + index * (totalFramesPerPath + delayPerPath);
               const endFrame = startFrame + totalFramesPerPath;
 
+              console.log("endFrame: ", endFrame);
+
               // חישוב המילוי (fill-opacity)
               const fillOpacity = animConfig({
                 inputRange: [startFrame, endFrame],
@@ -223,11 +225,14 @@ const Slide1 = ({ delayConfig }) => {
           <div className="absolute top-0 flex-center gap-2">
             {"בר מצווה".split("").map((letter, index) => {
               const { text } = delayConfig;
-              const { totalFramesPerPath, delayPerPath } = text;
+              const { totalFramesPerPath, delayPerPath, globalDelay } = text;
 
               const nameTotalFrames =
                 (paths.length - 1) * (totalFramesPerPath + delayPerPath) +
+                globalDelay +
                 totalFramesPerPath;
+
+              console.log("nameTotalFrames: ", nameTotalFrames);
 
               return (
                 <span key={index} className="relative pt-10 overflow-hidden">
