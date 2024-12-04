@@ -49,9 +49,6 @@ const Slide1 = ({ delayConfig }) => {
     options,
   } = {}) => interpolate(input, inputRange, outputRange, options);
 
-  const stylesConfig = ({ input = frame, ...rest } = {}) =>
-    interpolateStyles({ input, ...rest });
-
   return (
     <AbsoluteFill
       style={{ height, width, direction: "rtl" }}
@@ -94,21 +91,11 @@ const Slide1 = ({ delayConfig }) => {
             animationDuration: "5s",
             filter: "drop-shadow(0 0 50px black)",
             transform: `
-            rotate(${animConfig({ options: { extrapolateRight: "loop" } })}deg)
+            rotate(${animConfig()}deg)
             scale(${animConfig({
-              inputRange: [0, 1, durationInFrames - 100, durationInFrames], // טווחים חדשים
-              outputRange: [
-                0,
-                bounce({ delay: delayConfig.bigMandala }),
-                1,
-                30,
-              ], // טווחי הסקייל
-            })})`,
-            zIndex: animConfig({
-              inputRange: [0, durationInFrames - 100, durationInFrames],
-              outputRange: [0, 0, 20],
+              outputRange: [0, bounce({ delay: delayConfig.bigMandala })],
               options: { extrapolateRight: "clamp" },
-            }),
+            })})`,
           }}
         />
       </AbsoluteFill>
@@ -163,16 +150,27 @@ const Slide1 = ({ delayConfig }) => {
           src={staticFile("/video-assets/small-mandala.png")}
           style={{
             animationDuration: "5s",
-            filter: "drop-shadow(0 0 50px black)",
+
+            filter: `
+           drop-shadow(0 0 50px black)
+           blur(${animConfig({
+             inputRange: [0, durationInFrames - 100, durationInFrames],
+             outputRange: [0, 0, 10],
+           })}px)`,
             transform: `
-            rotate(${animConfig({ outputRange: [0, -360] })}deg)
-            scale(${animConfig({
-              inputRange: [0, 1, durationInFrames - 100, durationInFrames], // טווחים חדשים
-              outputRange: [0, bounce({ delay: 18 }), 1, 30], // טווחי הסקייל
-            })})`, // סיבוב ברוורס
+           rotate(${animConfig({ outputRange: [1, 0] })}deg)
+           scale(${animConfig({
+             inputRange: [0, 1, durationInFrames - 100, durationInFrames], // טווחים חדשים
+             outputRange: [
+               0,
+               bounce({ delay: delayConfig.smallMandala }),
+               1,
+               30,
+             ], // טווחי הסקייל
+           })})`, // סיבוב ברוורס
             zIndex: animConfig({
               inputRange: [0, durationInFrames - 100, durationInFrames],
-              outputRange: [0, 0, 20],
+              outputRange: [0, 0, 10],
               options: { extrapolateRight: "clamp" },
             }),
           }}
@@ -256,35 +254,3 @@ const Slide1 = ({ delayConfig }) => {
 };
 
 export default Slide1;
-
-{
-  /* <span className="absolute bottom-[42rem] flex-center gap-2">
-{name.split("").map((letter, index) => {
-  return (
-    <p
-      key={index}
-      className="text-[10rem] text-white"
-      style={{
-        transform: `translateY(${translateY({
-          input: bounce({ delay: 40 + index * 5 }),
-          inputRange: [0, 2],
-          outputRange: [300, 0],
-        })}px)`,
-        opacity: opacity([45, 90]),
-      }}
-    >
-      {letter}
-    </p>
-  );
-})}
-</span>
-
-<p
-className="text-[5.5rem] absolute bottom-[24rem] text-white"
-style={{
-  opacity: opacity([70, 90]),
-}}
->
-בר מצווה
-</p> */
-}

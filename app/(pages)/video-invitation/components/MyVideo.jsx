@@ -23,7 +23,7 @@ const delayConfig = {
     opacityMandala: 10,
     subBackground: 20,
     bigMandala: 30,
-    smallMandala: 40,
+    smallMandala: 20,
     ornaments: {
       right: 20,
       left: 30,
