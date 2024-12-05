@@ -10,6 +10,7 @@ import {
   Img,
   staticFile,
   Easing,
+  Sequence,
 } from "remotion";
 
 import { interpolateStyles } from "@remotion/animation-utils";
@@ -54,35 +55,38 @@ const Slide1 = ({ delayConfig }) => {
       style={{ height, width, direction: "rtl" }}
       className="flex-col-center bg-gradient-to-t to-[#293647] from-[#0A1528]"
     >
-      {/* רקע מנדלה שקופה */}
-      <AbsoluteFill className="flex-center">
-        <Img
-          src={staticFile("/video-assets/opacity-mandala.png")}
-          alt="big mandala"
-          className="size-full object-cover mix-blend-overlay opacity-75"
-          style={{
-            transform: `scale(${animConfig({
-              input: bounce({ delay: delayConfig.opacityMandala }),
-            })})`,
-          }}
-        />
-      </AbsoluteFill>
-
       {/* מסגרת זהב */}
       <AbsoluteFill className="flex-center p-16">
-        <Img
-          src={staticFile("/video-assets/gold-frame.png")}
-          className="size-full"
+        <div
           style={{
             transform: `scale(${animConfig({
               input: bounce({ delay: delayConfig.goldFrame }),
             })})`,
           }}
-        />
+          className="relative size-full flex p-3 overflow-hidden"
+        >
+          <span className="absolute inset-0 bg-[#ca7339]" />
+          <span
+            style={{ animationDuration: "5s" }}
+            className="absolute inset-0 bg-gradient-to-r from-[#ddc28d] via-[#9b411f] to-[#ddc28d] animate-spin blur-3xl"
+          />
+          <span className="z-10 size-full bg-gradient-to-t to-[#293647] from-[#0A1528]">
+            <Img
+              src={staticFile("/video-assets/opacity-mandala.png")}
+              alt="big mandala"
+              className="size-full object-cover mix-blend-overlay opacity-75"
+              style={{
+                transform: `scale(${animConfig({
+                  input: bounce({ delay: delayConfig.opacityMandala }),
+                })})`,
+              }}
+            />
+          </span>
+        </div>
       </AbsoluteFill>
 
       {/* מנדלה גדולה */}
-      <AbsoluteFill className="flex-center">
+      <AbsoluteFill className="flex-center z-10">
         <Img
           src={staticFile("/video-assets/big-mandala.png")}
           alt="big mandala"
@@ -101,7 +105,7 @@ const Slide1 = ({ delayConfig }) => {
       </AbsoluteFill>
 
       {/* חצי רקע */}
-      <AbsoluteFill className="size-full flex justify-end">
+      <AbsoluteFill className="size-full flex justify-end z-10">
         <Img
           src={staticFile("/video-assets/sub-background.png")}
           alt="big mandala"
@@ -119,7 +123,7 @@ const Slide1 = ({ delayConfig }) => {
       </AbsoluteFill>
 
       {/* עיטורים */}
-      <AbsoluteFill className="size-full flex justify-end">
+      <AbsoluteFill className="size-full flex justify-end z-10">
         <div className="h-64 flex justify-between items-center p-10 m-10">
           <Img
             src={staticFile("/video-assets/ornament.png")}
@@ -145,7 +149,7 @@ const Slide1 = ({ delayConfig }) => {
       </AbsoluteFill>
 
       {/* מנדלה קטנה */}
-      <AbsoluteFill className="flex-center">
+      <AbsoluteFill className="flex-center z-10">
         <Img
           src={staticFile("/video-assets/small-mandala.png")}
           style={{
@@ -171,7 +175,7 @@ const Slide1 = ({ delayConfig }) => {
             zIndex: animConfig({
               inputRange: [0, durationInFrames - 100, durationInFrames],
               outputRange: [0, 0, 10],
-              options: { extrapolateRight: "clamp" },
+              //options: { extrapolateRight: "clamp" },
             }),
           }}
           alt="big mandala"
@@ -180,77 +184,108 @@ const Slide1 = ({ delayConfig }) => {
       </AbsoluteFill>
 
       {/* כיתוב */}
-      <AbsoluteFill className="flex-col-center justify-end">
-        <div className="relative flex-col-center mb-[28rem] gap-8">
-          {/* שם הילד */}
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 256.88 89.99"
-            className="w-[55rem] absolute bottom-full"
-          >
-            {paths.map((d, index) => {
-              const { text } = delayConfig;
-              const { totalFramesPerPath, delayPerPath, globalDelay } = text;
+      <Sequence from={30} durationInFrames={durationInFrames - 120}>
+        <AbsoluteFill className="flex-col-center justify-end z-10">
+          <div className="relative flex-col-center mb-[28rem] gap-8">
+            {/* שם הילד */}
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 256.88 89.99"
+              className="w-[55rem] absolute bottom-full"
+            >
+              {paths.map((d, index) => {
+                const { text } = delayConfig;
+                const { totalFramesPerPath, delayPerPath, globalDelay } = text;
 
-              const startFrame =
-                globalDelay + index * (totalFramesPerPath + delayPerPath);
-              const endFrame = startFrame + totalFramesPerPath;
+                const startFrame =
+                  globalDelay + index * (totalFramesPerPath + delayPerPath);
+                const endFrame = startFrame + totalFramesPerPath;
 
-              // חישוב המילוי (fill-opacity)
-              const fillOpacity = animConfig({
-                inputRange: [startFrame, endFrame],
-                outputRange: [0, 1],
-                options: {
-                  extrapolateRight: "clamp",
-                  easing: Easing.easeInOut,
-                },
-              });
+                // חישוב המילוי (fill-opacity)
+                const fillOpacity = animConfig({
+                  inputRange: [startFrame, endFrame],
+                  outputRange: [0, 1],
+                  options: {
+                    extrapolateRight: "clamp",
+                    easing: Easing.easeInOut,
+                  },
+                });
 
-              return (
-                <path
-                  key={index}
-                  d={d}
-                  fill={textColor}
-                  fillOpacity={fillOpacity} // אנימציה על המילוי
-                />
-              );
-            })}
-          </svg>
+                return (
+                  <path
+                    key={index}
+                    d={d}
+                    fill={textColor}
+                    fillOpacity={fillOpacity} // אנימציה על המילוי
+                  />
+                );
+              })}
+            </svg>
 
-          {/* בר מצווה */}
-          <div className="absolute top-0 flex-center gap-2">
-            {"בר מצווה".split("").map((letter, index) => {
-              const { text } = delayConfig;
-              const { totalFramesPerPath, delayPerPath, globalDelay } = text;
+            {/* בר מצווה */}
+            <div className="absolute top-0 flex-center gap-2">
+              {"בר מצווה".split("").map((letter, index) => {
+                const { text } = delayConfig;
+                const { totalFramesPerPath, delayPerPath, globalDelay } = text;
 
-              const nameTotalFrames =
-                (paths.length - 1) * (totalFramesPerPath + delayPerPath) +
-                globalDelay +
-                totalFramesPerPath;
+                const nameTotalFrames =
+                  (paths.length - 1) * (totalFramesPerPath + delayPerPath) +
+                  globalDelay +
+                  totalFramesPerPath;
 
-              return (
-                <span key={index} className="pt-10 overflow-hidden">
-                  <p
-                    className={cn("text-8xl", letter === " " && "mx-2")}
-                    style={{
-                      color: textColor,
-                      transform: `translateY(${animConfig({
-                        input: bounce({ delay: nameTotalFrames + index * 5 }),
-                        inputRange: [0, 1],
-                        outputRange: [300, 0],
-                      })}px)`,
-                    }}
-                  >
-                    {letter}
-                  </p>
-                </span>
-              );
-            })}
+                return (
+                  <span key={index} className="pt-10 overflow-hidden">
+                    <p
+                      className={cn("text-8xl", letter === " " && "mx-2")}
+                      style={{
+                        color: textColor,
+                        transform: `translateY(${animConfig({
+                          input: bounce({ delay: nameTotalFrames + index * 5 }),
+                          inputRange: [0, 1],
+                          outputRange: [300, 0],
+                        })}px)`,
+                      }}
+                    >
+                      {letter}
+                    </p>
+                  </span>
+                );
+              })}
+            </div>
           </div>
-        </div>
-      </AbsoluteFill>
+        </AbsoluteFill>
+      </Sequence>
     </AbsoluteFill>
   );
 };
 
 export default Slide1;
+
+/* רקע מנדלה שקופה */
+{
+  /* <AbsoluteFill className="flex-center">
+        <Img
+          src={staticFile("/video-assets/opacity-mandala.png")}
+          alt="big mandala"
+          className="size-full object-cover mix-blend-overlay opacity-75"
+          style={{
+            transform: `scale(${animConfig({
+              input: bounce({ delay: delayConfig.opacityMandala }),
+            })})`,
+          }}
+        />
+      </AbsoluteFill> */
+}
+
+/* מסגרת זהב */
+{
+  /* <Img
+          src={staticFile("/video-assets/gold-frame.png")}
+          className="size-full"
+          style={{
+            transform: `scale(${animConfig({
+              input: bounce({ delay: delayConfig.goldFrame }),
+            })})`,
+          }}
+        /> */
+}
