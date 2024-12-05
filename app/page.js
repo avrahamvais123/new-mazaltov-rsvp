@@ -2,6 +2,10 @@ import { cn } from "@/lib/utils";
 import Image from "next/image";
 import CallToAction from "./components/CallToAction";
 import Prices from "./components/Prices";
+/* import { registerRoot } from "remotion";
+import { RemotionRoot } from "./Root";
+
+registerRoot(RemotionRoot); */
 
 const GridItem = ({ title, text, icon }) => {
   return (

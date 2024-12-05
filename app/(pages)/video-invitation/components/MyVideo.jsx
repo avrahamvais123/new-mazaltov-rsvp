@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Audio, staticFile } from "remotion";
+import { Audio, staticFile, Composition } from "remotion";
 
 import {
   linearTiming,
@@ -79,7 +79,7 @@ const MyVideo = () => {
         />
 
         {/* slide 3 */}
-        <TransitionSeries.Sequence durationInFrames={360}>
+        <TransitionSeries.Sequence durationInFrames={120}>
           <Slide3 />
         </TransitionSeries.Sequence>
       </TransitionSeries>

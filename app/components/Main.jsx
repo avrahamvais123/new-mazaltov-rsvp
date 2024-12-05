@@ -9,13 +9,17 @@ import Script from "next/script";
 import SetUser from "./SetUser";
 import MuiProvider from "./MuiProvider";
 import VisitorTracker from "../(pages)/visitor-tracking/components/VisitorTracker";
-
 const GA_TRACKING_ID = process.env.NEXT_PUBLIC_GA_TRACKING_ID;
+import { registerRoot } from "remotion";
+import RemotionRoot from "../(pages)/video-invitation/components/RemotionRoot";
 
 // Create a client
 const queryClient = new QueryClient();
 
+registerRoot(RemotionRoot);
+
 const Main = ({ children }) => {
+
   // הפעלת localForage רק בצד הלקוח
   useEffect(() => {
     if (typeof window !== "undefined") {

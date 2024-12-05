@@ -13,8 +13,6 @@ import {
   Sequence,
 } from "remotion";
 
-import { interpolateStyles } from "@remotion/animation-utils";
-
 /* האותיות בצורה הפוכה */
 const paths = [
   "M256.88,58.56c0,6.13-4.35,12.82-13.04,20.05-1.02.97-1.68,1.46-1.98,1.46-.93,0-1.61-.26-2.05-.79-1.1-1.1-1.65-2.09-1.65-2.98,0-.79.6-1.37,1.79-1.72,4.1-1.5,7.21-3.57,9.33-6.22,2.65-3.18,3.97-6.31,3.97-9.4,0-4.24-2.27-6.35-6.82-6.35-4.1,0-9.62,1.5-16.54,4.5-8.12,3.35-13.21,6.77-15.29,10.26-.22.35-.53.53-.93.53-1.1,0-1.65-.35-1.65-1.06,0-.31.22-.62.66-.93,3.48-2.6,8.82-5.65,16.01-9.13,7.59-3.71,13.63-5.56,18.13-5.56,3.53,0,6.33.86,8.4,2.58,1.1.93,1.65,2.51,1.65,4.76ZM228.02,69.81c0,2.56-2.1,5.8-6.29,9.73-.35.31-.57.35-.66.13-.04-.26.04-.49.26-.66,2.38-1.76,3.57-3.62,3.57-5.56,0-1.68-.6-3.02-1.79-4.04-.44-.44-.66-.95-.66-1.52,0-1.5.82-2.25,2.45-2.25.31,0,.65.07,1.03.2.37.13.72.35,1.03.66.31.31.56.74.76,1.29.2.55.3,1.22.3,2.02Z",
@@ -52,33 +50,73 @@ const Slide1 = ({ delayConfig }) => {
 
   return (
     <AbsoluteFill
-      style={{ height, width, direction: "rtl" }}
-      className="flex-col-center bg-gradient-to-t to-[#293647] from-[#0A1528]"
+      style={{
+        height,
+        width,
+        direction: "rtl",
+        display: "flex", // מחלקת flex
+        flexDirection: "column", // מחלקת flex-col
+        alignItems: "center", // מרכז כיווניות
+        justifyContent: "center", // מרכז ציר
+        backgroundImage: "linear-gradient(to top, #293647, #0A1528)",
+      }}
     >
-      {/* מסגרת זהב */}
-      <AbsoluteFill className="flex-center p-16">
+      {/* מסגרת זהב מסתובבת */}
+      <AbsoluteFill
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          padding: "64px",
+        }}
+      >
         <div
           style={{
+            position: "relative",
+            width: "100%",
+            height: "100%",
+            display: "flex",
+            padding: "12px",
+            overflow: "hidden",
             transform: `scale(${animConfig({
               input: bounce({ delay: delayConfig.goldFrame }),
             })})`,
           }}
-          className="relative size-full flex p-3 overflow-hidden"
         >
-          <span className="absolute inset-0 bg-[#ca7339]" />
           <span
             style={{
-              //animationDuration: "5s",
+              position: "absolute",
+              inset: 0,
+              backgroundColor: "#ca7339",
+            }}
+          />
+          <span
+            style={{
+              position: "absolute",
+              inset: 0,
+              backgroundImage:
+                "linear-gradient(to right, #ddc28d, #9b411f, #ddc28d)",
+              filter: "blur(10px)",
               rotate: `${animConfig()}deg`,
             }}
-            className="absolute inset-0 bg-gradient-to-r from-[#ddc28d] via-[#9b411f] to-[#ddc28d] blur-xl"
           />
-          <span className="z-10 size-full bg-gradient-to-t to-[#293647] from-[#0A1528]">
+          <span
+            style={{
+              zIndex: 10,
+              height: "100%",
+              width: "100%",
+              backgroundImage: "linear-gradient(to top, #293647, #0A1528)",
+            }}
+          >
             <Img
               src={staticFile("/video-assets/opacity-mandala.png")}
-              alt="big mandala"
-              className="size-full object-cover mix-blend-overlay opacity-75"
+              alt="opacity mandala"
               style={{
+                width: "100%",
+                height: "100%",
+                objectFit: "cover",
+                opacity: 0.75,
+                mixBlendMode: "overlay",
                 transform: `scale(${animConfig({
                   input: bounce({ delay: delayConfig.opacityMandala }),
                 })})`,
@@ -89,12 +127,21 @@ const Slide1 = ({ delayConfig }) => {
       </AbsoluteFill>
 
       {/* מנדלה גדולה */}
-      <AbsoluteFill className="flex-center z-10">
+      <AbsoluteFill
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          zIndex: 10,
+        }}
+      >
         <Img
           src={staticFile("/video-assets/big-mandala.png")}
           alt="big mandala"
-          className="size-[700px] object-contain"
           style={{
+            width: "700px",
+            height: "700px",
+            objectFit: "contain",
             animationDuration: "5s",
             filter: "drop-shadow(0 0 50px black)",
             transform: `
@@ -108,12 +155,22 @@ const Slide1 = ({ delayConfig }) => {
       </AbsoluteFill>
 
       {/* חצי רקע */}
-      <AbsoluteFill className="size-full flex justify-end z-10">
+      <AbsoluteFill
+        style={{
+          width: "100%",
+          height: "100%",
+          display: "flex",
+          justifyContent: "flex-end",
+          zIndex: 10,
+        }}
+      >
         <Img
           src={staticFile("/video-assets/sub-background.png")}
           alt="big mandala"
-          className="w-full h-[55%] object-cover"
           style={{
+            width: "100%",
+            height: "55%",
+            objectFit: "cover",
             filter: "drop-shadow(0 0 50px black)",
             height: `${animConfig({
               input: bounce({ delay: delayConfig.subBackground }),
@@ -126,13 +183,32 @@ const Slide1 = ({ delayConfig }) => {
       </AbsoluteFill>
 
       {/* עיטורים */}
-      <AbsoluteFill className="size-full flex justify-end z-10">
-        <div className="h-64 flex justify-between items-center p-10 m-10">
+      <AbsoluteFill
+        style={{
+          width: "100%",
+          height: "100%",
+          display: "flex",
+          justifyContent: "flex-end",
+          zIndex: 10,
+        }}
+      >
+        <div
+          style={{
+            height: "256px",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            padding: "40px",
+            margin: "40px",
+          }}
+        >
           <Img
             src={staticFile("/video-assets/ornament.png")}
             alt="big mandala"
-            className="w-fit h-full object-cover"
             style={{
+              width: "fit-content",
+              height: "100%",
+              objectFit: "cover",
               transform: `scale(${animConfig({
                 input: bounce({ delay: delayConfig.ornaments.right }),
               })})`,
@@ -141,8 +217,10 @@ const Slide1 = ({ delayConfig }) => {
           <Img
             src={staticFile("/video-assets/ornament.png")}
             alt="big mandala"
-            className="w-fit h-full object-cover"
             style={{
+              width: "fit-content",
+              height: "100%",
+              objectFit: "cover",
               transform: `rotateY(180deg) scale(${animConfig({
                 input: bounce({ delay: delayConfig.ornaments.left }),
               })})`,
@@ -152,12 +230,21 @@ const Slide1 = ({ delayConfig }) => {
       </AbsoluteFill>
 
       {/* מנדלה קטנה */}
-      <AbsoluteFill className="flex-center z-10">
+      <AbsoluteFill
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          zIndex: 10,
+        }}
+      >
         <Img
           src={staticFile("/video-assets/small-mandala.png")}
           style={{
             animationDuration: "5s",
-
+            width: 250,
+            height: 250,
+            objectFit: "contain",
             filter: `
            drop-shadow(0 0 50px black)
            blur(${animConfig({
@@ -178,23 +265,43 @@ const Slide1 = ({ delayConfig }) => {
             zIndex: animConfig({
               inputRange: [0, durationInFrames - 100, durationInFrames],
               outputRange: [0, 0, 10],
-              //options: { extrapolateRight: "clamp" },
             }),
           }}
           alt="big mandala"
-          className="size-[250px] object-contain"
         />
       </AbsoluteFill>
 
       {/* כיתוב */}
       <Sequence from={30} durationInFrames={durationInFrames - 120}>
-        <AbsoluteFill className="flex-col-center justify-end z-10">
-          <div className="relative flex-col-center mb-[28rem] gap-8">
+        <AbsoluteFill
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "flex-end",
+            alignItems: "center",
+            zIndex: 10,
+          }}
+        >
+          <div
+            style={{
+              position: "relative",
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "center",
+              alignItems: "center",
+              marginBottom: "448px",
+              gap: "32px",
+            }}
+          >
             {/* שם הילד */}
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 256.88 89.99"
-              className="w-[55rem] absolute bottom-full"
+              style={{
+                width: "880px",
+                position: "absolute",
+                bottom: "100%",
+              }}
             >
               {paths.map((d, index) => {
                 const { text } = delayConfig;
@@ -226,7 +333,16 @@ const Slide1 = ({ delayConfig }) => {
             </svg>
 
             {/* בר מצווה */}
-            <div className="absolute top-0 flex-center gap-2">
+            <div
+              style={{
+                position: "absolute",
+                top: 0,
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                gap: "8px",
+              }}
+            >
               {"בר מצווה".split("").map((letter, index) => {
                 const { text } = delayConfig;
                 const { totalFramesPerPath, delayPerPath, globalDelay } = text;
@@ -237,10 +353,19 @@ const Slide1 = ({ delayConfig }) => {
                   totalFramesPerPath;
 
                 return (
-                  <span key={index} className="pt-10 overflow-hidden">
+                  <span
+                    key={index}
+                    style={{
+                      paddingTop: "40px",
+                      overflow: "hidden",
+                    }}
+                  >
                     <p
                       className={cn("text-8xl", letter === " " && "mx-2")}
                       style={{
+                        fontSize: "96px",
+                        lineHeight: "1",
+                        marginInline: letter === " " ? "8px" : 0,
                         color: textColor,
                         transform: `translateY(${animConfig({
                           input: bounce({ delay: nameTotalFrames + index * 5 }),
