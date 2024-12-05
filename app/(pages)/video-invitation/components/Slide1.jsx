@@ -69,9 +69,9 @@ const Slide1 = ({ delayConfig }) => {
           <span
             style={{
               //animationDuration: "5s",
-              rotate: `${animConfig({})}deg`,
+              rotate: `${animConfig()}deg`,
             }}
-            className="absolute inset-0 bg-gradient-to-r from-[#ddc28d] via-[#9b411f] to-[#ddc28d] blur-2xl"
+            className="absolute inset-0 bg-gradient-to-r from-[#ddc28d] via-[#9b411f] to-[#ddc28d] blur-xl"
           />
           <span className="z-10 size-full bg-gradient-to-t to-[#293647] from-[#0A1528]">
             <Img
