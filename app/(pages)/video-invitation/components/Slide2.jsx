@@ -231,19 +231,18 @@ const Slide2 = ({ delayConfig }) => {
           gap: 40,
           padding: 192,
         }}
-        //className="flex-col-center justify-start gap-10 p-48"
       >
-        {/*  */}
-        <span style={{}}>
+        <span>
           {animteText({
             text: text1,
-            delayConfig,
+            startDelay:  delayConfig.text.startDelay,
+            letterDelay: delayConfig.text.letterDelay,
             lineStyle: (currentLineStartDelay) => ({
               textAlign: "center",
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
-              color: "white",
+              //border: "10px solid blue",              
               opacity: animConfig({
                 inputRange: [currentLineStartDelay, currentLineStartDelay + 20],
               }),
@@ -253,6 +252,7 @@ const Slide2 = ({ delayConfig }) => {
               color: textColor,
               fontSize: 48,
               lineHeight: 1,
+              //border: "10px solid red",
               transform: `translateY(${animConfig({
                 input: bounce({
                   delay: currentLetterDelay,

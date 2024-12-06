@@ -12,6 +12,11 @@ import {
   Easing,
   Sequence,
 } from "remotion";
+import { animteText } from "../utils/animateText";
+
+const text1 = `בשבח והודיה לה׳ יתברך
+  אנו שמחים להזמינכם להשתתף
+  בשמחת בר המצווה של בננו היקר`;
 
 /* האותיות בצורה הפוכה */
 const paths = [
@@ -289,54 +294,49 @@ const Slide1 = ({ delayConfig }) => {
               flexDirection: "column",
               justifyContent: "center",
               alignItems: "center",
-              marginBottom: "448px",
-              gap: "32px",
+              marginBottom: 380,
+              //gap: 32,
             }}
           >
             {/* שם הילד */}
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 256.88 89.99"
-              style={{
-                width: "880px",
-                position: "absolute",
-                bottom: "100%",
-              }}
-            >
-              {paths.map((d, index) => {
-                const { text } = delayConfig;
-                const { totalFramesPerPath, delayPerPath, globalDelay } = text;
-
-                const startFrame =
-                  globalDelay + index * (totalFramesPerPath + delayPerPath);
-                const endFrame = startFrame + totalFramesPerPath;
-
-                // חישוב המילוי (fill-opacity)
-                const fillOpacity = animConfig({
-                  inputRange: [startFrame, endFrame],
-                  outputRange: [0, 1],
-                  options: {
-                    extrapolateRight: "clamp",
-                    easing: Easing.easeInOut,
-                  },
-                });
-
-                return (
-                  <path
-                    key={index}
-                    d={d}
-                    fill={textColor}
-                    fillOpacity={fillOpacity} // אנימציה על המילוי
-                  />
-                );
+            <span>
+              {animteText({
+                text: "יעקב",
+                startDelay: 30,
+                letterDelay: 5,
+                lineStyle: (currentLineStartDelay) => ({
+                  textAlign: "center",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  opacity: animConfig({
+                    inputRange: [
+                      currentLineStartDelay,
+                      currentLineStartDelay + 20,
+                    ],
+                  }),
+                }),
+                lettersStyle: (currentLetterDelay, letter) => ({
+                  marginInline: letter === " " ? 8 : 0,
+                  color: textColor,
+                  fontSize: 600,
+                  lineHeight: 1,
+                  fontFamily: "fb egotrip",
+                  transform: `translateY(${animConfig({
+                    input: bounce({
+                      delay: currentLetterDelay,
+                    }),
+                    outputRange: [300, 0],
+                  })}px)`,
+                }),
               })}
-            </svg>
+            </span>
 
             {/* בר מצווה */}
             <div
               style={{
-                position: "absolute",
-                top: 0,
+                //position: "absolute",
+                //top: 0,
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
@@ -389,31 +389,42 @@ const Slide1 = ({ delayConfig }) => {
 
 export default Slide1;
 
-/* רקע מנדלה שקופה */
 {
-  /* <AbsoluteFill className="flex-center">
-        <Img
-          src={staticFile("/video-assets/opacity-mandala.png")}
-          alt="big mandala"
-          className="size-full object-cover mix-blend-overlay opacity-75"
-          style={{
-            transform: `scale(${animConfig({
-              input: bounce({ delay: delayConfig.opacityMandala }),
-            })})`,
-          }}
-        />
-      </AbsoluteFill> */
-}
+  /* <svg
+  xmlns="http://www.w3.org/2000/svg"
+  viewBox="0 0 256.88 89.99"
+  style={{
+    width: "880px",
+    position: "absolute",
+    bottom: "100%",
+  }}
+>
+  {paths.map((d, index) => {
+    const { text } = delayConfig;
+    const { totalFramesPerPath, delayPerPath, globalDelay } = text;
 
-/* מסגרת זהב */
-{
-  /* <Img
-          src={staticFile("/video-assets/gold-frame.png")}
-          className="size-full"
-          style={{
-            transform: `scale(${animConfig({
-              input: bounce({ delay: delayConfig.goldFrame }),
-            })})`,
-          }}
-        /> */
+    const startFrame =
+      globalDelay + index * (totalFramesPerPath + delayPerPath);
+    const endFrame = startFrame + totalFramesPerPath;
+
+    // חישוב המילוי (fill-opacity)
+    const fillOpacity = animConfig({
+      inputRange: [startFrame, endFrame],
+      outputRange: [0, 1],
+      options: {
+        extrapolateRight: "clamp",
+        easing: Easing.easeInOut,
+      },
+    });
+
+    return (
+      <path
+        key={index}
+        d={d}
+        fill={textColor}
+        fillOpacity={fillOpacity} // אנימציה על המילוי
+      />
+    );
+  })}
+</svg>; */
 }
