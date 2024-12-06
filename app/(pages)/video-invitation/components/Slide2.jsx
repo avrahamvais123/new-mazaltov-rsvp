@@ -232,7 +232,6 @@ const Slide2 = ({ delayConfig }) => {
           padding: 192,
         }}
       >
-        {/*  */}
         <span>
           {animteText({
             text: text1,
@@ -243,7 +242,7 @@ const Slide2 = ({ delayConfig }) => {
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
-              color: "white",
+              //border: "10px solid blue",              
               opacity: animConfig({
                 inputRange: [currentLineStartDelay, currentLineStartDelay + 20],
               }),
@@ -253,6 +252,7 @@ const Slide2 = ({ delayConfig }) => {
               color: textColor,
               fontSize: 48,
               lineHeight: 1,
+              //border: "10px solid red",
               transform: `translateY(${animConfig({
                 input: bounce({
                   delay: currentLetterDelay,

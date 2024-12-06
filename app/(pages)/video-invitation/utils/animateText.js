@@ -1,4 +1,3 @@
-
 export const animteText = ({
   text,
   lineStyle,
@@ -19,11 +18,7 @@ export const animteText = ({
             lineIndex === 0 ? accumulatedDelay : accumulatedDelay;
 
           return (
-            <span
-              key={lineIndex}
-              //className="text-center flex-center text-white"
-              style={lineStyle(currentLineStartDelay)}
-            >
+            <span key={lineIndex} style={lineStyle(currentLineStartDelay)}>
               {line.split("").map((letter, letterIndex) => {
                 const currentLetterDelay = accumulatedDelay;
                 accumulatedDelay += letterDelay;
@@ -34,13 +29,10 @@ export const animteText = ({
                     style={{
                       paddingTop: 16,
                       overflow: "hidden",
+                      //border: "10px solid green"
                     }}
-                    //className="pt-4 overflow-hidden"
                   >
-                    <p
-                      //className={cn("text-5xl", letter === " " && "mx-2")}
-                      style={lettersStyle(currentLetterDelay, letter)}
-                    >
+                    <p style={lettersStyle(currentLetterDelay, letter)}>
                       {letter}
                     </p>
                   </span>

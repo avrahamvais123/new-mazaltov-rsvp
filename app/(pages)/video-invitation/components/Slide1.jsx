@@ -13,13 +13,10 @@ import {
   Sequence,
 } from "remotion";
 import { animteText } from "../utils/animateText";
-import { fontFamily } from "@mui/system";
 
 const text1 = `בשבח והודיה לה׳ יתברך
   אנו שמחים להזמינכם להשתתף
   בשמחת בר המצווה של בננו היקר`;
-
-
 
 /* האותיות בצורה הפוכה */
 const paths = [
@@ -297,8 +294,8 @@ const Slide1 = ({ delayConfig }) => {
               flexDirection: "column",
               justifyContent: "center",
               alignItems: "center",
-              marginBottom: 448,
-              gap: 32,
+              marginBottom: 380,
+              //gap: 32,
             }}
           >
             {/* שם הילד */}
@@ -312,7 +309,6 @@ const Slide1 = ({ delayConfig }) => {
                   display: "flex",
                   justifyContent: "center",
                   alignItems: "center",
-                  color: "white",
                   opacity: animConfig({
                     inputRange: [
                       currentLineStartDelay,
@@ -323,9 +319,9 @@ const Slide1 = ({ delayConfig }) => {
                 lettersStyle: (currentLetterDelay, letter) => ({
                   marginInline: letter === " " ? 8 : 0,
                   color: textColor,
-                  fontSize: 200,
+                  fontSize: 600,
                   lineHeight: 1,
-                  fontFamily: "fb ranch",
+                  fontFamily: "fb egotrip",
                   transform: `translateY(${animConfig({
                     input: bounce({
                       delay: currentLetterDelay,
