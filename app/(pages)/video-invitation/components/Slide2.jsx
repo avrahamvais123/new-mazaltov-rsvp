@@ -231,13 +231,13 @@ const Slide2 = ({ delayConfig }) => {
           gap: 40,
           padding: 192,
         }}
-        //className="flex-col-center justify-start gap-10 p-48"
       >
         {/*  */}
-        <span style={{}}>
+        <span>
           {animteText({
             text: text1,
-            delayConfig,
+            startDelay:  delayConfig.text.startDelay,
+            letterDelay: delayConfig.text.letterDelay,
             lineStyle: (currentLineStartDelay) => ({
               textAlign: "center",
               display: "flex",

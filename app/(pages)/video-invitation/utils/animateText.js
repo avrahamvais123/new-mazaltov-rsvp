@@ -1,7 +1,13 @@
-import { cn } from "@/lib/utils";
 
-export const animteText = ({ text, lineStyle, lettersStyle, delayConfig }) => {
-  let accumulatedDelay = delayConfig.text.startDelay || 0; // דיליי התחלה לשורה הראשונה בלבד
+export const animteText = ({
+  text,
+  lineStyle,
+  lettersStyle,
+  startDelay = 0,
+  lineDelay = 0,
+  letterDelay = 0,
+}) => {
+  let accumulatedDelay = startDelay; // דיליי התחלה לשורה הראשונה בלבד
 
   return (
     <>
@@ -9,8 +15,6 @@ export const animteText = ({ text, lineStyle, lettersStyle, delayConfig }) => {
         .split("\n")
         .map((line) => line.trim()) // הסרת רווחים מיותרים מכל שורה
         .map((line, lineIndex) => {
-          const { letterDelay } = delayConfig.text;
-
           const currentLineStartDelay =
             lineIndex === 0 ? accumulatedDelay : accumulatedDelay;
 
