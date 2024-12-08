@@ -13,7 +13,7 @@ import {
   Easing,
 } from "remotion";
 import { animteText } from "../utils/animateText";
-import GoldFrame from "./slide-1/GoldFrame";
+import GoldFrame from "./slide-1/GoldFrame2";
 
 const textColor = "#c49c5c"; // צבע הטקסט
 

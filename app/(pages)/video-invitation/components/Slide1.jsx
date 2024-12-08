@@ -7,22 +7,13 @@ import {
   spring,
   useVideoConfig,
   AbsoluteFill,
-  Img,
-  staticFile,
-  Easing,
-  Sequence,
 } from "remotion";
-import { animteText } from "../utils/animateText";
-import GoldFrame from "./slide-1/GoldFrame";
+import GoldFrame from "./slide-1/GoldFrame2";
 import BigMandala from "./slide-1/BigMandala";
 import HalfBackground from "./slide-1/HalfBackground";
 import Ornaments from "./slide-1/Ornaments";
 import SmallMandala from "./slide-1/SmallMandala";
 import Text from "./slide-1/Text";
-
-const text1 = `בשבח והודיה לה׳ יתברך
-  אנו שמחים להזמינכם להשתתף
-  בשמחת בר המצווה של בננו היקר`;
 
 const textColor = "#c49c5c"; // צבע הטקסט
 
