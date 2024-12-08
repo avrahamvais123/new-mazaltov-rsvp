@@ -1,6 +1,5 @@
 "use client";
 
-import { cn } from "@/lib/utils";
 import React, { useEffect, useState } from "react";
 import {
   useCurrentFrame,
@@ -14,7 +13,7 @@ import {
 } from "remotion";
 import { animteText } from "../utils/animateText";
 import GoldFrame from "./slide-1/GoldFrame2";
-import { loadFont } from "@remotion/fonts";
+import Ornaments from "./slide-2/Ornaments";
 
 const textColor = "#c49c5c"; // צבע הטקסט
 
@@ -26,11 +25,6 @@ const text2 = `בשבח והודיה לה׳ יתברך
   אנו שמחים להזמינכם להשתתף
   בשמחת בר המצווה של בננו היקר`;
 
-/* loadFont({
-  family: "fb carish",
-  url: local("fb carish"),
-  weight: 400,
-}).then(() => console.log("Font loaded!")); */
 
 const Slide2 = ({ delayConfig }) => {
   const frame = useCurrentFrame();
@@ -68,96 +62,7 @@ const Slide2 = ({ delayConfig }) => {
       <GoldFrame delayConfig={delayConfig} bounce={bounce} />
 
       {/* עיטורים */}
-      <AbsoluteFill
-        style={{
-          width: "100%",
-          height: "100%",
-          display: "flex",
-          justifyContent: "space-between",
-        }}
-        //className="size-full flex justify-between"
-      >
-        {/* עיטורים למעלה */}
-        <div
-          className="h-64 flex justify-between items-center p-10 m-16"
-          style={{
-            transform: `rotate(180deg)`,
-            height: 256,
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            padding: 40,
-            margin: 64,
-          }}
-        >
-          <Img
-            src={staticFile("/video-assets/ornament.png")}
-            alt="big mandala"
-            //className="w-fit h-full object-cover"
-            style={{
-              width: "fit-content",
-              height: "100%",
-              objectFit: "cover",
-              transform: `scale(${animConfig({
-                input: bounce({ delay: delayConfig.ornaments.tl }),
-              })})`,
-            }}
-          />
-          <Img
-            src={staticFile("/video-assets/ornament.png")}
-            alt="big mandala"
-            //className="w-fit h-full object-cover"
-            style={{
-              width: "fit-content",
-              height: "100%",
-              objectFit: "cover",
-              transform: `rotateY(180deg) scale(${animConfig({
-                input: bounce({ delay: delayConfig.ornaments.tr }),
-              })})`,
-            }}
-          />
-        </div>
-
-        {/* עיטורים למטה */}
-        <div
-          style={{
-            height: 256,
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            padding: 40,
-            margin: 64,
-          }}
-          //className="h-64 flex justify-between items-center p-10 m-16"
-        >
-          <Img
-            src={staticFile("/video-assets/ornament.png")}
-            alt="big mandala"
-            //className="w-fit h-full object-cover"
-            style={{
-              width: "fit-content",
-              height: "100%",
-              objectFit: "cover",
-              transform: `scale(${animConfig({
-                input: bounce({ delay: delayConfig.ornaments.br }),
-              })})`,
-            }}
-          />
-          <Img
-            src={staticFile("/video-assets/ornament.png")}
-            alt="big mandala"
-            //className="w-fit h-full object-cover"
-            style={{
-              width: "fit-content",
-              height: "100%",
-              objectFit: "cover",
-              transform: `rotateY(180deg) scale(${animConfig({
-                input: bounce({ delay: delayConfig.ornaments.bl }),
-              })})`,
-            }}
-          />
-        </div>
-      </AbsoluteFill>
+      <Ornaments delayConfig={delayConfig} bounce={bounce} />
 
       {/* כיתוב 1 */}
       <AbsoluteFill
@@ -191,8 +96,7 @@ const Slide2 = ({ delayConfig }) => {
               color: textColor,
               fontSize: 50,
               lineHeight: 1,
-              fontFamily: "fb carish",
-              //fontWeight: "normal",
+              fontFamily: "carish",
               transform: `translateY(${interpolate(
                 bounce({
                   delay: currentLetterDelay,

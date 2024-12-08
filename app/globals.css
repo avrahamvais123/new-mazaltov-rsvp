@@ -108,12 +108,12 @@
   font-weight: normal;
   font-style: normal;
 }
-@font-face {
+/* @font-face {
   font-family: 'fb carish';
   src: local('FbCarish-Regular');
   font-weight: normal;
   font-style: normal;
-}
+} */
 
 @font-face {
   font-family: 'fb egotriPinSet1';

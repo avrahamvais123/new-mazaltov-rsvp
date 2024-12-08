@@ -16,6 +16,7 @@ import { wipe } from "@remotion/transitions/wipe";
 import Slide1 from "./Slide1";
 import Slide2 from "./Slide2";
 import Slide3 from "./Slide3";
+import { loadFont } from "@remotion/fonts";
 
 const delayConfig = {
   slide1: {
@@ -49,6 +50,13 @@ const delayConfig = {
     },
   },
 };
+
+loadFont({
+  family: "carish",
+  url: staticFile("/licensed-fonts/FbCarish-Regular.otf"),
+  weight: 400,
+}).then(() => console.log("Font loaded!"));
+
 
 const MyVideo = () => {
   return (
