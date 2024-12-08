@@ -1,3 +1,5 @@
+import { Sequence } from "remotion";
+
 export const animteText = ({
   text,
   lineStyle,
@@ -9,7 +11,8 @@ export const animteText = ({
   let accumulatedDelay = startDelay; // דיליי התחלה לשורה הראשונה בלבד
 
   return (
-    <span style={{ overflow: "hidden", paddingTop: 30 }}>
+    <>
+      {/* <span style={{ overflow: "hidden", paddingTop: 30 }}> */}
       {text
         .split("\n")
         .map((line) => line.trim()) // הסרת רווחים מיותרים מכל שורה
@@ -26,7 +29,11 @@ export const animteText = ({
                 return (
                   <span
                     key={letterIndex}
-                    style={lettersStyle(currentLetterDelay, letter)}
+                    style={lettersStyle(
+                      currentLetterDelay,
+                      letter,
+                      letterIndex
+                    )}
                   >
                     {letter}
                   </span>
@@ -35,6 +42,6 @@ export const animteText = ({
             </span>
           );
         })}
-    </span>
+    </>
   );
 };

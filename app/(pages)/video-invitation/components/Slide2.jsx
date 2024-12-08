@@ -13,7 +13,6 @@ import {
   Easing,
 } from "remotion";
 import { animteText } from "../utils/animateText";
-import { display, lineHeight } from "@mui/system";
 import GoldFrame from "./slide-1/GoldFrame";
 
 const textColor = "#c49c5c"; // צבע הטקסט
@@ -34,7 +33,7 @@ const Slide2 = ({ delayConfig }) => {
     spring({
       frame,
       fps,
-      config: { damping: 13 },
+      config: { damping: 15 },
       ...props,
     });
 
@@ -234,33 +233,36 @@ const Slide2 = ({ delayConfig }) => {
           padding: 192,
         }}
       >
-        <span className="test">
+        <span style={{ overflow: "hidden", paddingTop: 30 }}>
           {animteText({
             text: text1,
-            startDelay:  delayConfig.text.startDelay,
+            startDelay: delayConfig.text.startDelay,
             letterDelay: delayConfig.text.letterDelay,
             lineStyle: (currentLineStartDelay) => ({
               textAlign: "center",
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
-              //border: "10px solid blue",              
-              opacity: animConfig({
-                inputRange: [currentLineStartDelay, currentLineStartDelay + 20],
-              }),
+              opacity: interpolate(
+                frame,
+                [currentLineStartDelay, currentLineStartDelay + 20],
+                [0, 1]
+              ),
             }),
-            lettersStyle: (currentLetterDelay, letter) => ({
+            lettersStyle: (currentLetterDelay, letter, letterIndex) => ({
               marginInline: letter === " " ? 8 : 0,
               color: textColor,
-              fontSize: 48,
+              fontSize: 50,
               lineHeight: 1,
-              //border: "10px solid red",
-              transform: `translateY(${animConfig({
-                input: bounce({
+              fontFamily: "Fb Carish",
+              fontWeight: "normal",
+              transform: `translateY(${interpolate(
+                bounce({
                   delay: currentLetterDelay,
                 }),
-                outputRange: [300, 0],
-              })}px)`,
+                [0, 1],
+                [600, 0]
+              )}px)`,
             }),
           })}
         </span>

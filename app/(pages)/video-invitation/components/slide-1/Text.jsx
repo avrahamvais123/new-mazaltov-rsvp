@@ -9,6 +9,7 @@ import {
   useVideoConfig,
 } from "remotion";
 import { animteText } from "../../utils/animateText";
+import { display } from "@mui/system";
 
 const Text = ({ delayConfig, bounce, textColor }) => {
   const frame = useCurrentFrame();
@@ -33,6 +34,9 @@ const Text = ({ delayConfig, bounce, textColor }) => {
             alignItems: "center",
             marginBottom: 350,
             padding: 20,
+            //border: "1px solid red",
+            overflow: "hidden",
+            width: "100%",
           }}
         >
           {/* שם הילד */}
@@ -51,19 +55,18 @@ const Text = ({ delayConfig, bounce, textColor }) => {
                 [0, 1]
               ),
             }),
-            lettersStyle: (currentLetterDelay, letter) => ({
+            lettersStyle: (currentLetterDelay, letter, letterIndex) => ({
               marginInline: letter === " " ? 8 : 0,
               color: textColor,
-              fontSize: 200,
+              fontSize: 600,
               lineHeight: 1,
-              fontFamily: "fb riflex",
-              fontWeight: "light",
+              fontFamily: letterIndex == 1 ? "fb egotriPinSet1" : "fb egotrip",
               transform: `translateY(${interpolate(
                 bounce({
                   delay: currentLetterDelay,
                 }),
                 [0, 1],
-                [300, 0]
+                [600, 0]
               )}px)`,
             }),
           })}
