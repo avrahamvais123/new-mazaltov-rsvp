@@ -27,14 +27,12 @@ const Text = ({ delayConfig, bounce, textColor }) => {
       >
         <div
           style={{
-            //height: 200,
             display: "flex",
             flexDirection: "column",
             justifyContent: "center",
             alignItems: "center",
             marginBottom: 350,
             padding: 20,
-            //border: "1px solid red",
             overflow: "hidden",
             width: "100%",
           }}
