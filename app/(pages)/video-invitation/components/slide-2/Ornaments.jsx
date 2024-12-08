@@ -1,10 +1,9 @@
 "use client";
 
-import { delay } from "framer-motion";
 import React from "react";
 import { AbsoluteFill, Img, interpolate, staticFile } from "remotion";
 
-const Ornaments = ({ delayConfig, bounce }) => {
+const Ornaments = ({ bounce }) => {
   const ornaments = [
     {
       top: 100,
