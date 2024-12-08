@@ -9,7 +9,6 @@ import {
   useVideoConfig,
 } from "remotion";
 import { animteText } from "../../utils/animateText";
-import { display } from "@mui/system";
 
 const Text = ({ delayConfig, bounce, textColor }) => {
   const frame = useCurrentFrame();
