@@ -9,7 +9,7 @@ import {
   useVideoConfig,
 } from "remotion";
 import { animteText } from "../../utils/animateText";
-import { fontWeight } from "@mui/system";
+import { fontCarish_regular } from "../../css/slide1.module.css";
 
 const Text = ({ delayConfig, bounce, textColor }) => {
   const frame = useCurrentFrame();
@@ -90,7 +90,8 @@ const Text = ({ delayConfig, bounce, textColor }) => {
               color: textColor,
               fontSize: 75,
               lineHeight: 1,
-              fontFamily: "fb carish",
+              //fontFamily: "fb carish",
+              //fontWeight: "normal",
               transform: `translateY(${interpolate(
                 bounce({
                   delay: currentLetterDelay,

@@ -10,3 +10,30 @@
   justify-content: center;
   align-items: center;
 }
+
+@font-face {
+  font-family: "fb egotrip";
+  src: local("fb egotrip");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "fb carish";
+  src: local("fb carish");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "fb egotriPinSet1";
+  src: local("fb egotriPinSet1");
+  font-weight: normal;
+  font-style: normal;
+}
+
+.fontCarish_regular {
+  font-family: "fb carish";
+  font-weight: normal;
+  font-style: normal;
+}

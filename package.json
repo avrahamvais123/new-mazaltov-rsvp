@@ -47,6 +47,7 @@
     "@remotion/animation-utils": "4.0.236",
     "@remotion/bundler": "4.0.236",
     "@remotion/cli": "4.0.236",
+    "@remotion/fonts": "4.0.236",
     "@remotion/motion-blur": "4.0.236",
     "@remotion/paths": "4.0.236",
     "@remotion/player": "4.0.236",

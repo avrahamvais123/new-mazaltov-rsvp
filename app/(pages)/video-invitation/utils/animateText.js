@@ -1,4 +1,4 @@
-import { Sequence } from "remotion";
+import { fontCarish_regular } from "../css/slide1.module.css";
 
 export const animteText = ({
   text,

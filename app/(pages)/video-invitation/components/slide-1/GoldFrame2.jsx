@@ -114,11 +114,9 @@ const GoldFrame = ({ delayConfig, bounce }) => {
             position: "absolute",
             inset: 0,
             backgroundColor: "#ca7339",
-            //backgroundImage:
-            //"linear-gradient(to right, #ddc28d, #9b411f, #ddc28d)",
           }}
         />
-        {/* כדור ראשון */}
+        {/* אורות מהבהבים */}
         {flashlights.map(({ top, left, opacity }, index) => {
           return (
             <span
@@ -139,6 +137,7 @@ const GoldFrame = ({ delayConfig, bounce }) => {
           );
         })}
 
+        {/* המנדלה השקופה */}
         <span
           style={{
             zIndex: 10,

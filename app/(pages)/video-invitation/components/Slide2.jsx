@@ -14,6 +14,7 @@ import {
 } from "remotion";
 import { animteText } from "../utils/animateText";
 import GoldFrame from "./slide-1/GoldFrame2";
+import { loadFont } from "@remotion/fonts";
 
 const textColor = "#c49c5c"; // צבע הטקסט
 
@@ -24,6 +25,12 @@ const text1 = `בשבח והודיה לה׳ יתברך
 const text2 = `בשבח והודיה לה׳ יתברך
   אנו שמחים להזמינכם להשתתף
   בשמחת בר המצווה של בננו היקר`;
+
+/* loadFont({
+  family: "fb carish",
+  url: local("fb carish"),
+  weight: 400,
+}).then(() => console.log("Font loaded!")); */
 
 const Slide2 = ({ delayConfig }) => {
   const frame = useCurrentFrame();
@@ -184,8 +191,8 @@ const Slide2 = ({ delayConfig }) => {
               color: textColor,
               fontSize: 50,
               lineHeight: 1,
-              fontFamily: "Fb Carish",
-              fontWeight: "normal",
+              fontFamily: "fb carish",
+              //fontWeight: "normal",
               transform: `translateY(${interpolate(
                 bounce({
                   delay: currentLetterDelay,
@@ -197,12 +204,7 @@ const Slide2 = ({ delayConfig }) => {
           })}
         </span>
 
-        <p
-          style={{ color: textColor, fontSize: 128, lineHeight: 1 }}
-          //className="text-9xl"
-        >
-          משה
-        </p>
+        <p style={{ color: textColor, fontSize: 128, lineHeight: 1 }}>משה</p>
       </AbsoluteFill>
     </AbsoluteFill>
   );
@@ -211,7 +213,8 @@ const Slide2 = ({ delayConfig }) => {
 export default Slide2;
 
 //! לא למחוק!
-{/* <AbsoluteFill
+{
+  /* <AbsoluteFill
         style={{
           display: "flex",
           justifyContent: "center",
@@ -279,4 +282,5 @@ export default Slide2;
             />
           </span>
         </div>
-      </AbsoluteFill> */}
+      </AbsoluteFill> */
+}
