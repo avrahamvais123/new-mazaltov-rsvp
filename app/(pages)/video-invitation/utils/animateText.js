@@ -9,7 +9,7 @@ export const animteText = ({
   let accumulatedDelay = startDelay; // דיליי התחלה לשורה הראשונה בלבד
 
   return (
-    <>
+    <span style={{ overflow: "hidden", paddingTop: 30 }}>
       {text
         .split("\n")
         .map((line) => line.trim()) // הסרת רווחים מיותרים מכל שורה
@@ -26,21 +26,15 @@ export const animteText = ({
                 return (
                   <span
                     key={letterIndex}
-                    style={{
-                      paddingTop: 16,
-                      overflow: "hidden",
-                      //border: "10px solid green"
-                    }}
+                    style={lettersStyle(currentLetterDelay, letter)}
                   >
-                    <p style={lettersStyle(currentLetterDelay, letter)}>
-                      {letter}
-                    </p>
+                    {letter}
                   </span>
                 );
               })}
             </span>
           );
         })}
-    </>
+    </span>
   );
 };

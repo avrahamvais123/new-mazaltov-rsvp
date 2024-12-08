@@ -1,4 +1,4 @@
-import { bundle } from "@remotion/bundler";
+import { bundle, webpack } from "@remotion/bundler";
 import { renderMedia, selectComposition } from "@remotion/renderer";
 import path, { dirname } from "path";
 import { fileURLToPath } from "url";
@@ -9,6 +9,9 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const compositionId = "MyVideo";
 
 const bundleLocation = await bundle({
+  onProgress: (progress) => {
+    console.log(`Progress creating bundle: ${progress}`);
+  },
   entryPoint: path.resolve(__dirname, "../app/components/Main.jsx"), // נתיב מלא
   // הוספת התאמה אישית ל-Webpack
   webpackOverride: (config) => {
@@ -30,6 +33,9 @@ const composition = await selectComposition({
 });
 
 await renderMedia({
+  onProgress: ({ progress }) => {
+    console.log(`Rendering is ${progress * 100}% complete`);
+  },
   composition,
   serveUrl: bundleLocation,
   codec: "h264",

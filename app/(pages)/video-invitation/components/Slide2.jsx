@@ -14,6 +14,7 @@ import {
 } from "remotion";
 import { animteText } from "../utils/animateText";
 import { display, lineHeight } from "@mui/system";
+import GoldFrame from "./slide-1/GoldFrame";
 
 const textColor = "#c49c5c"; // צבע הטקסט
 
@@ -59,7 +60,7 @@ const Slide2 = ({ delayConfig }) => {
       //className="flex-col-center bg-gradient-to-t to-[#293647] from-[#0A1528]"
     >
       {/* מסגרת זהב */}
-      <AbsoluteFill
+      {/* <AbsoluteFill
         style={{
           display: "flex",
           justifyContent: "center",
@@ -127,7 +128,8 @@ const Slide2 = ({ delayConfig }) => {
             />
           </span>
         </div>
-      </AbsoluteFill>
+      </AbsoluteFill> */}
+      <GoldFrame delayConfig={delayConfig} bounce={bounce} />
 
       {/* עיטורים */}
       <AbsoluteFill
@@ -232,7 +234,7 @@ const Slide2 = ({ delayConfig }) => {
           padding: 192,
         }}
       >
-        <span>
+        <span className="test">
           {animteText({
             text: text1,
             startDelay:  delayConfig.text.startDelay,
