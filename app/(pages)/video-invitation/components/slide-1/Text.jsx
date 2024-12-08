@@ -9,6 +9,7 @@ import {
   useVideoConfig,
 } from "remotion";
 import { animteText } from "../../utils/animateText";
+import { fontWeight } from "@mui/system";
 
 const Text = ({ delayConfig, bounce, textColor }) => {
   const frame = useCurrentFrame();
@@ -89,8 +90,7 @@ const Text = ({ delayConfig, bounce, textColor }) => {
               color: textColor,
               fontSize: 75,
               lineHeight: 1,
-              fontFamily: "Fb Riflex",
-              fontWeight: "Light",
+              fontFamily: "fb carish",
               transform: `translateY(${interpolate(
                 bounce({
                   delay: currentLetterDelay,

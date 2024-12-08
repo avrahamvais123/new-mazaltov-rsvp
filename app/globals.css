@@ -100,3 +100,24 @@
     @apply absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2;
   }
 }
+
+
+@font-face {
+  font-family: 'fb egotrip';
+  src: local('fb egotrip');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'fb carish';
+  src: local('fb carish');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'fb egotriPinSet1';
+  src: local('fb egotriPinSet1');
+  font-weight: normal;
+  font-style: normal;
+}
