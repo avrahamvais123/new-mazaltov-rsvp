@@ -17,7 +17,24 @@ import Text from "./slide-1/Text";
 
 const textColor = "#c49c5c"; // צבע הטקסט
 
-const Slide1 = ({ delayConfig }) => {
+const delayConfig = {
+  goldFrame: 5,
+  opacityMandala: 10,
+  subBackground: 20,
+  bigMandala: 30,
+  smallMandala: 20,
+  ornaments: {
+    right: 20,
+    left: 30,
+  },
+  text: {
+    totalFramesPerPath: 10, // מספר פריימים לכל נתיב
+    delayPerPath: 5, // עיכוב בפריימים בין כל נתיב
+    globalDelay: 60,
+  },
+};
+
+const Slide1 = () => {
   const frame = useCurrentFrame();
   const { fps, height, width, durationInFrames } = useVideoConfig();
 
@@ -29,13 +46,6 @@ const Slide1 = ({ delayConfig }) => {
       config: { damping: 10 },
       ...props,
     });
-
-  const animConfig = ({
-    input = frame,
-    inputRange = [0, 1],
-    outputRange = [0, 1],
-    options,
-  } = {}) => interpolate(input, inputRange, outputRange, options);
 
   return (
     <AbsoluteFill

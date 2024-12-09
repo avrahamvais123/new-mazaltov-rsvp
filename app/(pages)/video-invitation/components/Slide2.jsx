@@ -7,10 +7,10 @@ import {
   useVideoConfig,
   AbsoluteFill,
 } from "remotion";
-import { animteText } from "../utils/animateText";
 import GoldFrame from "./slide-1/GoldFrame2";
 import Ornaments from "./slide-2/Ornaments";
 import Text from "./slide-2/Text";
+import Name from "./slide-2/Name";
 
 const textColor = "#c49c5c"; // צבע הטקסט
 
@@ -18,11 +18,27 @@ const text1 = `בשבח והודיה לה׳ יתברך
   אנו שמחים להזמינכם להשתתף
   בשמחת בר המצווה של בננו היקר`;
 
-const text2 = `בשבח והודיה לה׳ יתברך
-  אנו שמחים להזמינכם להשתתף
-  בשמחת בר המצווה של בננו היקר`;
+const delayConfig = {
+  goldFrame: 3,
+  opacityMandala: 6,
+  ornaments: {
+    tr: 10,
+    br: 15,
+    bl: 20,
+    tl: 25,
+  },
+  text: {
+    startDelay: 30, // השהיה לפני תחילת הטקסט
+    letterDelay: 1, // השהיה בין כל אות לאות
+  },
+  name: {
+    startDelay: 120, // השהיה לפני תחילת הטקסט
+    letterDelay: 10, // השהיה בין כל אות לאות
+    overflow: 160, // תצפית על השם
+  },
+};
 
-const Slide2 = ({ delayConfig }) => {
+const Slide2 = () => {
   const frame = useCurrentFrame();
   const { fps, height, width } = useVideoConfig();
 
@@ -33,13 +49,6 @@ const Slide2 = ({ delayConfig }) => {
       config: { damping: 15 },
       ...props,
     });
-
-  const animConfig = ({
-    input = frame,
-    inputRange = [0, 1],
-    outputRange = [0, 1],
-    options,
-  } = {}) => interpolate(input, inputRange, outputRange, options);
 
   return (
     <AbsoluteFill
@@ -55,18 +64,40 @@ const Slide2 = ({ delayConfig }) => {
       }}
     >
       {/* מסגרת זהב */}
-      <GoldFrame delayConfig={delayConfig} bounce={bounce} />
+      <GoldFrame
+        delayConfig={delayConfig}
+        bounce={bounce}
+        mandalaOpacity={0.4}
+      />
 
       {/* עיטורים */}
       <Ornaments delayConfig={delayConfig} bounce={bounce} />
 
-      {/* כיתוב 1 */}
-      <Text
-        delayConfig={delayConfig}
-        bounce={bounce}
-        text1={text1}
-        textColor={textColor}
-      />
+      {/* כיתוב */}
+      <AbsoluteFill
+        style={{
+          padding: 192,
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "start",
+          alignItems: "center",
+          gap: 80,
+        }}
+      >
+        <Text
+          delayConfig={delayConfig}
+          bounce={bounce}
+          text1={text1}
+          textColor={textColor}
+        />
+
+        <Name
+          delayConfig={delayConfig}
+          bounce={bounce}
+          name="יעקב"
+          textColor={textColor}
+        />
+      </AbsoluteFill>
     </AbsoluteFill>
   );
 };

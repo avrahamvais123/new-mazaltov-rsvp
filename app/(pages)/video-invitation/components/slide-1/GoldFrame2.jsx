@@ -10,7 +10,7 @@ import {
   useVideoConfig,
 } from "remotion";
 
-const GoldFrame = ({ delayConfig, bounce }) => {
+const GoldFrame = ({ delayConfig, bounce, mandalaOpacity = 0.75 }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
   // גודל העיגול המנצנץ
@@ -153,7 +153,7 @@ const GoldFrame = ({ delayConfig, bounce }) => {
               width: "100%",
               height: "100%",
               objectFit: "cover",
-              opacity: 0.75,
+              opacity: mandalaOpacity,
               mixBlendMode: "overlay",
               transform: `scale(${interpolate(
                 bounce({ delay: delayConfig.opacityMandala }),
