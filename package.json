@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@auth/core": "^0.37.0",
+    "@capsizecss/core": "^4.1.2",
     "@emotion/react": "^11.13.3",
     "@emotion/styled": "^11.13.0",
     "@fontsource/alef": "^5.1.0",
@@ -110,6 +111,7 @@
     "next-themes": "^0.3.0",
     "nodemailer": "^6.9.15",
     "npm": "^10.9.0",
+    "opentype.js": "^1.3.4",
     "pretty-bytes": "^6.1.1",
     "pusher": "^5.2.0",
     "pusher-js": "^8.4.0-rc2",
@@ -140,6 +142,7 @@
     "stylis-plugin-rtl": "^2.1.1",
     "tailwind-merge": "^2.5.2",
     "tailwindcss-animate": "^1.0.7",
+    "text-to-svg": "^3.1.5",
     "tinycolor2": "^1.6.0",
     "tsparticles": "^3.7.1",
     "tus-js-client": "^1.6.0",

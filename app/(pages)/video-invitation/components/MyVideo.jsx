@@ -57,6 +57,24 @@ loadFont({
   weight: 400,
 }).then(() => console.log("Font loaded!"));
 
+loadFont({
+  family: "egotrip",
+  url: staticFile("/licensed-fonts/FbEgotrip-Regular.otf"),
+  weight: 400,
+}).then(() => console.log("Font loaded!"));
+
+loadFont({
+  family: "egotrip-set-1",
+  url: staticFile("/licensed-fonts/FbEgotriPinSet1-Regular.otf"),
+  weight: 400,
+}).then(() => console.log("Font loaded!"));
+
+loadFont({
+  family: "egotrip-set-2",
+  url: staticFile("/licensed-fonts/FbEgotriPinSet2-Regular.otf"),
+  weight: 400,
+}).then(() => console.log("Font loaded!"));
+
 
 const MyVideo = () => {
   return (
