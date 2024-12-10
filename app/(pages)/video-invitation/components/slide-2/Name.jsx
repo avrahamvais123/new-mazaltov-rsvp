@@ -19,7 +19,7 @@ const Name = ({ delayConfig, bounce, name = "שם הילד", textColor, fontFami
     };
 
     const capsize = createStyleObject({
-      capHeight: 1,
+      capHeight: 250,
       lineGap: 0,
       fontMetrics,
     });
@@ -56,7 +56,7 @@ const Name = ({ delayConfig, bounce, name = "שם הילד", textColor, fontFami
           ...capsizeStyles,
           marginInline: letter === " " ? 8 : 0,
           color: textColor,
-          //border: "8px solid green",
+          border: "8px solid red",
           fontFamily: letterIndex === 1 ? "egotrip-set-1" : "egotrip",
           transform: `translateY(${interpolate(
             bounce({
