@@ -12,15 +12,29 @@ const Name = ({ delayConfig, bounce, name = "שם הילד", textColor, fontFami
 
   useEffect(() => {
     const fontMetrics = {
-      ascent: 900,
-      descent: -300,
-      lineGap: 0,
-      unitsPerEm: 1000,
+      familyName: "Fb Egotrip",
+      fullName: "Fb Egotrip",
+      postscriptName: "FbEgotrip-Regular",
+      capHeight: 1350,
+      ascent: 1681,
+      descent: -484,
+      lineGap: 50,
+      unitsPerEm: 2048,
+      xHeight: 911,
+      xWidthAvg: 1358,
+      subsets: {
+        latin: {
+          xWidthAvg: 1358
+        },
+        thai: {
+          xWidthAvg: 1593
+        }
+      }
     };
 
     const capsize = createStyleObject({
-      capHeight: 250,
-      lineGap: 0,
+      capHeight: 400,
+      lineGap: 22,
       fontMetrics,
     });
 
@@ -52,7 +66,7 @@ const Name = ({ delayConfig, bounce, name = "שם הילד", textColor, fontFami
           ),
         }),
         lettersStyle: (currentLetterDelay, letter, letterIndex) => ({
-          fontSize: 450,
+          //fontSize: 450,
           ...capsizeStyles,
           marginInline: letter === " " ? 8 : 0,
           color: textColor,

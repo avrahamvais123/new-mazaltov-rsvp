@@ -3,10 +3,18 @@
 import React from "react";
 import { Player } from "@remotion/player";
 import MyVideo from "./MyVideo";
+import { parseAsInteger, useQueryState } from "nuqs";
 
 const MediaPlayer = () => {
+  const [state, setState] = useQueryState("count", parseAsInteger);
+  console.log("state: ", state);
+
   return (
     <div dir="ltr" className="size-full flex-center">
+      <button onClick={() => setState(60)} className="">
+        click
+      </button>
+
       <Player
         component={MyVideo}
         durationInFrames={1800}

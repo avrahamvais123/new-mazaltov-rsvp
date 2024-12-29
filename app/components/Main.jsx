@@ -12,6 +12,7 @@ import VisitorTracker from "../(pages)/visitor-tracking/components/VisitorTracke
 const GA_TRACKING_ID = process.env.NEXT_PUBLIC_GA_TRACKING_ID;
 import { registerRoot } from "remotion";
 import RemotionRoot from "../(pages)/video-invitation/components/RemotionRoot";
+import { NuqsAdapter } from "nuqs/adapters/next/app";
 
 // Create a client
 const queryClient = new QueryClient();
@@ -19,7 +20,6 @@ const queryClient = new QueryClient();
 registerRoot(RemotionRoot);
 
 const Main = ({ children }) => {
-
   // הפעלת localForage רק בצד הלקוח
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -36,14 +36,16 @@ const Main = ({ children }) => {
   return (
     <>
       <QueryClientProvider client={queryClient}>
-        <SessionProvider>
-          <VisitorTracker />
-          <MuiProvider>
-            <Header />
-            <SetUser />
-            {children}
-          </MuiProvider>
-        </SessionProvider>
+        <NuqsAdapter>
+          <SessionProvider>
+            <VisitorTracker />
+            <MuiProvider>
+              <Header />
+              <SetUser />
+              {children}
+            </MuiProvider>
+          </SessionProvider>
+        </NuqsAdapter>
       </QueryClientProvider>
 
       {/* Google Analytics */}
