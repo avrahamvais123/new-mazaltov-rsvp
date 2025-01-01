@@ -7,6 +7,7 @@ module.exports = {
     "./app/**/*.{js,ts,jsx,tsx}",
     "./src/**/*.{js,ts,jsx,tsx}",
     "./scripts/**/*.{js,jsx,ts,tsx}", // קבצים בסקריפטים אם צריך
+    "./node_modules/flyonui/dist/js/*.js",
   ],
   prefix: "",
   theme: {
@@ -74,5 +75,11 @@ module.exports = {
       },
     },
   },
-  plugins: [require("tailwindcss-animate"), /* require("tailwindcss-3d") */],
+  plugins: [
+    require("tailwindcss-animate"),
+    require("flyonui"),
+    require("flyonui/plugin"),
+  ],
 };
+
+/* require("tailwindcss-3d") */

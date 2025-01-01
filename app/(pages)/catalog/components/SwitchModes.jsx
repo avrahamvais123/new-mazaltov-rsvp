@@ -27,6 +27,7 @@ const SwitchModes = () => {
       <label className="text-white" htmlFor="editing-mode">
         מצב עריכה
       </label>
+      <button className="btn btn-primary">מצב עריכה</button>
     </div>
   );
 };

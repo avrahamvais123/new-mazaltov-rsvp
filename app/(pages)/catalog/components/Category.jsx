@@ -41,7 +41,7 @@ const fields = [
     required: true,
     span: 12,
   },
-  {
+  /* {
     type: "upload",
     name: "upload-image",
     label: "תמונת מוצר",
@@ -51,7 +51,7 @@ const fields = [
       console.log("data from image: ", data);
     },
     span: 12,
-  },
+  }, */
 ];
 
 const Category = ({ link, name, imageUrl }) => {
