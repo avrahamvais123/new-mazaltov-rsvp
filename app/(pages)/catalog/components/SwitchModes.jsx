@@ -15,6 +15,8 @@ const SwitchModes = () => {
 
   return (
     <div className="z-20 absolute top-5 right-5 flex-center gap-2">
+
+      <button className="btn btn-primary">click</button>
       <Switch
         id="editing-mode"
         classNames={{

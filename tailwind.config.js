@@ -75,6 +75,23 @@ module.exports = {
       },
     },
   },
+  flyonui: {
+    themes: [
+      {
+        mytheme: {
+          primary: "#5c41e1",
+          secondary: "#1abc9b",
+          accent: "#9b59b6",
+          neutral: "#95a5a6",
+          "base-100": "#ecf0f1",
+          info: "#1a8cbc",
+          success: "#6cd831",
+          warning: "#f1c40f",
+          error: "#e74c3c",
+        },
+      },
+    ],
+  },
   plugins: [
     require("tailwindcss-animate"),
     require("flyonui"),
