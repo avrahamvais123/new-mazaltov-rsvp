@@ -2,7 +2,7 @@ import { Fredoka, Noto_Sans_Hebrew } from "next/font/google";
 import "./globals.css";
 import Main from "./components/Main";
 import { cn } from "@/lib/utils";
-import { GoogleAnalytics } from "@next/third-parties/google";
+//import { GoogleAnalytics } from "@next/third-parties/google";
 //import { GoogleTagManager } from "@next/third-parties/google";
 import { Analytics } from "@vercel/analytics/react";
 import { Toaster } from "@/components/ui/sonner";
@@ -27,8 +27,8 @@ const localization = {
   },
 };
 
-const GA_TRACKING_ID = process.env.GA_TRACKING_ID;
-console.log("GA_TRACKING_ID: ", GA_TRACKING_ID);
+//const GA_TRACKING_ID = process.env.GA_TRACKING_ID;
+//console.log("GA_TRACKING_ID: ", GA_TRACKING_ID);
 
 export default function RootLayout({ children }) {
   return (
@@ -41,7 +41,7 @@ export default function RootLayout({ children }) {
       >
         <Main>{children}</Main>
         <Analytics />
-        <GoogleAnalytics gaId={GA_TRACKING_ID} />
+        {/* <GoogleAnalytics gaId={GA_TRACKING_ID} /> */}
         <Toaster
           theme="light"
           position="top-right"
