@@ -1,4 +1,4 @@
-import React from "react";
+/* import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import InvitaionForm from "./components/InvitaionForm";
@@ -36,7 +36,7 @@ const Page = async ({ searchParams }, ...props) => {
         width={500}
         priority
       />
-      {/* <InvitaionForm email={email} client={client} /> */}
+      <InvitaionForm email={email} client={client} />
 
       <div className="flex-col-center gap-2">
         <h4>קישור לוויז</h4>
@@ -73,6 +73,14 @@ const Page = async ({ searchParams }, ...props) => {
           הזמנות מזל טוב
         </Link>
       </p>
+    </div>
+  );
+}; */
+
+const Page = () => {
+  return (
+    <div>
+      <h1>Page</h1>
     </div>
   );
 };
