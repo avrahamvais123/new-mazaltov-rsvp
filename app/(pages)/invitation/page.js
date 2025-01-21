@@ -1,6 +1,6 @@
-/* import React from "react";
+import React from "react";
 import Image from "next/image";
-import Link from "next/link";
+//import Link from "next/link";
 import InvitaionForm from "./components/InvitaionForm";
 
 export async function generateMetadata({ searchParams }) {
@@ -40,7 +40,7 @@ const Page = async ({ searchParams }, ...props) => {
 
       <div className="flex-col-center gap-2">
         <h4>קישור לוויז</h4>
-        <Link
+        {/* <Link
           href={waze}
           className="relative size-20 aspect-square p-4 rounded-full hover:scale-75 transition-all duration-300"
         >
@@ -50,7 +50,7 @@ const Page = async ({ searchParams }, ...props) => {
             fill
             sizes="100px"
           />
-        </Link>
+        </Link> */}
       </div>
 
       <div className="w-full h-fit flex-col-center gap-2">
@@ -73,14 +73,6 @@ const Page = async ({ searchParams }, ...props) => {
           הזמנות מזל טוב
         </Link>
       </p>
-    </div>
-  );
-}; */
-
-const Page = () => {
-  return (
-    <div>
-      <h1>Page</h1>
     </div>
   );
 };
