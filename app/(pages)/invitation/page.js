@@ -66,12 +66,12 @@ const Page = async ({ searchParams }, ...props) => {
 
       <p>
         נוצר ב-❤️ ע׳׳י מזל טוב אישורי הגעה מבית{" "}
-        <Link
+        {/* <Link
           href="https://hazmanot-mazaltov.com/"
           className="text-indigo-600 hover:text-indigo-400"
         >
           הזמנות מזל טוב
-        </Link>
+        </Link> */}
       </p>
     </div>
   );
