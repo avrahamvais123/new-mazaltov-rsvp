@@ -1,7 +1,7 @@
 import React from "react";
 import Image from "next/image";
-import InvitaionForm from "./components/InvitaionForm";
 import Link from "next/link";
+import InvitaionForm from "./components/InvitaionForm";
 
 export async function generateMetadata({ searchParams }) {
   const { title } = await searchParams;
@@ -12,7 +12,6 @@ export async function generateMetadata({ searchParams }) {
 }
 
 const Page = async ({ searchParams }, ...props) => {
-  console.log("props: ", props);
   const { email, client, title, name, img_1, img_2, waze, gm } =
     await searchParams;
 
@@ -37,7 +36,7 @@ const Page = async ({ searchParams }, ...props) => {
         width={500}
         priority
       />
-      <InvitaionForm email={email} client={client} />
+      {/* <InvitaionForm email={email} client={client} /> */}
 
       <div className="flex-col-center gap-2">
         <h4>קישור לוויז</h4>

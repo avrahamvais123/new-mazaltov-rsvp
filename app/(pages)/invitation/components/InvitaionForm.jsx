@@ -9,45 +9,9 @@ import axios from "axios";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 
-const fields = [
-  {
-    name: "name",
-    label: "שם",
-    type: "text",
-    required: true,
-  },
-  {
-    type: "radioGroup",
-    name: "status",
-    options: [
-      {
-        text: "מגיעים",
-        value: "מגיעים",
-      },
-      {
-        text: "אולי מגיעים",
-        value: "אולי מגיעים",
-      },
-      {
-        text: "לא מגיעים",
-        value: "לא מגיעים",
-      },
-    ],
-    classNames: {
-      wrapper: "",
-    },
-  },
-  {
-    name: "name",
-    label: "שם",
-    type: "textarea",
-    required: true,
-  },
-];
-
 const InvitaionForm = ({ email, client }) => {
-  console.log('client: ', client);
-  console.log('email: ', email);
+  console.log("client: ", client);
+  console.log("email: ", email);
   const [quantity, setQuantity] = useState(1);
   const { reset, register, handleSubmit, watch } = useForm({
     defaultValues: {
@@ -90,7 +54,7 @@ const InvitaionForm = ({ email, client }) => {
 
   const sendRSVPMutation = useMutation({
     mutationFn: async (data) => {
-      console.log('data: ', data);
+      console.log("data: ", data);
       try {
         const res = await axios.post("/api/invitation", {
           ...data,
@@ -216,3 +180,39 @@ const InvitaionForm = ({ email, client }) => {
 };
 
 export default InvitaionForm;
+
+/* const fields = [
+  {
+    name: "name",
+    label: "שם",
+    type: "text",
+    required: true,
+  },
+  {
+    type: "radioGroup",
+    name: "status",
+    options: [
+      {
+        text: "מגיעים",
+        value: "מגיעים",
+      },
+      {
+        text: "אולי מגיעים",
+        value: "אולי מגיעים",
+      },
+      {
+        text: "לא מגיעים",
+        value: "לא מגיעים",
+      },
+    ],
+    classNames: {
+      wrapper: "",
+    },
+  },
+  {
+    name: "name",
+    label: "שם",
+    type: "textarea",
+    required: true,
+  },
+]; */
