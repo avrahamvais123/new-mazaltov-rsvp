@@ -40,7 +40,7 @@ const Page = async ({ searchParams }) => {
 
       <div className="flex-col-center gap-2">
         <h4>קישור לוויז</h4>
-        {/* <Link
+        <Link
           href={waze || null}
           className="relative size-20 aspect-square p-4 rounded-full hover:scale-75 transition-all duration-300"
         >
@@ -50,7 +50,7 @@ const Page = async ({ searchParams }) => {
             fill
             sizes="100px"
           />
-        </Link> */}
+        </Link>
       </div>
 
       <div className="w-full h-fit flex-col-center gap-2">
@@ -66,12 +66,12 @@ const Page = async ({ searchParams }) => {
 
       <p>
         נוצר ב-❤️ ע׳׳י מזל טוב אישורי הגעה מבית{" "}
-        {/* <Link
+        <Link
           href="https://hazmanot-mazaltov.com/"
           className="text-indigo-600 hover:text-indigo-400"
         >
           הזמנות מזל טוב
-        </Link> */}
+        </Link>
       </p>
     </div>
   );
