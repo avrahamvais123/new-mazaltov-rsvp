@@ -3,15 +3,15 @@ import Image from "next/image";
 import Link from "next/link";
 import InvitaionForm from "./components/InvitaionForm";
 
-/* export async function generateMetadata({ searchParams }) {
+export async function generateMetadata({ searchParams }) {
   const { title } = await searchParams;
   return {
-    title: searchParams?.title || "מזל טוב אישורי הגעה",
-    description: searchParams?.title || "מזל טוב אישורי הגעה",
+    title: title || "מזל טוב אישורי הגעה",
+    description: title || "מזל טוב אישורי הגעה",
   };
-} */
+}
 
-const Page = async ({ searchParams }) => {
+const Page = async ({ searchParams }, ...props) => {
   const { email, client, title, name, img_1, img_2, waze, gm } =
     await searchParams;
 
@@ -41,7 +41,7 @@ const Page = async ({ searchParams }) => {
       <div className="flex-col-center gap-2">
         <h4>קישור לוויז</h4>
         <Link
-          href={waze || null}
+          href={waze}
           className="relative size-20 aspect-square p-4 rounded-full hover:scale-75 transition-all duration-300"
         >
           <Image
@@ -76,6 +76,7 @@ const Page = async ({ searchParams }) => {
     </div>
   );
 };
+
 
 export default Page;
 
