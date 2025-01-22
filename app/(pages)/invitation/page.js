@@ -79,16 +79,3 @@ const Page = async ({ searchParams }) => {
 
 export default Page;
 
-/* const email = searchParams?.email || "";
-  const client = searchParams?.client || "";
-  const title = searchParams?.title || "";
-  const name = searchParams?.name || "";
-  const img_1 = searchParams?.img_1 || "";
-  const img_2 = searchParams?.img_2 || "";
-  const waze = searchParams?.waze || "";
-  const gm = searchParams?.gm || ""; */
-
-/* export const metadata = {
-  title: "מזל טוב אישורי הגעה",
-  description: "הזמנה דיגיטלית",
-}; */
