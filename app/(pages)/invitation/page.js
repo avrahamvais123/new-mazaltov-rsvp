@@ -6,8 +6,8 @@ import InvitaionForm from "./components/InvitaionForm";
 /* export async function generateMetadata({ searchParams }) {
   const { title } = await searchParams;
   return {
-    title: title || "מזל טוב אישורי הגעה",
-    description: title || "מזל טוב אישורי הגעה",
+    title: searchParams?.title || "מזל טוב אישורי הגעה",
+    description: searchParams?.title || "מזל טוב אישורי הגעה",
   };
 } */
 
