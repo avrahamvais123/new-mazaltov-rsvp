@@ -152,7 +152,7 @@ export default function SignIn() {
             </div>
 
             {/* google button */}
-            <button
+            {/* <button
               type="button"
               className="w-full rounded-sm px-4 py-2 border text-slate-400 flex justify-center items-center gap-2"
               onClick={async () =>
@@ -168,7 +168,7 @@ export default function SignIn() {
                 height={20}
               />
               כניסה עם גוגל
-            </button>
+            </button> */}
           </MyForm>
 
           {/* להרשמה */}
