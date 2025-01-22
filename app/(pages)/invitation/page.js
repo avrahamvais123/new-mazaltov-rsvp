@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Suspense } from "react";
 import Invitation from "./components/Invitation";
 
 /* export async function generateMetadata({ searchParams }) {
@@ -12,7 +12,8 @@ import Invitation from "./components/Invitation";
 const Page =  () => {
 
   return (
-    <Invitation />
+    <Suspense fallback={<div>טוען הזמנה...</div>}><Invitation /></Suspense>
+    
   );
 };
 
