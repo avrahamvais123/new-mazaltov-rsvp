@@ -1,15 +1,17 @@
+"use client"
+
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import InvitaionForm from "./components/InvitaionForm";
 
-export async function generateMetadata({ searchParams }) {
+/* export async function generateMetadata({ searchParams }) {
   const { title } = await searchParams;
   return {
     title: title || "מזל טוב אישורי הגעה",
     description: title || "מזל טוב אישורי הגעה",
   };
-}
+} */
 
 const Page = async ({ searchParams }, ...props) => {
   const { email, client, title, name, img_1, img_2, waze, gm } =
