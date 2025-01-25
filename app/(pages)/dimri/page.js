@@ -6,7 +6,7 @@ import React from "react";
 const email = "yska.dimri@gmail.com";
 const client = encodeURIComponent("משפחת דימרי");
 const title = encodeURIComponent("הזמנה לבר המצווה של");
-const name = encodeURIComponent("ישי");
+const name = encodeURIComponent("ישי דימרי");
 const waze = encodeURIComponent(
   "https://www.waze.com/en/live-map/directions/%D7%90%D7%95%D7%9C%D7%9D-%D7%9B%D7%A8%D7%9E%D7%99%D7%9D-%D7%90%D7%9E%D7%A0%D7%95%D7%9F-%D7%95%D7%AA%D7%9E%D7%A8-%D7%92%D7%91%D7%A2%D7%AA-%D7%96%D7%90%D7%91?place=w.23068991.230427762.577617"
 );
