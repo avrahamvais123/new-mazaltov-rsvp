@@ -1,7 +1,7 @@
 "use client";
 
 import Table from "@/app/ui/Table";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import {
   useReactTable,
   getCoreRowModel,
@@ -16,6 +16,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import { useSession } from "next-auth/react";
 import Loader from "@/app/ui/Loader";
+import { useRouter } from "next/navigation";
 
 const fetchGuests = async ({ queryKey }) => {
   const [, email] = queryKey;
@@ -31,6 +32,7 @@ const fetchGuests = async ({ queryKey }) => {
 };
 
 const GuestsTable = () => {
+  const router = useRouter();
   const { data: session, status: dataStatus } = useSession();
   const [status, setStatus] = useState({
     מגיעים: 0,
@@ -38,13 +40,20 @@ const GuestsTable = () => {
     "אולי מגיעים": 0,
   });
 
-  // Using useQuery with an object structure to fetch guests data and handle caching
+  // רידיירקט כאשר אין סשן
+  useEffect(() => {
+    if (!session && dataStatus !== "loading") {
+      router.push("/auth/signin");
+    }
+  }, [session, dataStatus, router]);
+
+  // שימוש ב-useQuery עם enabled כדי להימנע מהפעלה מיותרת כשאין session
   const { data = [], isLoading, refetch, status: statusFetchGuests } = useQuery(
     {
       queryKey: ["guests", session?.user?.email],
       queryFn: ({ queryKey }) => fetchGuests({ queryKey, setStatus }),
       enabled: !!session?.user?.email,
-      staleTime: 300000, // Cache data for 5 minutes
+      staleTime: 300000,
       select: (data) => {
         calaulateTotalStatus({ data });
         return data;
@@ -54,7 +63,6 @@ const GuestsTable = () => {
 
   const calaulateTotalStatus = useCallback(
     ({ data }) => {
-      // חישוב סטטוס אחרי קבלת הנתונים מהשאילתה
       const initialStatus = { מגיעים: 0, "לא מגיעים": 0, "אולי מגיעים": 0 };
 
       const result = data.reduce((acc, curr) => {
@@ -120,10 +128,13 @@ const GuestsTable = () => {
     getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
     autoResetPageIndex: false,
-    //initialState: { pagination: { pageSize: 50 } }, // למשל 50 שורות בעמוד
     enableRowSelection: true,
     getRowId: (row, index) => row?._id,
   });
+
+  if (!session) {
+    return null; // תחזיר כלום בזמן שה-Effect מבצע את הרידיירקט
+  }
 
   return (
     <>
@@ -164,51 +175,3 @@ const GuestsTable = () => {
 };
 
 export default GuestsTable;
-
-/* const removeGuests = async () => {
-    const guestsToRemove = table
-      ?.getSelectedRowModel()
-      .rows.map((row) => row?.id);
-    console.log("guestsToRemove: ", guestsToRemove);
-
-    try {
-      const res = await axios.delete("/api/guests", {
-        data: { ids: guestsToRemove },
-      });
-      getAllGuests();
-      console.log("res: ", res);
-    } catch (error) {
-      console.error(
-        "Error removing all guests: ",
-        error.response?.data || error.message
-      );
-    }
-  }; */
-
-/* const getAllGuests = useMutation({
-    mutationFn: async () => {
-      const email = session?.user?.email;
-
-      try {
-        const res = await axios.get(`/api/guests?belongsTo=${email}`);
-        console.log("res: ", res);
-
-        return res?.data?.data;
-      } catch (error) {
-        console.error(
-          "Error getting all guests: ",
-          error.response?.data || error.message
-        );
-      }
-    },
-    onSuccess: async (data) => {
-      //console.log("data: ", data);
-      setData(data);
-    },
-  }); */
-
-/* useEffect(() => {
-    if (session) {
-      getAllGuests.mutate();
-    }
-  }, [session]); */
